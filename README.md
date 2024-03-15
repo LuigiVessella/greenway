@@ -6,11 +6,12 @@ GreenWay is a multi-platform app (iOS and Android) that includes a routing and n
 
 Clone the repository and open project with Visual Studio Code.
 
-Make sure you've installed [Flutter](https://docs.flutter.dev/get-started/install) first
+First please be sure of installing:
 
-```bash
-pip install foobar
-```
+1)[Visual Studio Code](https://code.visualstudio.com/download)
+
+2)[Flutter](https://docs.flutter.dev/get-started/install)
+
 
 ## Usage
 After cloning repository, you're ready to launch and test the project. By default, the project is ready-to-start, but if some errors come, try:
