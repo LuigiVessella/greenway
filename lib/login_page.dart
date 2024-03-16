@@ -1,10 +1,11 @@
-import 'dart:convert';
 import 'dart:io' show Platform;
-import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:greenway/welcome_page.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
         appBar: AppBar(
           title: const Text('GreenWay Login'),
         ),
-        body: SafeArea(
+        body: Center(
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -71,11 +72,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
-                  child: const Text('Sign in with auto code exchange'),
-                  onPressed: () {
-                    _signInWithAutoCodeExchange();
-                  } 
-                ),
+                    child: const Text('Login'),
+                    onPressed: () {
+                      _signInWithAutoCodeExchange();
+                      
+                    }),
                 if (Platform.isIOS || Platform.isMacOS)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -92,41 +93,30 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ElevatedButton(
-                  child: const Text('Refresh token'),
                   onPressed: _refreshToken != null ? _refresh : null,
+                  child: const Text('Refresh token'),
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
-                  child: const Text('End session'),
                   onPressed: _idToken != null
                       ? () async {
                           await _endSession();
                         }
                       : null,
+                  child: const Text('Logout'),
                 ),
                 const SizedBox(height: 8),
-                const Text('authorization code'),
-                TextField(
-                  controller: _authorizationCodeTextController,
-                ),
-                const Text('access token'),
-                TextField(
-                  controller: _accessTokenTextController,
-                ),
-                const Text('access token expiration'),
-                TextField(
-                  controller: _accessTokenExpirationTextController,
-                ),
-                const Text('id token'),
-                TextField(
-                  controller: _idTokenTextController,
-                ),
-                const Text('refresh token'),
-                TextField(
-                  controller: _refreshTokenTextController,
-                ),
-                const Text('test api results'),
-                Text(_userInfo ?? ''),
+                ElevatedButton(
+                    onPressed: () {
+                      if (_isLoggingComplete) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const WelcomePage()),
+                        );
+                      }
+                    },
+                    child: const Text('Procedi')),
               ],
             ),
           ),
@@ -172,19 +162,18 @@ class _LoginPageState extends State<LoginPage> {
           refreshToken: _refreshToken,
           issuer: _issuer,
           scopes: _scopes,
-          clientSecret: "jyTj9K8qcn3AoZjElhNCT15klfdiBH0K",
+          clientSecret: dotenv.env['CLIENT_SECRET'],
           allowInsecureConnections: true));
       _processTokenResponse(result);
-     
     } catch (_) {
       _clearBusyState();
     }
   }
 
-
-
   Future<void> _signInWithAutoCodeExchange(
       {bool preferEphemeralSession = false}) async {
+    
+
     try {
       _setBusyState();
 
@@ -192,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
           await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(_clientId, _redirectUrl,
             clientSecret:
-                "jyTj9K8qcn3AoZjElhNCT15klfdiBH0K", //vedere come usare i segreti in flutter
+                dotenv.env['CLIENT_SECRET'], //vedere come usare i segreti in flutter
             serviceConfiguration: _serviceConfiguration,
             scopes: _scopes,
             preferEphemeralSession: preferEphemeralSession,
@@ -201,8 +190,6 @@ class _LoginPageState extends State<LoginPage> {
 
       if (result != null) {
         _processAuthTokenResponse(result);
-        checkState();
-    
       }
     } catch (_) {
       _clearBusyState();
@@ -229,8 +216,8 @@ class _LoginPageState extends State<LoginPage> {
       _accessTokenExpirationTextController.text =
           response.accessTokenExpirationDateTime!.toIso8601String();
       _isLoggingComplete = true;
+      _isBusy = false;
     });
-    checkState();
   }
 
   void _processAuthResponse(AuthorizationResponse response) {
@@ -254,17 +241,13 @@ class _LoginPageState extends State<LoginPage> {
       _refreshToken = _refreshTokenTextController.text = response.refreshToken!;
       _accessTokenExpirationTextController.text =
           response.accessTokenExpirationDateTime!.toIso8601String();
+      _isBusy = false;
     });
   }
 
-
-  void checkState(){
-    if(_isLoggingComplete) 
-    {
-      print ("sei entrato");
-      
-      
+  void _checkState() {
+    if (_isLoggingComplete) {
+      print("sei entrato");
     }
-
   }
 }

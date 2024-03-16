@@ -1,34 +1,21 @@
 import 'package:flutter/material.dart';
 
-class WelcomePage extends StatefulWidget {
+class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
   @override
-  State<WelcomePage> createState() => _WelcomePageState();
-}
-
-class _WelcomePageState extends State<WelcomePage> {
-  String _text = "";
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          onChanged: (text) {
-            setState(() {
-              _text = text;
-            });
-          },
+    const String appTitle = 'Flutter layout demo';
+    return MaterialApp(
+      title: appTitle,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(appTitle),
         ),
-        ElevatedButton(
-          onPressed: () {
-            // Fai qualcosa con il testo
-            print(_text);
-          },
-          child: Text("Invia"),
+        body: const Center(
+          child: Text('Hello World'),
         ),
-      ],
+      ),
     );
   }
 }
