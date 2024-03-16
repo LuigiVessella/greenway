@@ -2,7 +2,8 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
-import 'package:greenway/welcome_page.dart';
+import 'package:greenway/config/themes/first_theme.dart';
+import 'package:greenway/presentation/pages/welcome_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -58,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: firstAppTheme,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('GreenWay Login'),
@@ -75,7 +77,6 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text('Login'),
                     onPressed: () {
                       _signInWithAutoCodeExchange();
-                      
                     }),
                 if (Platform.isIOS || Platform.isMacOS)
                   Padding(
@@ -172,16 +173,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _signInWithAutoCodeExchange(
       {bool preferEphemeralSession = false}) async {
-    
-
     try {
       _setBusyState();
 
       final AuthorizationTokenResponse? result =
           await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(_clientId, _redirectUrl,
-            clientSecret:
-                dotenv.env['CLIENT_SECRET'], //vedere come usare i segreti in flutter
+            clientSecret: dotenv
+                .env['CLIENT_SECRET'], //vedere come usare i segreti in flutter
             serviceConfiguration: _serviceConfiguration,
             scopes: _scopes,
             preferEphemeralSession: preferEphemeralSession,
