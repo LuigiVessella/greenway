@@ -1,16 +1,31 @@
-# greenway
+# GreenWay
 
-A new Flutter project.
+GreenWay is a multi-platform app (iOS and Android) that includes a routing and navigation system with maps based on OSMR and designed to make the journey of an electric vehicle as efficient as possible
 
-## Getting Started
+## Installation
 
-This project is a starting point for a Flutter application.
+Clone the repository and open project with Visual Studio Code.
 
-A few resources to get you started if this is your first Flutter project:
+First please be sure of installing:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1)[Visual Studio Code](https://code.visualstudio.com/download)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2)[Flutter](https://docs.flutter.dev/get-started/install)
+
+
+## Usage
+After cloning repository, you're ready to launch and test the project. By default, the project is ready-to-start, but if some errors come, try:
+
+```dart
+
+flutter doctor
+flutter clean
+flutter pub get
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
