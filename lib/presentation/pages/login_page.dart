@@ -62,22 +62,27 @@ class _LoginPageState extends State<LoginPage> {
       theme: firstAppTheme,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('GreenWay Login'),
+          title: const Text('GreenWay App'),
         ),
         body: Center(
-          child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 Visibility(
                   visible: _isBusy,
                   child: const LinearProgressIndicator(),
                 ),
-                const SizedBox(height: 8),
-                ElevatedButton(
+                const SizedBox(height: 8,),
+                Image.asset('lib/assets/login_page_img.png', height: 200, width: 200),
+                const SizedBox(height: 50),
+                const Text("Benvenuto, esegui il login"),
+                 ElevatedButton(
+                    style: const ButtonStyle(
+                      minimumSize: MaterialStatePropertyAll(Size(200, 40)),
+                      maximumSize: MaterialStatePropertyAll(Size(300, 50))
+                    ),
+                
                     child: const Text('Login'),
-                    onPressed: () {
-                      _signInWithAutoCodeExchange();
-                    }),
+                    onPressed: () =>_signInWithAutoCodeExchange()),
                 if (Platform.isIOS || Platform.isMacOS)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -122,8 +127,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
-    );
+      );
+ 
   }
 
   Future<void> _endSession() async {
@@ -180,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
           await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(_clientId, _redirectUrl,
             clientSecret: dotenv
-                .env['CLIENT_SECRET'], //vedere come usare i segreti in flutter
+                .env['CLIENT_SECRET'], //file .env di configurazione in config/auth
             serviceConfiguration: _serviceConfiguration,
             scopes: _scopes,
             preferEphemeralSession: preferEphemeralSession,
