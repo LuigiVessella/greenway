@@ -8,13 +8,13 @@ Clone the repository and open project with Visual Studio Code.
 
 First please be sure of installing:
 
-1)[Visual Studio Code](https://code.visualstudio.com/download)
+1)[Visual Studio Code](https://code.visualstudio.com/download) editor
 
-2)[Flutter](https://docs.flutter.dev/get-started/install)
+2)[Flutter](https://docs.flutter.dev/get-started/install) framework
 
 
 ## Usage
-After cloning repository, you're ready to launch and test the project. By default, the project is ready-to-start, but if some errors come, try:
+After cloning repository, you're ready to launch and test the project. By default, the project is ready-to-start, but if some errors occours, try:
 
 ```dart
 
