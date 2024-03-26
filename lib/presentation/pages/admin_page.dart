@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenway/config/themes/first_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminPage extends StatelessWidget {
   const AdminPage({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,16 @@ class AdminPage extends StatelessWidget {
             style: const ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(200,50))), 
             child: const Text('Add vehicle'),),
             const SizedBox(height: 20,),
-            FilledButton(onPressed: (){}, child: const Text('Add delivery'))
+            FilledButton(onPressed: (){readToken();}, child: const Text('Add delivery'))
         ]),
       )),
     );
+  }
+
+  Future readToken() async{
+    print('ciao');
+    final prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token').toString();
+    print('token: $token');
   }
 }

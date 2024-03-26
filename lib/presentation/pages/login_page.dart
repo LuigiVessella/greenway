@@ -3,10 +3,12 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:greenway/config/themes/first_theme.dart';
+import 'package:greenway/presentation/pages/admin_page.dart';
 import 'package:greenway/presentation/pages/welcome_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -65,70 +67,78 @@ class _LoginPageState extends State<LoginPage> {
           title: const Text('GreenWay App'),
         ),
         body: Center(
-            child: Column(
-              children: <Widget>[
-                Visibility(
-                  visible: _isBusy,
-                  child: const LinearProgressIndicator(),
-                ),
-                const SizedBox(height: 8,),
-                Image.asset('lib/assets/login_page_img.png', height: 200, width: 200),
-                const SizedBox(height: 50),
-                const Text("Benvenuto, esegui il login"),
-                 ElevatedButton(
-                    style: const ButtonStyle(
+          child: Column(
+            children: <Widget>[
+              Visibility(
+                visible: _isBusy,
+                child: const LinearProgressIndicator(),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Image.asset('lib/assets/login_page_img.png',
+                  height: 200, width: 200),
+              const SizedBox(height: 50),
+              const Text("Benvenuto, esegui il login"),
+              ElevatedButton(
+                  style: const ButtonStyle(
                       minimumSize: MaterialStatePropertyAll(Size(200, 40)),
-                      maximumSize: MaterialStatePropertyAll(Size(300, 50))
+                      maximumSize: MaterialStatePropertyAll(Size(300, 50))),
+                  child: const Text('Login'),
+                  onPressed: () {
+                    _signInWithAutoCodeExchange();
+                    if (_isLoggingComplete) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AdminPage()),
+                      );
+                    }
+                  }),
+              if (Platform.isIOS || Platform.isMacOS)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    child: const Text(
+                      'Sign in with auto code exchange using ephemeral '
+                      'session',
+                      textAlign: TextAlign.center,
                     ),
-                
-                    child: const Text('Login'),
-                    onPressed: () =>_signInWithAutoCodeExchange()),
-                if (Platform.isIOS || Platform.isMacOS)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      child: const Text(
-                        'Sign in with auto code exchange using ephemeral '
-                        'session',
-                        textAlign: TextAlign.center,
-                      ),
-                      onPressed: () {
-                        _signInWithAutoCodeExchange(
-                            preferEphemeralSession: true);
-                      },
-                    ),
-                  ),
-                ElevatedButton(
-                  onPressed: _refreshToken != null ? _refresh : null,
-                  child: const Text('Refresh token'),
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: _idToken != null
-                      ? () async {
-                          await _endSession();
-                        }
-                      : null,
-                  child: const Text('Logout'),
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton(
                     onPressed: () {
-                      if (_isLoggingComplete) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const WelcomePage()),
-                        );
-                      }
+                      _signInWithAutoCodeExchange(preferEphemeralSession: true);
                     },
-                    child: const Text('Procedi')),
-              ],
-            ),
+                  ),
+                ),
+              ElevatedButton(
+                onPressed: _refreshToken != null ? _refresh : null,
+                child: const Text('Refresh token'),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _idToken != null
+                    ? () async {
+                        await _endSession();
+                      }
+                    : null,
+                child: const Text('Logout'),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                  onPressed: () {
+                    if (_isLoggingComplete) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const WelcomePage()),
+                      );
+                    }
+                  },
+                  child: const Text('Procedi')),
+            ],
           ),
         ),
-      );
- 
+      ),
+    );
   }
 
   Future<void> _endSession() async {
@@ -184,8 +194,8 @@ class _LoginPageState extends State<LoginPage> {
       final AuthorizationTokenResponse? result =
           await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(_clientId, _redirectUrl,
-            clientSecret: dotenv
-                .env['CLIENT_SECRET'], //file .env di configurazione in config/auth
+            clientSecret: dotenv.env[
+                'CLIENT_SECRET'], //file .env di configurazione in config/auth
             serviceConfiguration: _serviceConfiguration,
             scopes: _scopes,
             preferEphemeralSession: preferEphemeralSession,
@@ -194,6 +204,8 @@ class _LoginPageState extends State<LoginPage> {
 
       if (result != null) {
         _processAuthTokenResponse(result);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', result.accessToken.toString());
       }
     } catch (_) {
       _clearBusyState();
@@ -221,7 +233,6 @@ class _LoginPageState extends State<LoginPage> {
           response.accessTokenExpirationDateTime!.toIso8601String();
       _isLoggingComplete = true;
       _isBusy = false;
-
     });
   }
 
