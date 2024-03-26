@@ -1,5 +1,6 @@
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +21,7 @@ class AuthService {
   String? _idToken;
   String? _expDate;
   String? _userInfo;
+  Map<String, dynamic>? _decodedToken;
 
   bool _isLoggingComplete = false;
 
@@ -92,6 +94,9 @@ class AuthService {
     _expDate = response.accessTokenExpirationDateTime!.toIso8601String();
     _isLoggingComplete = true;
     _isBusy = false;
+    _decodedToken = JwtDecoder.decode(_accessToken.toString());
+    _expDate = JwtDecoder.getExpirationDate(_accessToken.toString()) as String?;
+    _userInfo = _decodedToken?["realm_access"];
   }
 
   void _processTokenResponse(TokenResponse? response) {
@@ -136,4 +141,5 @@ class AuthService {
   bool get isLoggedIn => _accessToken != null; // Helper per la UI
   bool get isBusy => _isBusy != false;
   bool get isLoginComplete => _isLoggingComplete != false;
+  String? get getUserInfo => _userInfo;
 }
