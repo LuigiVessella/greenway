@@ -41,6 +41,14 @@ dependencies:
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.2.2
   jwt_decoder: ^2.0.1
+  flutter_map_location_marker: ^8.0.8
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.1
+  flutter_map_cancellable_tile_provider: ^2.0.0
+  url_launcher: ^6.2.5
+  google_polyline_algorithm: ^3.1.0
+  geolocator: ^11.0.0
+  equatable: ^2.0.5
 
 
 
@@ -64,6 +72,7 @@ flutter:
   assets:
     - lib/config/auth/auth_client.env
     - lib/assets/
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

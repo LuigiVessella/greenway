@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 
-class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+class DeliveryManPage extends StatelessWidget {
+  const DeliveryManPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class WelcomePage extends StatelessWidget {
               Image.asset('lib/assets/welcome_page_image.png', height: 200, width: 200,),
               const SizedBox(height: 10),
               const Text(
-                'Welcome to your homepage!',
+                'Benvenuto!\nDa qui puoi vedere le tue consegne',
                 style: TextStyle(
                   fontSize: 24
                 ),

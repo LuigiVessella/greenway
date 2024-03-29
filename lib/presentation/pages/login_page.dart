@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
-import 'package:greenway/presentation/pages/welcome_page.dart';
+import 'package:greenway/presentation/pages/delivery_man_page.dart';
 import 'package:greenway/services/network/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -44,7 +43,12 @@ class _LoginPageState extends State<LoginPage> {
                       minimumSize: MaterialStatePropertyAll(Size(200, 40)),
                       maximumSize: MaterialStatePropertyAll(Size(300, 50))),
                   onPressed: () async {
-                    AuthService().signInWithAutoCodeExchange();
+                    if(Platform.isIOS) {
+                      AuthService().signInWithAutoCodeExchange(preferEphemeralSession: true);
+                    }
+                    else {
+                      AuthService().signInWithAutoCodeExchange();
+                    }
                     _checkBusy();
                   },
                   child: const Text('Login')),
@@ -58,12 +62,13 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 8),
               ElevatedButton(
                   onPressed: () {
-                    if (AuthService().isLoggedIn) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AdminPage()),
-                      );
+                    if (AuthService().isLoggedIn &&
+                        AuthService().getUserInfo!.contains('DELIVERY')) {
+                      Navigator.pushNamed(context, '/third');
+                    }
+                    if (AuthService().isLoggedIn &&
+                        AuthService().getUserInfo!.contains('ADMIN')) {
+                      Navigator.pushNamed(context, '/second');
                     }
                   },
                   child: const Text('Procedi')),
@@ -73,13 +78,13 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  void _checkBusy(){
-    if(AuthService().isBusy){
+
+  void _checkBusy() {
+    if (AuthService().isBusy) {
       setState(() {
         _isBusy = true;
       });
-    }
-    else {
+    } else {
       setState(() {
         _isBusy = false;
       });

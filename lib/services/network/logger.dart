@@ -10,8 +10,10 @@ class AuthService {
   static final AuthService _instance = AuthService._privateConstructor();
   factory AuthService() => _instance;
 
+  //con factory stiamo praticamente dicendo che non possono esistere più istanze di questa classe. se esistono, sono uguali.
   final FlutterAppAuth _appAuth = const FlutterAppAuth();
 
+  //variabili private
   bool _isBusy = false;
   String? _codeVerifier;
   String? _nonce;
@@ -25,6 +27,7 @@ class AuthService {
 
   bool _isLoggingComplete = false;
 
+  //setting per il server keycloak che fornisce oauth2
   final String _clientId = 'GreenWay';
   final String _redirectUrl = 'com.example.greenway:/';
   final String _issuer = 'http://192.168.1.9:8090/realms/GreenWay';
@@ -95,8 +98,11 @@ class AuthService {
     _isLoggingComplete = true;
     _isBusy = false;
     _decodedToken = JwtDecoder.decode(_accessToken.toString());
-    _expDate = JwtDecoder.getExpirationDate(_accessToken.toString()) as String?;
-    _userInfo = _decodedToken?["realm_access"];
+   _expDate = JwtDecoder.getExpirationDate(_accessToken.toString()).toString();
+    print(_expDate);
+    print(_decodedToken);
+   _userInfo = _decodedToken?["realm_access"].toString();
+   print(_userInfo);
   }
 
   void _processTokenResponse(TokenResponse? response) {
@@ -142,4 +148,6 @@ class AuthService {
   bool get isBusy => _isBusy != false;
   bool get isLoginComplete => _isLoggingComplete != false;
   String? get getUserInfo => _userInfo;
+  String? get accessToken => _accessToken;
+  String? get refreshToken => _refreshToken;
 }
