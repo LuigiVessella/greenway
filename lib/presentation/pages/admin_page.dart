@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenway/config/themes/first_theme.dart';
+import 'package:greenway/entity/vehicle.dart';
 import 'package:greenway/presentation/pages/login_page.dart';
+import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminPage extends StatelessWidget {
@@ -69,6 +71,8 @@ class _VehicleInputDetailState extends StatefulWidget {
 }
 
 class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
+  final VehicleRepository vr = VehicleRepository();
+  Vehicle v1 = Vehicle();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +102,7 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
                   prefixIcon: Icon(Icons.api_rounded),
                   border: OutlineInputBorder()),
             ),
+            FilledButton(onPressed: () {vr.addVehicle(v1);}, child: const Text('crea veicolo'))
           ],
         ),
       ),
