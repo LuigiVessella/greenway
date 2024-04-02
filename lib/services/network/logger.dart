@@ -148,6 +148,18 @@ class AuthService {
   bool get isBusy => _isBusy != false;
   bool get isLoginComplete => _isLoggingComplete != false;
   String? get getUserInfo => _userInfo;
-  String? get accessToken => _accessToken;
+
+  String? get accessToken {
+      DateTime now = DateTime.now();
+      DateTime expDate = DateTime.parse(_expDate!); 
+      
+      if (now.isBefore(expDate)) {
+        return _accessToken;
+      } else {
+         refresh();
+         return _accessToken;
+      }
+  } 
+  
   String? get refreshToken => _refreshToken;
 }

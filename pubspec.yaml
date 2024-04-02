@@ -49,6 +49,8 @@ dependencies:
   google_polyline_algorithm: ^3.1.0
   geolocator: ^11.0.0
   equatable: ^2.0.5
+  flutter_svg: ^2.0.10+1
+  fluttertoast: ^8.2.4
 
 
 

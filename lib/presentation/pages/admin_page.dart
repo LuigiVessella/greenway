@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/entity/vehicle.dart';
-import 'package:greenway/presentation/pages/login_page.dart';
+
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,8 +19,8 @@ class AdminPage extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          Image.asset(
-            'lib/assets/welcome_page_image.png',
+          SvgPicture.asset(
+            'lib/assets/undraw_delivery_address_re_cjca.svg',
             height: 200,
             width: 200,
           ),
@@ -45,6 +44,8 @@ class AdminPage extends StatelessWidget {
             height: 20,
           ),
           FilledButton(
+              style: const ButtonStyle(
+                minimumSize: MaterialStatePropertyAll(Size(200, 50))),
               onPressed: () {
                 readToken();
               },
@@ -72,7 +73,9 @@ class _VehicleInputDetailState extends StatefulWidget {
 
 class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
   final VehicleRepository vr = VehicleRepository();
-  Vehicle v1 = Vehicle();
+  final myTextController = TextEditingController();
+
+  //Vehicle v1 = Vehicle();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +91,7 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
               height: 10,
             ),
             TextFormField(
+              controller: myTextController,
               decoration: const InputDecoration(
                   labelText: 'Model name:',
                   prefixIcon: Icon(Icons.api_rounded),
@@ -102,7 +106,34 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
                   prefixIcon: Icon(Icons.api_rounded),
                   border: OutlineInputBorder()),
             ),
-            FilledButton(onPressed: () {vr.addVehicle(v1);}, child: const Text('crea veicolo'))
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Vehicle Consumption:',
+                  prefixIcon: Icon(Icons.api_rounded),
+                  border: OutlineInputBorder()),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Current Battery Charge',
+                  prefixIcon: Icon(Icons.api_rounded),
+                  border: OutlineInputBorder()),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Max capacity:',
+                  prefixIcon: Icon(Icons.api_rounded),
+                  border: OutlineInputBorder()),
+            ),
+            FilledButton(onPressed: () {}, child: const Text('crea veicolo'))
           ],
         ),
       ),

@@ -16,11 +16,11 @@ class HttpVehicleResponse {
               'Content-Type': 'application/json'
             },
             body: jsonEncode({
-              'model': 'Tesla Model 3',
-              'batteryNominalCapacity': '60.0',
-              'vehicleConsumption': '139.0',
-              'currentBatteryCharge': '100',
-              'maxCapacity': '100'
+              'model': vehicle.model,
+              'batteryNominalCapacity': '${vehicle.batteryNominalCapacity}',
+              'vehicleConsumption': '${vehicle.vehicleConsumption}',
+              'currentBatteryCharge': '${vehicle.currentBatteryCharge}',
+              'maxCapacity': '${vehicle.maxCapacity}',
             }));
     print(response.body);
 
