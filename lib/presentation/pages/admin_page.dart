@@ -11,10 +11,8 @@ class AdminPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: firstAppTheme,
-      home: Scaffold(
-          body: Center(
+    return Scaffold(
+      body: Center(
         child: Column(children: <Widget>[
           const SizedBox(
             height: 30,
@@ -51,7 +49,7 @@ class AdminPage extends StatelessWidget {
               },
               child: const Text('Add delivery'))
         ]),
-      )),
+      ),
     );
   }
 
