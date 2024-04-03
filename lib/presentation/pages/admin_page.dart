@@ -45,7 +45,7 @@ class AdminPage extends StatelessWidget {
           ),
           FilledButton(
               style: const ButtonStyle(
-                minimumSize: MaterialStatePropertyAll(Size(200, 50))),
+                  minimumSize: MaterialStatePropertyAll(Size(200, 50))),
               onPressed: () {
                 readToken();
               },
@@ -73,9 +73,13 @@ class _VehicleInputDetailState extends StatefulWidget {
 
 class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
   final VehicleRepository vr = VehicleRepository();
-  final myTextController = TextEditingController();
 
-  //Vehicle v1 = Vehicle();
+  final modelTextController = TextEditingController();
+  final batteryTextController = TextEditingController();
+  final vehicleConsumptionTextController = TextEditingController();
+  final currentBatteryChargeTextController = TextEditingController();
+  final maxCapacityTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +95,7 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
               height: 10,
             ),
             TextFormField(
-              controller: myTextController,
+              controller: modelTextController,
               decoration: const InputDecoration(
                   labelText: 'Model name:',
                   prefixIcon: Icon(Icons.api_rounded),
@@ -101,6 +105,7 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
               height: 10,
             ),
             TextFormField(
+              controller: batteryTextController,
               decoration: const InputDecoration(
                   labelText: 'Battery Capacity:',
                   prefixIcon: Icon(Icons.api_rounded),
@@ -110,6 +115,7 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
               height: 10,
             ),
             TextFormField(
+              controller: vehicleConsumptionTextController,
               decoration: const InputDecoration(
                   labelText: 'Vehicle Consumption:',
                   prefixIcon: Icon(Icons.api_rounded),
@@ -119,6 +125,7 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
               height: 10,
             ),
             TextFormField(
+              controller: currentBatteryChargeTextController,
               decoration: const InputDecoration(
                   labelText: 'Current Battery Charge',
                   prefixIcon: Icon(Icons.api_rounded),
@@ -128,12 +135,26 @@ class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
               height: 10,
             ),
             TextFormField(
+              controller: maxCapacityTextController,
               decoration: const InputDecoration(
                   labelText: 'Max capacity:',
                   prefixIcon: Icon(Icons.api_rounded),
                   border: OutlineInputBorder()),
             ),
-            FilledButton(onPressed: () {}, child: const Text('crea veicolo'))
+            FilledButton(
+                onPressed: () {
+                  vr.addVehicle(Vehicle(
+                      model: modelTextController.text,
+                      batteryNominalCapacity:
+                          double.parse(batteryTextController.text),
+                      vehicleConsumption:
+                          double.parse(vehicleConsumptionTextController.text),
+                      currentBatteryCharge:
+                          double.parse(currentBatteryChargeTextController.text),
+                      maxCapacity:
+                          double.parse(maxCapacityTextController.text)));
+                },
+                child: const Text('crea veicolo'))
           ],
         ),
       ),

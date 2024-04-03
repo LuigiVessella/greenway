@@ -20,14 +20,10 @@ class _LoginPageState extends State<LoginPage> {
   bool _isBusy = false;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: firstAppTheme,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('GreenWay App'),
-        ),
-        body: Center(
+    return Scaffold(
+      body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Visibility(
                 visible: _isBusy,
@@ -64,6 +60,14 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 8),
               ElevatedButton(
                   onPressed: () {
+                    final snackBar = SnackBar(
+                        content: const Text('Please login first'),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                            // Some code to undo the change.
+                          },
+                        ));
                     if (AuthService().isLoggedIn &&
                         AuthService().getUserInfo!.contains('ADMIN')) {
                       Navigator.pushNamed(context, '/second');
@@ -71,22 +75,14 @@ class _LoginPageState extends State<LoginPage> {
                         AuthService().getUserInfo!.contains('DELIVERY')) {
                       Navigator.pushNamed(context, '/third');
                     } else {
-                      Fluttertoast.showToast(
-                          msg: "Please login first",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.green,
-                          fontSize: 16.0);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   },
                   child: const Text('Procedi')),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   void _checkBusy() {
