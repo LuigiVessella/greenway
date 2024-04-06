@@ -23,9 +23,9 @@ flutter pub get
 ```
 After that, you're 90% ready to start the app. The last step you need to do is creating a 
 ```.env ``` file and put inside it your endpoint (keycloak and rest service) configuration. 
-Here is an examaple: 
+Here is an example: 
 ```
-CLIENT_SECRET={your_client_secret}
+CLIENT_SECRET={your_client_secret}  
 ISSUER={keycloak_issuer}
 authorizationEndpoint={keycloak_auth_endpoint}
 tokenEndpoint={keycloak_token_endpoint}
@@ -34,9 +34,9 @@ restApiEndpoint={backend_rest_api_endpoint}
 ```
 Rename the file ```auth_client.env``` and put it inside ```lib\config\auth\auth_client.env```
 
-Good! Now you're ready to start the application, just connect your mobile device and start debugging the code! 
+Good! Now you're ready to debug the application, just connect your mobile device and enjoy it! 
 
-> :warning: This app is fully tested only on an Android device! I can't say for now if it's 100% working on iOS :warning:
+> :warning: This app is fully tested only on an Android (A13+) device! I can't say for now if it's 100% working on iOS :warning:
 
 ## Contributing
 
