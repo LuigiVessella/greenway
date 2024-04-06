@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/entity/vehicle.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_widget.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminPage extends StatelessWidget {
   const AdminPage({super.key});
@@ -79,12 +79,12 @@ class AdminPage extends StatelessWidget {
     );
   }
 
-  Future readToken() async {
-    print('ciao');
-    final prefs = await SharedPreferences.getInstance();
-    final String token = prefs.getString('token').toString();
-    print('token: $token');
-  }
+// Future readToken() async {
+//   print('ciao');
+//   final prefs = await SharedPreferences.getInstance();
+//   final String token = prefs.getString('token').toString();
+//   print('token: $token');
+// }
 
   //utilizzo i il Navigator.push in una funzione che ritorna Future in attesa dei risultati della scelta del luogo
   Future<void> _navigateAndDisplaySelection(BuildContext context, String role) async {

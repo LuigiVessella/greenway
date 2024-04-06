@@ -1,7 +1,8 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ... altre importazioni, configurazione come dotenv

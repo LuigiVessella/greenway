@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
 import 'package:greenway/presentation/pages/login_page.dart';
-import 'package:greenway/presentation/pages/navigation_page.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_widget.dart';
 
 Future<void> main() async {
@@ -28,9 +27,7 @@ class MyApp extends StatelessWidget {
         '/second': (context) => const AdminPage(),
         '/third': (context) => const AddNewDelivery(title: 'Aggiungi mittente',),
         '/delivery':(context) => const AddNewDelivery(title: 'Aggiungi mittente',),
-        
 
-        
       },
     );
   }
