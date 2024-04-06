@@ -33,6 +33,11 @@ endSessionEndpoint={keycloak_logout_endpoint}
 restApiEndpoint={backend_rest_api_endpoint}
 ```
 Rename the file ```auth_client.env``` and put it inside ```lib\config\auth\auth_client.env```
+
+Good! Now you're ready to start the application, just connect your mobile device and start debugging the code! 
+
+> :warning: This app is fully tested only on an Android device! I can't say for now if it's 100% working on iOS :warning:
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
