@@ -17,12 +17,22 @@ First please be sure of installing:
 After cloning repository, you're ready to launch and test the project. By default, the project is ready-to-start, but if some errors occours, try:
 
 ```dart
-
 flutter doctor
 flutter clean
 flutter pub get
 ```
-
+After that, you're 90% ready to start the app. The last step you need to do is creating a 
+```.env ``` file and put inside it your endpoint (keycloak and rest service) configuration. 
+Here is an examaple: 
+```
+CLIENT_SECRET={your_client_secret}
+ISSUER={keycloak_issuer}
+authorizationEndpoint={keycloak_auth_endpoint}
+tokenEndpoint={keycloak_token_endpoint}
+endSessionEndpoint={keycloak_logout_endpoint}
+restApiEndpoint={backend_rest_api_endpoint}
+```
+Rename the file ```auth_client.env``` and put it inside ```lib\config\auth\auth_client.env```
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
