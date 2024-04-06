@@ -14,7 +14,7 @@ First please be sure of installing:
 
 
 ## Usage
-After cloning repository, you're ready to launch and test the project. By default, the project is ready-to-start, but if some errors occours, try:
+After cloning repository, you are one step away from start and test the project. By default, the project is ready-to-start, but if some errors occours, try:
 
 ```dart
 flutter doctor
