@@ -18,14 +18,13 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Visibility(
               visible: _isBusy,
               child: const LinearProgressIndicator(),
             ),
             const SizedBox(
-              height: 8,
+              height: 150,
             ),
             SvgPicture.asset('lib/assets/undraw_delivery_truck_vt6p.svg',
                 height: 100),
@@ -43,6 +42,12 @@ class _LoginPageState extends State<LoginPage> {
                     AuthService().signInWithAutoCodeExchange();
                   }
                   _checkBusy();
+                  Future.delayed(
+                    const Duration(seconds: 2),
+                    () {
+                      _checkBusy();
+                    },
+                  );
                 },
                 child: const Text('Login')),
             const SizedBox(height: 8),

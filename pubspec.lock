@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dart_exporter_annotation:
+    dependency: transitive
+    description:
+      name: dart_exporter_annotation
+      sha256: f41e230919ca926e4231fc068f427f8370f33523a3c0900c11417650a4b97fc4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   dio:
     dependency: transitive
     description:
@@ -166,6 +174,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
+  flutter_map_animated_marker:
+    dependency: "direct main"
+    description:
+      name: flutter_map_animated_marker
+      sha256: "92a1590601d6e925f7235adbf8df8474d65950cf7da05c8b00e94abfb4f18bb0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_map_cancellable_tile_provider:
     dependency: "direct main"
     description:
