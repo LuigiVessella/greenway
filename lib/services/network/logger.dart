@@ -4,6 +4,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // ... altre importazioni, configurazione come dotenv
 
@@ -31,20 +32,20 @@ class AuthService {
   //setting per il server keycloak che fornisce oauth2
   final String _clientId = 'GreenWay';
   final String _redirectUrl = 'com.example.greenway:/';
-  final String _issuer = 'http://192.168.1.9:8090/realms/GreenWay';
+  final String _issuer = 'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay';
   //final String _discoveryUrl =
   //    'http://192.168.1.9:8090/realms/GreenWay/.well-known/openid-configuration';
   final String _postLogoutRedirectUrl = 'com.example.greenway:/';
   final List<String> _scopes = <String>['openid', 'profile', 'email'];
 
   final AuthorizationServiceConfiguration _serviceConfiguration =
-      const AuthorizationServiceConfiguration(
+       AuthorizationServiceConfiguration(
     authorizationEndpoint:
-        'http://192.168.1.9:8090/realms/GreenWay/protocol/openid-connect/auth',
+      'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay/protocol/openid-connect/auth',
     tokenEndpoint:
-        'http://192.168.1.9:8090/realms/GreenWay/protocol/openid-connect/token',
+        'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay/protocol/openid-connect/token',
     endSessionEndpoint:
-        'http://192.168.1.9:8090/realms/GreenWay/protocol/openid-connect/logout',
+        'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay/protocol/openid-connect/logout',
   );
 
   AuthService._privateConstructor();

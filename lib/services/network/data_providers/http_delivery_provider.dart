@@ -2,19 +2,15 @@ import 'dart:convert';
 
 import 'package:greenway/entity/delivery.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HttpDeliveryResponse {
   var client = http.Client();
 
   Future<void> addDelivery(Delivery delivery) async {
     var response = await client
-        .post(Uri.http('http://localhost:8080/api/v1/vehicles'), body: {
-      'model': 'Tesla Model 3',
-      'batteryNominalCapacity': '60.0',
-      'vehicleConsumption': '139.0',
-      'chargePortType': 'Type 2',
-      'chargingPower': '11',
-      'currentBatteryCharge': '100'
+        .post(Uri.http('${dotenv.env['restApiEndpoint']}'), body: {
+    
     });
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;

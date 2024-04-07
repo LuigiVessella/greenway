@@ -1,12 +1,22 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/entity/vehicle.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_widget.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
+
 //import 'package:shared_preferences/shared_preferences.dart';
 
-class AdminPage extends StatelessWidget {
+class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
+
+  @override
+  State<AdminPage> createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
+  var resultSenderG, resultReceiverG;
 
   @override
   Widget build(BuildContext context) {
@@ -63,17 +73,26 @@ class AdminPage extends StatelessWidget {
               style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll(Size(200, 50))),
               onPressed: () {
-               _navigateAndDisplaySelection(context, 'sender');
+                _navigateAndDisplaySelection(context, 'sender');
               },
               child: const Text('Add sender')),
-              const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           FilledButton(
               style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll(Size(200, 50))),
               onPressed: () {
-               _navigateAndDisplaySelection(context, 'receiver');
+                _navigateAndDisplaySelection(context, 'receiver');
               },
               child: const Text('Add receiver')),
+          FilledButton(
+              style: const ButtonStyle(
+                  minimumSize: MaterialStatePropertyAll(Size(200, 50))),
+              onPressed: () {
+                print('risultati: $resultSenderG and $resultReceiverG');
+              },
+              child: const Text('Add delivery')),
         ]),
       ),
     );
@@ -87,12 +106,13 @@ class AdminPage extends StatelessWidget {
 // }
 
   //utilizzo i il Navigator.push in una funzione che ritorna Future in attesa dei risultati della scelta del luogo
-  Future<void> _navigateAndDisplaySelection(BuildContext context, String role) async {
+  Future<void> _navigateAndDisplaySelection(
+      BuildContext context, String role) async {
     var resultSender, resultReceiver;
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
-    if(role =='sender'){
-       resultSender = await Navigator.push(
+    if (role == 'sender') {
+      resultSender = await Navigator.push(
         context,
         // Create the SelectionScreen in the next step.
         MaterialPageRoute(
@@ -100,9 +120,8 @@ class AdminPage extends StatelessWidget {
                   title: "Aggiungi mittente",
                 )),
       );
-    }
-    else if(role == 'receiver'){
-         resultReceiver = await Navigator.push(
+    } else if (role == 'receiver') {
+      resultReceiver = await Navigator.push(
         context,
         // Create the SelectionScreen in the next step.
         MaterialPageRoute(
@@ -113,33 +132,18 @@ class AdminPage extends StatelessWidget {
     }
 
     if (resultReceiver != null) {
-      print('destinatario: $resultReceiver');
+      setState(() {
+        resultReceiverG = resultReceiver;
+      });
     }
-    
+
     if (resultSender != null) {
-      print('mittente: $resultSender');
+      setState(() {
+        resultSenderG = resultSender;
+      });
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //probabilmente questo va spostato in un altro file per pulizia
 class _VehicleInputDetailState extends StatefulWidget {
