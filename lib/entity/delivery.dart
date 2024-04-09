@@ -31,6 +31,10 @@ class Delivery {
         "startingPoint": startingPoint.toJson(),
         "deliveryPackages": List<dynamic>.from(deliveryPackages.map((x) => x.toJson())),
     };
+
+    void addNewPackage(DeliveryPackage deliveryPackage) {
+      deliveryPackages.add(deliveryPackage);
+    }
 }
 
 

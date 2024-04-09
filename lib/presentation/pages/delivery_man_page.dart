@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DeliveryManPage extends StatelessWidget {
   const DeliveryManPage({super.key});
@@ -11,8 +12,8 @@ class DeliveryManPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 30),
-            Image.asset(
-              'lib/assets/welcome_page_image.png',
+            SvgPicture.asset(
+              'lib/assets/undraw_messenger_re_8bky.svg',
               height: 200,
               width: 200,
             ),

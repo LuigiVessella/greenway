@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/entity/delivery.dart';
 import 'package:greenway/entity/delivery_package.dart';
-import 'package:greenway/entity/vehicle.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_widget.dart';
 import 'package:greenway/presentation/widgets/add_new_vehicle_widget.dart';
 import 'package:greenway/repositories/delivery_repository.dart';
-import 'package:greenway/repositories/vehicle_repository.dart';
+
 
 //import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,7 +113,7 @@ class _AdminPageState extends State<AdminPage> {
     DeliveryPackage newPackage = DeliveryPackage(
         destination: destination, weight: '1.0');
 
-    //newDelivery.addDeliveryPackage(newPackage);
+    newDelivery.addNewPackage(newPackage);
 
     DeliveryRepository dv = DeliveryRepository();
     dv.AddNewDelivery(newDelivery);

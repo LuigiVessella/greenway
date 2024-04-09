@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:greenway/repositories/deliveryman_repository.dart';
 import 'package:greenway/services/network/logger.dart';
 
 class LoginPage extends StatefulWidget {
@@ -99,6 +100,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _checkDeliveyman(){
-    
+    DeliveryManRepository dmr = DeliveryManRepository();
+    try{
+      dmr.createDeliveryMan();
+    }catch(e){
+      print(e.toString());
+    }
+
   }
 }
