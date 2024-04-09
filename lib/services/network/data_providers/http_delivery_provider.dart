@@ -1,22 +1,26 @@
 import 'dart:convert';
 
 import 'package:greenway/entity/delivery.dart';
+import 'package:greenway/services/network/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HttpDeliveryResponse {
-  var client = http.Client();
+  final client = http.Client();
 
   Future<void> addDelivery(Delivery delivery) async {
-    var response = await client
-        .post(Uri.http('${dotenv.env['restApiEndpoint']}'), body: {
     
-    });
-
-    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    var uri = Uri.parse(decodedResponse['uri'] as String);
-    print(await client.get(uri));
     
+    var response = await client.post(
+        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deliveries'),
+        headers: {
+          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Content-Type': 'application/json'
+        },
+        body: DeliveryToJson(delivery));
+    
+    print(response.statusCode);
+    print(response.body);
   }
   //}
   //Future<void> deleteDelivery(Delivery delivery){

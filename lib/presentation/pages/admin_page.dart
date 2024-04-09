@@ -2,8 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:greenway/entity/delivery.dart';
+import 'package:greenway/entity/delivery_package.dart';
 import 'package:greenway/entity/vehicle.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_widget.dart';
+import 'package:greenway/presentation/widgets/add_new_vehicle_widget.dart';
+import 'package:greenway/repositories/delivery_repository.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 
 //import 'package:shared_preferences/shared_preferences.dart';
@@ -60,7 +64,7 @@ class _AdminPageState extends State<AdminPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const _VehicleInputDetailState()));
+                      builder: (context) => const VehicleInputDetailState()));
             },
             style: const ButtonStyle(
                 minimumSize: MaterialStatePropertyAll(Size(200, 50))),
@@ -90,7 +94,7 @@ class _AdminPageState extends State<AdminPage> {
               style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll(Size(200, 50))),
               onPressed: () {
-                print('risultati: $resultSenderG and $resultReceiverG');
+                _addDelivery();
               },
               child: const Text('Add delivery')),
         ]),
@@ -98,12 +102,23 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-// Future readToken() async {
-//   print('ciao');
-//   final prefs = await SharedPreferences.getInstance();
-//   final String token = prefs.getString('token').toString();
-//   print('token: $token');
-// }
+  void _addDelivery() {
+    StartingPoint start =
+        StartingPoint(type: 'Point', coordinates: resultSenderG);
+    StartingPoint destination =
+        StartingPoint(type: 'Point', coordinates: resultReceiverG);
+
+    // ignore: prefer_collection_literals
+    Delivery newDelivery = Delivery(vehicleId: '1', deliveryMan: null, deliveryPackages: List.empty(growable: true), startingPoint: start);
+
+    DeliveryPackage newPackage = DeliveryPackage(
+        destination: destination, weight: '1.0');
+
+    //newDelivery.addDeliveryPackage(newPackage);
+
+    DeliveryRepository dv = DeliveryRepository();
+    dv.AddNewDelivery(newDelivery);
+  }
 
   //utilizzo i il Navigator.push in una funzione che ritorna Future in attesa dei risultati della scelta del luogo
   Future<void> _navigateAndDisplaySelection(
@@ -142,105 +157,5 @@ class _AdminPageState extends State<AdminPage> {
         resultSenderG = resultSender;
       });
     }
-  }
-}
-
-//probabilmente questo va spostato in un altro file per pulizia
-class _VehicleInputDetailState extends StatefulWidget {
-  const _VehicleInputDetailState({super.key});
-
-  @override
-  State<_VehicleInputDetailState> createState() =>
-      __VehicleInputDetailStateState();
-}
-
-class __VehicleInputDetailStateState extends State<_VehicleInputDetailState> {
-  final VehicleRepository vr = VehicleRepository();
-
-  final modelTextController = TextEditingController();
-  final batteryTextController = TextEditingController();
-  final vehicleConsumptionTextController = TextEditingController();
-  final currentBatteryChargeTextController = TextEditingController();
-  final maxCapacityTextController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Vehicle data"),
-        centerTitle: true,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: modelTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Model name:',
-                  prefixIcon: Icon(Icons.api_rounded),
-                  border: OutlineInputBorder()),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: batteryTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Battery Capacity:',
-                  prefixIcon: Icon(Icons.api_rounded),
-                  border: OutlineInputBorder()),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: vehicleConsumptionTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Vehicle Consumption:',
-                  prefixIcon: Icon(Icons.api_rounded),
-                  border: OutlineInputBorder()),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: currentBatteryChargeTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Current Battery Charge',
-                  prefixIcon: Icon(Icons.api_rounded),
-                  border: OutlineInputBorder()),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: maxCapacityTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Max capacity:',
-                  prefixIcon: Icon(Icons.api_rounded),
-                  border: OutlineInputBorder()),
-            ),
-            FilledButton(
-                onPressed: () {
-                  vr.addVehicle(Vehicle(
-                      model: modelTextController.text,
-                      batteryNominalCapacity:
-                          double.parse(batteryTextController.text),
-                      vehicleConsumption:
-                          double.parse(vehicleConsumptionTextController.text),
-                      currentBatteryCharge:
-                          double.parse(currentBatteryChargeTextController.text),
-                      maxCapacity:
-                          double.parse(maxCapacityTextController.text)));
-                },
-                child: const Text('crea veicolo'))
-          ],
-        ),
-      ),
-    );
   }
 }

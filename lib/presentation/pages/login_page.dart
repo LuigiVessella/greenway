@@ -73,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushNamed(context, '/second');
                   } else if (AuthService().isLoggedIn &&
                       AuthService().getUserInfo!.contains('DELIVERY')) {
+                        _checkDeliveyman();
                     Navigator.pushNamed(context, '/third');
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -95,5 +96,9 @@ class _LoginPageState extends State<LoginPage> {
         _isBusy = false;
       });
     }
+  }
+
+  void _checkDeliveyman(){
+    
   }
 }

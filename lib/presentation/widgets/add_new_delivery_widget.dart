@@ -15,8 +15,8 @@ class AddNewDelivery extends StatefulWidget {
 
 class _AddNewDeliveryState extends State<AddNewDelivery> {
   List<Address> _addressList = [];
-  String _lat = '0.0';
-  String _lon = '0.0';
+  double _lat = 0.0;
+  double _lon = 0.0;
 
   Future<List<Address>> _getAddress(String userInput) async {
     var client = http.Client();
@@ -80,8 +80,8 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                           title:
                               Text(_addressList[index].displayName.toString()),
                           onTap: () => setState(() {
-                            _lat = _addressList[index].lat.toString();
-                            _lon = _addressList[index].lon.toString();
+                            _lat = double.parse(_addressList[index].lat!);
+                            _lon = double.parse( _addressList[index].lon!);
                           }),
                         ));
                   }),
@@ -101,7 +101,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, 'lat: $_lat e lon: $_lon');
+                Navigator.pop(context, [_lon, _lat]);
               },
               child: const Text('Ok'),
             )
