@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:greenway/entity/vehicle.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 
-class VehicleInputDetailState extends StatefulWidget {
-  const VehicleInputDetailState({super.key});
+class VehicleInputDetail extends StatefulWidget {
+  const VehicleInputDetail({super.key});
 
   @override
-  State<VehicleInputDetailState> createState() =>
-      _VehicleInputDetailStateState();
+  State<VehicleInputDetail> createState() =>
+      _VehicleInputDetailState();
 }
 
-class _VehicleInputDetailStateState extends State<VehicleInputDetailState> {
+class _VehicleInputDetailState extends State<VehicleInputDetail> {
   final VehicleRepository vr = VehicleRepository();
 
   final modelTextController = TextEditingController();

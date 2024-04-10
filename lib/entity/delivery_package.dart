@@ -1,22 +1,37 @@
 import 'package:greenway/entity/delivery.dart';
 
 class DeliveryPackage {
-  
-    StartingPoint destination;
-    String weight;
+    String? sender;
+    String? senderAddress;
+    String? receiver;
+    String? receiverAddress;
+    Coordinates? receiverCoordinates;
+    String? weight;
 
     DeliveryPackage({
-        required this.destination,
-        required this.weight,
+        this.sender,
+        this.senderAddress,
+        this.receiver,
+        this.receiverAddress,
+        this.receiverCoordinates,
+        this.weight,
     });
 
     factory DeliveryPackage.fromJson(Map<String, dynamic> json) => DeliveryPackage(
-        destination: StartingPoint.fromJson(json["destination"]),
+        sender: json["sender"],
+        senderAddress: json["senderAddress"],
+        receiver: json["receiver"],
+        receiverAddress: json["receiverAddress"],
+        receiverCoordinates: Coordinates.fromJson(json["receiverCoordinates"]),
         weight: json["weight"],
     );
 
     Map<String, dynamic> toJson() => {
-        "destination": destination.toJson(),
+        "sender": sender,
+        "senderAddress": senderAddress,
+        "receiver": receiver,
+        "receiverAddress": receiverAddress,
+        "receiverCoordinates": receiverCoordinates!.toJson(),
         "weight": weight,
     };
 }

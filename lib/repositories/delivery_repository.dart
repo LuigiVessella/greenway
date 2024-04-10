@@ -12,4 +12,9 @@ class DeliveryRepository{
   void AddNewDelivery(Delivery delivery) {
     httpDelivery.addDelivery(delivery);
   }
+
+
+  Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) {
+    return httpDelivery.getDeliveryByDeliveryMan(deliveryManId);
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenway/entity/addresses.dart';
+import 'package:greenway/entity/delivery.dart';
 import 'package:http/http.dart' as http;
 
 class AddNewDelivery extends StatefulWidget {
@@ -17,6 +18,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
   List<Address> _addressList = [];
   double _lat = 0.0;
   double _lon = 0.0;
+  String? _destinationAddress;
 
   Future<List<Address>> _getAddress(String userInput) async {
     var client = http.Client();
@@ -79,10 +81,16 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                         child: ListTile(
                           title:
                               Text(_addressList[index].displayName.toString()),
-                          onTap: () => setState(() {
-                            _lat = double.parse(_addressList[index].lat!);
-                            _lon = double.parse( _addressList[index].lon!);
-                          }),
+                          onTap: () {
+                            if (mounted) {
+                              setState(() {
+                                _lat = double.parse(_addressList[index].lat!);
+                                _lon = double.parse(_addressList[index].lon!);
+                                _destinationAddress =
+                                    _addressList[index].displayName;
+                              });
+                            }
+                          },
                         ));
                   }),
             ),
@@ -101,7 +109,10 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, [_lon, _lat]);
+                Navigator.pop(
+                  context,
+                  [_lon, _lat],
+                );
               },
               child: const Text('Ok'),
             )

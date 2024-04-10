@@ -63,7 +63,7 @@ class _AdminPageState extends State<AdminPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const VehicleInputDetailState()));
+                      builder: (context) => const VehicleInputDetail()));
             },
             style: const ButtonStyle(
                 minimumSize: MaterialStatePropertyAll(Size(200, 50))),
@@ -102,16 +102,16 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   void _addDelivery() {
-    StartingPoint start =
-        StartingPoint(type: 'Point', coordinates: resultSenderG);
-    StartingPoint destination =
-        StartingPoint(type: 'Point', coordinates: resultReceiverG);
+    Coordinates start =
+        Coordinates(type: 'Point', coordinates: resultSenderG);
+    Coordinates destination =
+        Coordinates(type: 'Point', coordinates: resultReceiverG);
 
     // ignore: prefer_collection_literals
-    Delivery newDelivery = Delivery(vehicleId: '1', deliveryMan: null, deliveryPackages: List.empty(growable: true), startingPoint: start);
+    Delivery newDelivery = Delivery(vehicleId: '1', deliveryMan: null, deliveryPackages: List.empty(growable: true), depositCoordinates: start);
 
     DeliveryPackage newPackage = DeliveryPackage(
-        destination: destination, weight: '1.0');
+        receiverCoordinates: destination, weight: '1.0');
 
     newDelivery.addNewPackage(newPackage);
 

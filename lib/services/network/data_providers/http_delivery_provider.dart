@@ -22,6 +22,26 @@ class HttpDeliveryResponse {
     print(response.statusCode);
     print(response.body);
   }
+
+  Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) async {
+
+    final queryParams ={
+      'pageNo' : 0,
+      'pageSize' : 5, 
+    };
+
+    var response = await client.get(
+        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deliveries/$deliveryManId', queryParams ),
+        headers: {
+          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Content-Type': 'application/json'
+        });
+
+      List<Delivery> deliveries = DeliveriesFromJson(response.body);
+
+      return deliveries;
+        
+  }
   //}
   //Future<void> deleteDelivery(Delivery delivery){
 
