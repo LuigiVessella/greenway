@@ -6,17 +6,14 @@ class VehicleInputDetail extends StatefulWidget {
   const VehicleInputDetail({super.key});
 
   @override
-  State<VehicleInputDetail> createState() =>
-      _VehicleInputDetailState();
+  State<VehicleInputDetail> createState() => _VehicleInputDetailState();
 }
 
 class _VehicleInputDetailState extends State<VehicleInputDetail> {
   final VehicleRepository vr = VehicleRepository();
 
   final modelTextController = TextEditingController();
-  final batteryTextController = TextEditingController();
-  final vehicleConsumptionTextController = TextEditingController();
-  final currentBatteryChargeTextController = TextEditingController();
+  final maxAutonomyTextController = TextEditingController();
   final maxCapacityTextController = TextEditingController();
 
   @override
@@ -44,29 +41,9 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
               height: 10,
             ),
             TextFormField(
-              controller: batteryTextController,
+              controller: maxAutonomyTextController,
               decoration: const InputDecoration(
-                  labelText: 'Battery Capacity:',
-                  prefixIcon: Icon(Icons.api_rounded),
-                  border: OutlineInputBorder()),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: vehicleConsumptionTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Vehicle Consumption:',
-                  prefixIcon: Icon(Icons.api_rounded),
-                  border: OutlineInputBorder()),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: currentBatteryChargeTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Current Battery Charge',
+                  labelText: 'Battery Capacity (km):',
                   prefixIcon: Icon(Icons.api_rounded),
                   border: OutlineInputBorder()),
             ),
@@ -76,19 +53,20 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
             TextFormField(
               controller: maxCapacityTextController,
               decoration: const InputDecoration(
-                  labelText: 'Max capacity:',
+                  labelText: 'Vehicle capacity (kg):',
                   prefixIcon: Icon(Icons.api_rounded),
                   border: OutlineInputBorder()),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             FilledButton(
                 onPressed: () {
                   vr.addVehicle(Vehicle(
-                      model: modelTextController.text,
-                      batteryNominalCapacity: batteryTextController.text,
-                      vehicleConsumption: vehicleConsumptionTextController.text,
-                      currentBatteryCharge:
-                          currentBatteryChargeTextController.text,
-                      maxCapacity: maxCapacityTextController.text));
+                    modelName: modelTextController.text,
+                    maxAutonomyKm: double.parse(maxAutonomyTextController.text),
+                    maxCapacityKg: double.parse(maxCapacityTextController.text),
+                  ));
                 },
                 child: const Text('crea veicolo'))
           ],

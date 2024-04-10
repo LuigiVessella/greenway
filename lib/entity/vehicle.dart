@@ -4,38 +4,32 @@
 
 import 'dart:convert';
 
-VehicleVehicleFromJson(String str) => Vehicle.fromJson(json.decode(str));
+import 'dart:convert';
 
-String VehicleToJson(Vehicle data) => json.encode(data.toJson());
+Vehicle vehicleFromJson(String str) => Vehicle.fromJson(json.decode(str));
+List<Vehicle> vehiclesFromJson(String str) => List<Vehicle>.from(json.decode(str).map((x) => Vehicle.fromJson(x)));
+String vehicleToJson(Vehicle data) => json.encode(data.toJson());
 
-class Vehicle{
-    String model;
-    String batteryNominalCapacity;
-    String vehicleConsumption;
-    String currentBatteryCharge;
-    String maxCapacity;
+class Vehicle {
+    String modelName;
+    double maxAutonomyKm;
+    double maxCapacityKg;
 
     Vehicle({
-        required this.model,
-        required this.batteryNominalCapacity,
-        required this.vehicleConsumption,
-        required this.currentBatteryCharge,
-        required this.maxCapacity,
+       required this.modelName,
+       required this.maxAutonomyKm,
+       required this.maxCapacityKg,
     });
 
     factory Vehicle.fromJson(Map<String, dynamic> json) => Vehicle(
-        model: json["model"],
-        batteryNominalCapacity: json["batteryNominalCapacity"],
-        vehicleConsumption: json["vehicleConsumption"],
-        currentBatteryCharge: json["currentBatteryCharge"],
-        maxCapacity: json["maxCapacity"],
+        modelName: json["modelName"],
+        maxAutonomyKm: json["maxAutonomyKm"],
+        maxCapacityKg: json["maxCapacityKg"],
     );
 
     Map<String, dynamic> toJson() => {
-        "model": model,
-        "batteryNominalCapacity": batteryNominalCapacity,
-        "vehicleConsumption": vehicleConsumption,
-        "currentBatteryCharge": currentBatteryCharge,
-        "maxCapacity": maxCapacity,
+        "modelName": modelName,
+        "maxAutonomyKm": maxAutonomyKm,
+        "maxCapacityKg": maxCapacityKg,
     };
 }

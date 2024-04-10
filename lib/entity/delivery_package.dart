@@ -3,8 +3,10 @@ import 'package:greenway/entity/delivery.dart';
 class DeliveryPackage {
     String? sender;
     String? senderAddress;
+
     String? receiver;
     String? receiverAddress;
+    
     Coordinates? receiverCoordinates;
     String? weight;
 

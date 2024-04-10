@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:greenway/entity/vehicle.dart';
+import 'package:greenway/entity/vehicleDTO.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,23 +14,32 @@ class HttpVehicleResponse {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
         },
-        body: VehicleToJson(vehicle));
+        body: vehicleToJson(vehicle));
 
     print(response.statusCode);
     print(response.body);
   }
-  //}
-  //Future<void> deleteDelivery(Delivery delivery){
 
-  //}
-  //Future<void> updateDelivery(Delivery delivery){
+  Future<List<Vehicle>> getAllVehicles() async{
 
-  //}
-  //Future<List<Delivery>> getDelivery(){
-  //
-  //}
+    await Future.delayed(const Duration(seconds: 3));
 
-  //factory DeliveryRepositories.fromJSon(Map<String, dynamic> data) {
-  //  return
-  //}
+    var response = await client.get(Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/vehicles'),
+    headers: {
+      'Authorization': 'Bearer ${AuthService().accessToken}',
+      'Content-Type': 'application/json'
+    });
+    print(response.statusCode);
+    print(response.body);
+    
+    
+    
+    return vehicleDtoFromJson(response.body).content;
+    
+  }
+
+  //TODO:
+  //Future<void> getVehicleById(String id) async {
+
+
 }

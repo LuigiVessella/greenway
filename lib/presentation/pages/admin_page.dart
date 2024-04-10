@@ -6,8 +6,8 @@ import 'package:greenway/entity/delivery.dart';
 import 'package:greenway/entity/delivery_package.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_widget.dart';
 import 'package:greenway/presentation/widgets/add_new_vehicle_widget.dart';
+import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
 import 'package:greenway/repositories/delivery_repository.dart';
-
 
 //import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,31 +24,16 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              //...
-            },
-            heroTag: null,
-            child: const Icon(Icons.delete),
-          ),
+        appBar: AppBar(
+          title: const Text('Admin'),
+        ),
+        body: ListView(children: [
           const SizedBox(
-            height: 10,
+            height: 30,
+            child: Text("I tuoi veicoli:", textAlign: TextAlign.center,),
           ),
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: null,
-            child: const Icon(Icons.star),
-          )
-        ],
-      ),
-      body: Center(
-        child: Column(children: <Widget>[
-          const SizedBox(
-            height: 70,
-          ),
+          
+          VehiclesListWidget(),
           SvgPicture.asset(
             'lib/assets/undraw_delivery_address_re_cjca.svg',
             height: 150,
@@ -96,22 +81,23 @@ class _AdminPageState extends State<AdminPage> {
                 _addDelivery();
               },
               child: const Text('Add delivery')),
-        ]),
-      ),
-    );
+        ]));
   }
 
   void _addDelivery() {
-    Coordinates start =
-        Coordinates(type: 'Point', coordinates: resultSenderG);
+    Coordinates start = Coordinates(type: 'Point', coordinates: resultSenderG);
     Coordinates destination =
         Coordinates(type: 'Point', coordinates: resultReceiverG);
 
     // ignore: prefer_collection_literals
-    Delivery newDelivery = Delivery(vehicleId: '1', deliveryMan: null, deliveryPackages: List.empty(growable: true), depositCoordinates: start);
+    Delivery newDelivery = Delivery(
+        vehicleId: '1',
+        deliveryMan: null,
+        deliveryPackages: List.empty(growable: true),
+        depositCoordinates: start);
 
-    DeliveryPackage newPackage = DeliveryPackage(
-        receiverCoordinates: destination, weight: '1.0');
+    DeliveryPackage newPackage =
+        DeliveryPackage(receiverCoordinates: destination, weight: '1.0');
 
     newDelivery.addNewPackage(newPackage);
 
