@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:greenway/entity/vehicle.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 
+// ignore: must_be_immutable
 class VehiclesListWidget extends StatelessWidget {
   VehiclesListWidget({super.key});
 
