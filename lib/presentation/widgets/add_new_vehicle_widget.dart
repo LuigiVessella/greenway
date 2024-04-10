@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenway/entity/vehicle.dart';
+import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 
 class VehicleInputDetail extends StatefulWidget {

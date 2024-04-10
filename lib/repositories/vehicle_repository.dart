@@ -1,4 +1,4 @@
-import 'package:greenway/entity/vehicle.dart';
+import 'package:greenway/entity/vehicle/vehicle.dart';
 
 import 'package:greenway/services/network/data_providers/http_vehicle_provider.dart';
 

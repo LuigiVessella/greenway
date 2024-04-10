@@ -1,6 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:greenway/entity/vehicle.dart';
-import 'package:greenway/entity/vehicleDTO.dart';
+import 'package:greenway/entity/vehicle/vehicle.dart';
+import 'package:greenway/entity/vehicle/vehicleDTO.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:http/http.dart' as http;
 

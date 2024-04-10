@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:greenway/entity/vehicle.dart';
+import 'package:greenway/entity/vehicle/vehicle.dart';
 
 
 
