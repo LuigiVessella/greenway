@@ -4,7 +4,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:openidconnect/openidconnect.dart' as webauth;
 // ... altre importazioni, configurazione come dotenv
 
 class AuthService {
@@ -13,6 +13,9 @@ class AuthService {
 
   //con factory stiamo praticamente dicendo che non possono esistere più istanze di questa classe. se esistono, sono uguali.
   final FlutterAppAuth _appAuth = const FlutterAppAuth();
+
+  webauth.OpenIdConfiguration? discoveryDocument;
+  webauth.AuthorizationResponse? identity;
 
   //variabili private
   bool _isBusy = false;
@@ -74,6 +77,7 @@ class AuthService {
       _clearBusyState();
     }
   }
+  
 
   Future<void> refresh() async {
     try {

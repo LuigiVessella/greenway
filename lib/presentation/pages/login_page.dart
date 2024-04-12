@@ -1,7 +1,9 @@
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:greenway/presentation/pages/login_web_page.dart';
 import 'package:greenway/repositories/deliveryman_repository.dart';
 import 'package:greenway/services/network/logger.dart';
 
@@ -12,7 +14,13 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+@override
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   bool _isBusy = false;
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,13 @@ class _LoginPageState extends State<LoginPage> {
                     minimumSize: MaterialStatePropertyAll(Size(200, 40)),
                     maximumSize: MaterialStatePropertyAll(Size(300, 50))),
                 onPressed: () async {
-                  if (Platform.isIOS) {
+                  if (kIsWeb) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const InteractivePage()));
+                  }
+                  else if (Platform.isIOS) {
                     AuthService().signInWithAutoCodeExchange(
                         preferEphemeralSession: true);
                   } else {
@@ -74,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushNamed(context, '/second');
                   } else if (AuthService().isLoggedIn &&
                       AuthService().getUserInfo!.contains('DELIVERY')) {
-                        _checkDeliveyman();
+                    _checkDeliveyman();
                     Navigator.pushNamed(context, '/third');
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -99,13 +113,12 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _checkDeliveyman(){
+  void _checkDeliveyman() {
     DeliveryManRepository dmr = DeliveryManRepository();
-    try{
+    try {
       dmr.createDeliveryMan();
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
-
   }
 }

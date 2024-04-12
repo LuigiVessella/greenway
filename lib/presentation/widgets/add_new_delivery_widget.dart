@@ -18,9 +18,11 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
   List<Address> _addressList = [];
   double _lat = 0.0;
   double _lon = 0.0;
-  String? _destinationAddress;
+  String? address;
 
   Future<List<Address>> _getAddress(String userInput) async {
+    Delivery newDelivery = Delivery();
+    
     var client = http.Client();
 
     var response = await client.get(Uri.https(
@@ -86,7 +88,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                               setState(() {
                                 _lat = double.parse(_addressList[index].lat!);
                                 _lon = double.parse(_addressList[index].lon!);
-                                _destinationAddress =
+                                address =
                                     _addressList[index].displayName;
                               });
                             }
@@ -111,7 +113,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               onPressed: () {
                 Navigator.pop(
                   context,
-                  [_lon, _lat],
+                  {'lat': _lat, 'lon': _lon, 'address': address},
                 );
               },
               child: const Text('Ok'),

@@ -8,7 +8,7 @@ class DeliveryRepository{
 
 
 
-  void AddNewDelivery(Delivery delivery) {
+  void addNewDelivery(Delivery delivery) {
     httpDelivery.addDelivery(delivery);
   }
 

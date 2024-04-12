@@ -7,6 +7,7 @@ class HttpDeliveryResponse {
   final client = http.Client();
 
   Future<void> addDelivery(Delivery delivery) async {
+    print(DeliveryToJson(delivery));
     
     
     var response = await client.post(

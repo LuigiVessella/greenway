@@ -28,10 +28,11 @@ class Delivery {
 
   factory Delivery.fromJson(Map<String, dynamic> json) => Delivery(
         vehicleId: json["vehicleId"],
+        depositAddress: json["depositAddress"],
         depositCoordinates: Coordinates.fromJson(json["depositCoordinates"]),
         deliveryPackages: List<DeliveryPackage>.from(
             json["deliveryPackages"].map((x) => DeliveryPackage.fromJson(x))),
-        depositAddress: json["depositAddress"],
+        
       );
 
   Map<String, dynamic> toJson() => {

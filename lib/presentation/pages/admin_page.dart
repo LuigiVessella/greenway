@@ -30,9 +30,11 @@ class _AdminPageState extends State<AdminPage> {
         body: ListView(children: [
           const SizedBox(
             height: 30,
-            child: Text("I tuoi veicoli:", textAlign: TextAlign.center,),
+            child: Text(
+              "I tuoi veicoli:",
+              textAlign: TextAlign.center,
+            ),
           ),
-          
           VehiclesListWidget(),
           SvgPicture.asset(
             'lib/assets/undraw_delivery_address_re_cjca.svg',
@@ -78,32 +80,12 @@ class _AdminPageState extends State<AdminPage> {
               style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll(Size(200, 50))),
               onPressed: () {
-                _addDelivery();
+                _addNewDelivery();
               },
               child: const Text('Add delivery')),
         ]));
   }
 
-  void _addDelivery() {
-    Coordinates start = Coordinates(type: 'Point', coordinates: resultSenderG);
-    Coordinates destination =
-        Coordinates(type: 'Point', coordinates: resultReceiverG);
-
-    // ignore: prefer_collection_literals
-    Delivery newDelivery = Delivery(
-        vehicleId: '1',
-        deliveryMan: null,
-        deliveryPackages: List.empty(growable: true),
-        depositCoordinates: start);
-
-    DeliveryPackage newPackage =
-        DeliveryPackage(receiverCoordinates: destination, weight: '1.0');
-
-    newDelivery.addNewPackage(newPackage);
-
-    DeliveryRepository dv = DeliveryRepository();
-    dv.AddNewDelivery(newDelivery);
-  }
 
   //utilizzo i il Navigator.push in una funzione che ritorna Future in attesa dei risultati della scelta del luogo
   Future<void> _navigateAndDisplaySelection(
@@ -131,16 +113,44 @@ class _AdminPageState extends State<AdminPage> {
       );
     }
 
-    if (resultReceiver != null) {
-      setState(() {
-        resultReceiverG = resultReceiver;
-      });
-    }
-
     if (resultSender != null) {
+      print('sender address: ${resultSender['address']}');
       setState(() {
         resultSenderG = resultSender;
       });
     }
+
+    if (resultReceiver != null) {
+      print('receiver address: ${resultReceiver['address']}');
+      setState(() {
+        resultReceiverG = resultReceiver;
+      });
+    }
+  }
+
+  bool _addNewDelivery() {
+    Delivery newDelivery = Delivery(
+        vehicleId: '1',
+        deliveryMan: null,
+        deliveryPackages: List.empty(growable: true),
+        depositCoordinates: Coordinates(
+            type: "Point",
+            coordinates: [resultSenderG['lon'], resultSenderG['lat']]),
+        depositAddress: resultSenderG['address']);
+    DeliveryPackage newPackage = DeliveryPackage(
+        sender: 'Luigi Vessella',
+        receiver: 'Pierluigi',
+        weight: '1.0',
+        senderAddress: resultSenderG['address'],
+        receiverAddress: resultReceiverG['address'],
+        receiverCoordinates: Coordinates(
+            type: "Point",
+            coordinates: [resultReceiverG['lon'], resultReceiverG['lat']]));
+
+    newDelivery.addNewPackage(newPackage);
+
+    DeliveryRepository dv = DeliveryRepository();
+     dv.addNewDelivery(newDelivery);
+    return true;
   }
 }
