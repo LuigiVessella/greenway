@@ -130,8 +130,10 @@ class _AdminPageState extends State<AdminPage> {
 
   bool _addNewDelivery() {
     Delivery newDelivery = Delivery(
-        vehicleId: '1',
-        deliveryMan: null,
+        createdAt: DateTime.now(),
+        estimatedDeliveryDate: DateTime.parse('18-04-2024'),
+        vehicleId: 1,
+        deliveryManUsername: 'deliveryMan1',
         deliveryPackages: List.empty(growable: true),
         depositCoordinates: Coordinates(
             type: "Point",
@@ -140,7 +142,7 @@ class _AdminPageState extends State<AdminPage> {
     DeliveryPackage newPackage = DeliveryPackage(
         sender: 'Luigi Vessella',
         receiver: 'Pierluigi',
-        weight: '1.0',
+        weight: 1.0,
         senderAddress: resultSenderG['address'],
         receiverAddress: resultReceiverG['address'],
         receiverCoordinates: Coordinates(

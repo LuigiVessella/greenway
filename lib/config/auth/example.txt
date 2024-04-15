@@ -1,0 +1,1 @@
+you have to create a .env file in this auth folder (maybe with replacing this example file). In this .env file you must write the key - value pairs to use it with keycloak and endpoint configuraiton.

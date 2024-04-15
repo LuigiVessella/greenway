@@ -21,7 +21,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
   String? address;
 
   Future<List<Address>> _getAddress(String userInput) async {
-    Delivery newDelivery = Delivery();
+    //late Delivery newDelivery;
     
     var client = http.Client();
 

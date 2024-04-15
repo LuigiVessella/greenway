@@ -7,7 +7,6 @@ class HttpDeliveryResponse {
   final client = http.Client();
 
   Future<void> addDelivery(Delivery delivery) async {
-    print(DeliveryToJson(delivery));
     
     
     var response = await client.post(
@@ -16,7 +15,7 @@ class HttpDeliveryResponse {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
         },
-        body: DeliveryToJson(delivery));
+        body: deliveryToJson(delivery));
     
     print(response.statusCode);
     print(response.body);
@@ -36,7 +35,7 @@ class HttpDeliveryResponse {
           'Content-Type': 'application/json'
         });
 
-      List<Delivery> deliveries = DeliveriesFromJson(response.body);
+      List<Delivery> deliveries = deliveriesFromJson(response.body);
 
       return deliveries;
         

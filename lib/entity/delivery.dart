@@ -1,52 +1,61 @@
 import 'dart:convert';
-
-import 'package:greenway/entity/delivery_man.dart';
 import 'package:greenway/entity/delivery_package.dart';
 
-List<Delivery> DeliveriesFromJson(String str) => List<Delivery>.from(json.decode(str).map((x) => Delivery.fromJson(x)));
+List<Delivery> deliveriesFromJson(String str) => List<Delivery>.from(json.decode(str).map((x) => Delivery.fromJson(x)));
 
-Delivery DeliveryFromJson(String str) => Delivery.fromJson(json.decode(str));
+Delivery deliveryFromJson(String str) => Delivery.fromJson(json.decode(str));
 
-String DeliveryToJson(Delivery data) => json.encode(data.toJson());
+String deliveryToJson(Delivery data) => json.encode(data.toJson());
 
 class Delivery {
-  DeliveryMan? deliveryMan;
+    int? id;
+    DateTime createdAt;
+    DateTime estimatedDeliveryDate;
+    String deliveryManUsername;
+    int vehicleId;
+    String depositAddress;
+    Coordinates depositCoordinates;
+    List<DeliveryPackage> deliveryPackages;
 
-  
-  String? vehicleId;
-  Coordinates? depositCoordinates;
-  List<DeliveryPackage>? deliveryPackages;
-  String? depositAddress;
+    Delivery({
+        this.id,
+        required this.createdAt,
+        required this.estimatedDeliveryDate,
+        required this.deliveryManUsername,
+        required this.vehicleId,
+        required this.depositAddress,
+        required this.depositCoordinates,
+        required this.deliveryPackages,
+    });
 
-  Delivery({
-    this.vehicleId,
-    this.deliveryMan,
-    this.deliveryPackages,
-    this.depositCoordinates,
-    this.depositAddress,
-  });
-
-  factory Delivery.fromJson(Map<String, dynamic> json) => Delivery(
+    factory Delivery.fromJson(Map<String, dynamic> json) => Delivery(
+        id: json["id"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        estimatedDeliveryDate: DateTime.parse(json["estimatedDeliveryDate"]),
+        deliveryManUsername: json["deliveryManUsername"],
         vehicleId: json["vehicleId"],
         depositAddress: json["depositAddress"],
         depositCoordinates: Coordinates.fromJson(json["depositCoordinates"]),
-        deliveryPackages: List<DeliveryPackage>.from(
-            json["deliveryPackages"].map((x) => DeliveryPackage.fromJson(x))),
-        
-      );
+        deliveryPackages: List<DeliveryPackage>.from(json["deliveryPackages"].map((x) => DeliveryPackage.fromJson(x))),
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "createdAt": createdAt.toIso8601String(),
+        "estimatedDeliveryDate": "${estimatedDeliveryDate.year.toString().padLeft(4, '0')}-${estimatedDeliveryDate.month.toString().padLeft(2, '0')}-${estimatedDeliveryDate.day.toString().padLeft(2, '0')}",
+        "deliveryManUsername": deliveryManUsername,
         "vehicleId": vehicleId,
-        "depositCoordinates": depositCoordinates!.toJson(),
-        "deliveryPackages":
-            List<dynamic>.from(deliveryPackages!.map((x) => x.toJson())),
         "depositAddress": depositAddress,
-      };
+        "depositCoordinates": depositCoordinates.toJson(),
+        "deliveryPackages": List<dynamic>.from(deliveryPackages.map((x) => x.toJson())),
+    };
+
 
   void addNewPackage(DeliveryPackage deliveryPackage) {
-    deliveryPackages!.add(deliveryPackage);
+    deliveryPackages.add(deliveryPackage);
   }
 }
+
 
 class Coordinates {
   String type;

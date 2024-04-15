@@ -1,46 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:greenway/presentation/pages/navigation_page.dart';
 
 class DeliveryManPage extends StatelessWidget {
   const DeliveryManPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 30),
-            SvgPicture.asset(
-              'lib/assets/undraw_messenger_re_8bky.svg',
-              height: 200,
-              width: 200,
+    return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: const TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.delivery_dining)),
+                Tab(icon: Icon(Icons.car_rental)),
+                Tab(icon: Icon(Icons.map_outlined)),
+              ],
             ),
-            const SizedBox(height: 10),
-            const Text(
-              'Benvenuto!\nDa qui puoi vedere le tue consegne',
-              style: TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 50),
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Inserisci il modello del veicolo',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Invia'),
-            ),
-          ],
-        ),
-      ),
-    );
+            title: const Text('Le tue attività:'),
+          ),
+          body:  TabBarView(
+            children: [
+              SizedBox(height: 300,
+              child: ListView(
+                children: const [
+                  ListTile(
+                    
+                    title: Text(
+                      'Consegna 1',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    subtitle: Text(
+                      'In consegna presso Via statale 13',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                  ListTile(
+                    
+                    title: Text(
+                      'Consegna 2',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    subtitle: Text(
+                      'In Via provinciale 100',
+                      
+              ))])),
+              const Icon(Icons.car_rental),
+              const NavigationWidget(),
+            ],
+          ),
+  ));
   }
-
-
-
-  
 }
