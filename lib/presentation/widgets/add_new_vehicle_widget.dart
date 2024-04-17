@@ -60,7 +60,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
             const SizedBox(
               height: 10,
             ),
-            FilledButton(
+            ElevatedButton(
                 onPressed: () {
                   try{
                   vr.addVehicle(Vehicle(

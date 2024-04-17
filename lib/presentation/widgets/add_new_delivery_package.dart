@@ -6,10 +6,6 @@ import 'package:greenway/entity/addresses.dart';
 import 'package:greenway/entity/delivery.dart';
 import 'package:http/http.dart' as http;
 
-
-
-
-
 class AddNewPackage extends StatefulWidget {
   const AddNewPackage({super.key, required this.title});
   final String title;
@@ -26,7 +22,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
 
   Future<List<Address>> _getAddress(String userInput) async {
     //late Delivery newDelivery;
-    
+
     var client = http.Client();
 
     var response = await client.get(Uri.https(
@@ -66,18 +62,19 @@ class _AddNewPackageState extends State<AddNewPackage> {
           children: [
             Row(
               children: [
-                TextFormField(
+                Expanded(
+                    child: TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Nome',
                   ),
-                  onChanged: (value) {
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Cognome',
-                  ),
-                  onChanged: (value) {}),
+                  onChanged: (value) {},
+                )),
+                Expanded(
+                    child: TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Cognome',
+                        ),
+                        onChanged: (value) {})),
               ],
             ),
             const SizedBox(
@@ -108,8 +105,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
                               setState(() {
                                 _lat = double.parse(_addressList[index].lat!);
                                 _lon = double.parse(_addressList[index].lon!);
-                                address =
-                                    _addressList[index].displayName;
+                                address = _addressList[index].displayName;
                               });
                             }
                           },

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:greenway/presentation/pages/add_new_delivery.dart';
+import 'package:greenway/presentation/pages/new_delivery_page.dart';
 import 'package:greenway/presentation/widgets/add_new_vehicle_widget.dart';
 import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
 
@@ -43,30 +43,27 @@ class _AdminPageState extends State<AdminPage> {
           ),
           VehiclesListWidget(),
           const Divider(),
-          FilledButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const VehicleInputDetail()));
-            },
-            style: const ButtonStyle(
-                minimumSize: MaterialStatePropertyAll(Size(200, 50))),
-            child: const Text('Add vehicle'),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          FilledButton(
-              style: const ButtonStyle(
-                  minimumSize: MaterialStatePropertyAll(Size(200, 50))),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddNewDelivery()));
-              },
-              child: const Text('Add delivery')),
+          Container(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const VehicleInputDetail()));
+                  },
+                  child: const Text('Add vehicle'),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AddNewDelivery()));
+                    },
+                    child: const Text('Add delivery')),
+              ]))
         ]));
   }
 }
