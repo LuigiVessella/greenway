@@ -6,15 +6,19 @@ import 'package:greenway/entity/addresses.dart';
 import 'package:greenway/entity/delivery.dart';
 import 'package:http/http.dart' as http;
 
-class AddNewDelivery extends StatefulWidget {
-  const AddNewDelivery({super.key, required this.title});
+
+
+
+
+class AddNewPackage extends StatefulWidget {
+  const AddNewPackage({super.key, required this.title});
   final String title;
 
   @override
-  State<AddNewDelivery> createState() => _AddNewDeliveryState();
+  State<AddNewPackage> createState() => _AddNewPackageState();
 }
 
-class _AddNewDeliveryState extends State<AddNewDelivery> {
+class _AddNewPackageState extends State<AddNewPackage> {
   List<Address> _addressList = [];
   double _lat = 0.0;
   double _lon = 0.0;
@@ -60,6 +64,22 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
         child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
+            Row(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Nome',
+                  ),
+                  onChanged: (value) {
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Cognome',
+                  ),
+                  onChanged: (value) {}),
+              ],
+            ),
             const SizedBox(
               height: 40,
             ),

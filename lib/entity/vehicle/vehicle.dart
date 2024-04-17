@@ -1,32 +1,44 @@
 // To parse this JSON data, do
 //
-//     final Vehicle= VehicleFromJson(jsonString);
+//     final vehicle = vehicleFromJson(jsonString);
+
 import 'dart:convert';
 
+import 'package:greenway/entity/delivery.dart';
+
 Vehicle vehicleFromJson(String str) => Vehicle.fromJson(json.decode(str));
-List<Vehicle> vehiclesFromJson(String str) => List<Vehicle>.from(json.decode(str).map((x) => Vehicle.fromJson(x)));
+
 String vehicleToJson(Vehicle data) => json.encode(data.toJson());
 
 class Vehicle {
+    int? id;
     String modelName;
-    double maxAutonomyKm;
-    double maxCapacityKg;
+    int maxAutonomyKm;
+    int maxCapacityKg;
+   
+    List<Delivery>? deliveries = List.empty();
 
     Vehicle({
-       required this.modelName,
-       required this.maxAutonomyKm,
-       required this.maxCapacityKg,
+        this.id,
+        required this.modelName,
+        required this.maxAutonomyKm,
+        required this.maxCapacityKg,
+        this.deliveries,
     });
 
     factory Vehicle.fromJson(Map<String, dynamic> json) => Vehicle(
+        id: json["id"],
         modelName: json["modelName"],
         maxAutonomyKm: json["maxAutonomyKm"],
         maxCapacityKg: json["maxCapacityKg"],
+        deliveries: List<Delivery>.from(json["deliveries"].map((x) => Delivery.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
+        "id": id,
         "modelName": modelName,
         "maxAutonomyKm": maxAutonomyKm,
         "maxCapacityKg": maxCapacityKg,
+        if(deliveries!=null)"deliveries": List<dynamic>.from(deliveries!.map((x) => x.toJson())),
     };
 }

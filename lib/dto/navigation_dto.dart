@@ -1,83 +1,60 @@
 // To parse this JSON data, do
 //
-//     final deliveryNavigation = deliveryNavigationFromJson(jsonString);
+//     final navigationDataDto = navigationDataDtoFromJson(jsonString);
 
 import 'dart:convert';
 
-import 'package:greenway/entity/delivery.dart';
+NavigationDataDto navigationDataDtoFromJson(String str) => NavigationDataDto.fromJson(json.decode(str));
 
-DeliveryNavigation deliveryNavigationFromJson(String str) => DeliveryNavigation.fromJson(json.decode(str));
+String navigationDataDtoToJson(NavigationDataDto data) => json.encode(data.toJson());
 
-String deliveryNavigationToJson(DeliveryNavigation data) => json.encode(data.toJson());
-
-class DeliveryNavigation {
-    Delivery delivery;
-    NavigationData navigationData;
-
-    DeliveryNavigation({
-       required this.delivery,
-       required this.navigationData,
-    });
-
-    factory DeliveryNavigation.fromJson(Map<String, dynamic> json) => DeliveryNavigation(
-        delivery: Delivery.fromJson(json["delivery"]),
-        navigationData: NavigationData.fromJson(json["navigationData"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "delivery": delivery.toJson(),
-        "navigationData": navigationData.toJson(),
-    };
-}
-
-
-class NavigationData {
+class NavigationDataDto {
     String code;
-    List<Trip> trips;
+    List<Route> routes;
     List<Waypoint> waypoints;
 
-    NavigationData({
-        required this.code,
-        required this.trips,
-        required this.waypoints,
+    NavigationDataDto({
+       required this.code,
+       required this.routes,
+       required this.waypoints,
     });
 
-    factory NavigationData.fromJson(Map<String, dynamic> json) => NavigationData(
+    factory NavigationDataDto.fromJson(Map<String, dynamic> json) => NavigationDataDto(
         code: json["code"],
-        trips: List<Trip>.from(json["trips"].map((x) => Trip.fromJson(x))),
+        routes: List<Route>.from(json["routes"].map((x) => Route.fromJson(x))),
         waypoints: List<Waypoint>.from(json["waypoints"].map((x) => Waypoint.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "code": code,
-        "trips": List<dynamic>.from(trips.map((x) => x.toJson())),
+        "routes": List<dynamic>.from(routes.map((x) => x.toJson())),
         "waypoints": List<dynamic>.from(waypoints.map((x) => x.toJson())),
     };
 }
 
-class Trip {
+class Route {
     String geometry;
     List<Leg> legs;
     String weightName;
     double weight;
-    int duration;
+    double duration;
     double distance;
 
-    Trip({
-        required this.geometry,
-        required this.legs,
-        required this.weightName,
-        required this.weight,
-        required this.duration,
-        required this.distance,
+    Route({
+       required this.geometry,
+       required this.legs,
+       required this.weightName,
+       required this.weight,
+       required this.duration,
+       required this.distance,
     });
 
-    factory Trip.fromJson(Map<String, dynamic> json) => Trip(
+    factory Route.fromJson(Map<String, dynamic> json) => Route(
         geometry: json["geometry"],
         legs: List<Leg>.from(json["legs"].map((x) => Leg.fromJson(x))),
         weightName: json["weight_name"],
         weight: json["weight"].toDouble(),
-        duration: json["duration"],
+        duration: json["duration"].toDouble(),
         distance: json["distance"].toDouble(),
     );
 
@@ -99,11 +76,11 @@ class Leg {
     double distance;
 
     Leg({
-        required this.steps,
-        required this.summary,
-        required this.weight,
-        required this.duration,
-        required this.distance,
+       required this.steps,
+       required this.summary,
+       required this.weight,
+       required this.duration,
+       required this.distance,
     });
 
     factory Leg.fromJson(Map<String, dynamic> json) => Leg(
@@ -127,7 +104,7 @@ class Step {
     String geometry;
     Maneuver maneuver;
     Mode mode;
-    DrivingSide? drivingSide;
+    DrivingSide drivingSide;
     String name;
     List<Intersection> intersections;
     double weight;
@@ -136,23 +113,23 @@ class Step {
     String rotaryName;
 
     Step({
-       required this.geometry,
-       required this.maneuver,
-       required this.mode,
-       required this.drivingSide,
-       required this.name,
-       required this.intersections,
-       required this.weight,
-       required this.duration,
-       required this.distance,
-       required this.rotaryName,
+        required this.geometry,
+        required this.maneuver,
+        required this.mode,
+        required this.drivingSide,
+        required this.name,
+        required this.intersections,
+        required this.weight,
+        required this.duration,
+        required this.distance,
+        required this.rotaryName,
     });
 
     factory Step.fromJson(Map<String, dynamic> json) => Step(
         geometry: json["geometry"],
         maneuver: Maneuver.fromJson(json["maneuver"]),
         mode: modeValues.map[json["mode"]]!,
-        drivingSide: drivingSideValues.map[json["driving_side"]],
+        drivingSide: drivingSideValues.map[json["driving_side"]]!,
         name: json["name"],
         intersections: List<Intersection>.from(json["intersections"].map((x) => Intersection.fromJson(x))),
         weight: json["weight"].toDouble(),
@@ -178,7 +155,6 @@ class Step {
 enum DrivingSide {
     LEFT,
     RIGHT,
-    SHARP_LEFT,
     SLIGHT_LEFT,
     SLIGHT_RIGHT,
     STRAIGHT
@@ -187,7 +163,6 @@ enum DrivingSide {
 final drivingSideValues = EnumValues({
     "left": DrivingSide.LEFT,
     "right": DrivingSide.RIGHT,
-    "sharp left": DrivingSide.SHARP_LEFT,
     "slight left": DrivingSide.SLIGHT_LEFT,
     "slight right": DrivingSide.SLIGHT_RIGHT,
     "straight": DrivingSide.STRAIGHT
@@ -234,12 +209,12 @@ class Maneuver {
     int exit;
 
     Maneuver({
-      required  this.bearingAfter,
-      required  this.bearingBefore,
-      required  this.location,
-      required  this.modifier,
-      required  this.type,
-      required  this.exit,
+       required this.bearingAfter,
+       required this.bearingBefore,
+       required this.location,
+       required this.modifier,
+       required this.type,
+       required this.exit,
     });
 
     factory Maneuver.fromJson(Map<String, dynamic> json) => Maneuver(
@@ -270,16 +245,12 @@ final modeValues = EnumValues({
 });
 
 class Waypoint {
-    int waypointIndex;
-    int tripsIndex;
     String hint;
     double distance;
     String name;
     List<double> location;
 
     Waypoint({
-       required this.waypointIndex,
-       required this.tripsIndex,
        required this.hint,
        required this.distance,
        required this.name,
@@ -287,8 +258,6 @@ class Waypoint {
     });
 
     factory Waypoint.fromJson(Map<String, dynamic> json) => Waypoint(
-        waypointIndex: json["waypoint_index"],
-        tripsIndex: json["trips_index"],
         hint: json["hint"],
         distance: json["distance"].toDouble(),
         name: json["name"],
@@ -296,8 +265,6 @@ class Waypoint {
     );
 
     Map<String, dynamic> toJson() => {
-        "waypoint_index": waypointIndex,
-        "trips_index": tripsIndex,
         "hint": hint,
         "distance": distance,
         "name": name,

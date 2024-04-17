@@ -7,8 +7,6 @@ class HttpDeliveryResponse {
   final client = http.Client();
 
   Future<void> addDelivery(Delivery delivery) async {
-    
-    
     var response = await client.post(
         Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deliveries'),
         headers: {
@@ -16,42 +14,30 @@ class HttpDeliveryResponse {
           'Content-Type': 'application/json'
         },
         body: deliveryToJson(delivery));
-    
+
     print(response.statusCode);
     print(response.body);
   }
 
-  Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) async {
+ //Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) async {
+ //  final queryParams = {
+ //    'pageNo': 0,
+ //    'pageSize': 5,
+ //  };
 
-    final queryParams ={
-      'pageNo' : 0,
-      'pageSize' : 5, 
-    };
+ //  var response = await client.get(
+ //      Uri.http('${dotenv.env['restApiEndpoint']}',
+ //          '/api/v1/deliveries/$deliveryManId', queryParams),
+ //      headers: {
+ //        'Authorization': 'Bearer ${AuthService().accessToken}',
+ //        'Content-Type': 'application/json'
+ //      });
 
-    var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deliveries/$deliveryManId', queryParams ),
-        headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
-          'Content-Type': 'application/json'
-        });
+ //  List<Delivery> deliveries = deliveriesFromJson(response.body);
 
-      List<Delivery> deliveries = deliveriesFromJson(response.body);
+ //  return deliveries;
+ //}
 
-      return deliveries;
-        
-  }
-  //}
-  //Future<void> deleteDelivery(Delivery delivery){
+ 
 
-  //}
-  //Future<void> updateDelivery(Delivery delivery){
-
-  //}
-  //Future<List<Delivery>> getDelivery(){
-  //
-  //}
-
-  //factory DeliveryRepositories.fromJSon(Map<String, dynamic> data) {
-  //  return
-  //}
 }

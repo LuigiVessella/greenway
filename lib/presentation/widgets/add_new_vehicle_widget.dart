@@ -20,7 +20,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Vehicle data"),
+        title: const Text("Informazioni sul veicolo:"),
         centerTitle: true,
       ),
       body: Container(
@@ -62,13 +62,21 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
             ),
             FilledButton(
                 onPressed: () {
+                  try{
                   vr.addVehicle(Vehicle(
                     modelName: modelTextController.text,
-                    maxAutonomyKm: double.parse(maxAutonomyTextController.text),
-                    maxCapacityKg: double.parse(maxCapacityTextController.text),
+                    maxAutonomyKm: int.parse(maxAutonomyTextController.text),
+                    maxCapacityKg: int.parse(maxCapacityTextController.text),
                   ));
+                  }catch(e){
+                    print('assicurati di aver inserito i dati');
+                    
+                  }
+
+                  Navigator.pop(context);
                 },
-                child: const Text('crea veicolo'))
+                
+                child: const Text('Aggiungi'))
           ],
         ),
       ),

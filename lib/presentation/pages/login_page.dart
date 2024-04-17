@@ -33,12 +33,15 @@ class _LoginPageState extends State<LoginPage> {
               child: const LinearProgressIndicator(),
             ),
             const SizedBox(
-              height: 150,
+              height: 100,
             ),
-            SvgPicture.asset('lib/assets/undraw_delivery_truck_vt6p.svg',
+            SvgPicture.asset('lib/assets/undraw_package_arrived_63rf.svg',
                 height: 100),
             const SizedBox(height: 50),
-            const Text("Benvenuto, esegui il login"),
+            const Text("Benvenuto in GreenWay, esegui il login"),
+            const Divider(),
+            const SizedBox(height: 150,),
+            
             ElevatedButton(
                 style: const ButtonStyle(
                     minimumSize: MaterialStatePropertyAll(Size(200, 40)),

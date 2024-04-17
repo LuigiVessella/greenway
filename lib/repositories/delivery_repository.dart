@@ -13,7 +13,9 @@ class DeliveryRepository{
   }
 
 
-  Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) {
-    return httpDelivery.getDeliveryByDeliveryMan(deliveryManId);
-  }
+  //Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) {
+  //  return httpDelivery.getDeliveryByDeliveryMan(deliveryManId);
+  //}
+
+
 }
