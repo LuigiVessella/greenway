@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:greenway/presentation/pages/new_delivery_page.dart';
+import 'package:greenway/presentation/pages/delivery_page.dart';
 import 'package:greenway/presentation/widgets/add_new_vehicle_widget.dart';
 import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
 
@@ -41,7 +41,7 @@ class _AdminPageState extends State<AdminPage> {
               textAlign: TextAlign.center,
             ),
           ),
-          VehiclesListWidget(),
+          VehicleListAdminWidget(),
           const Divider(),
           Container(
               padding: const EdgeInsets.all(10.0),
@@ -53,7 +53,7 @@ class _AdminPageState extends State<AdminPage> {
                         MaterialPageRoute(
                             builder: (context) => const VehicleInputDetail()));
                   },
-                  child: const Text('Add vehicle'),
+                  child: const Text('Aggiungi veicolo'),
                 ),
                 ElevatedButton(
                     onPressed: () {
@@ -62,7 +62,7 @@ class _AdminPageState extends State<AdminPage> {
                           MaterialPageRoute(
                               builder: (context) => const AddNewDelivery()));
                     },
-                    child: const Text('Add delivery')),
+                    child: const Text('Crea etichetta')),
               ]))
         ]));
   }

@@ -87,10 +87,10 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ));
                   if (AuthService().isLoggedIn &&
-                      AuthService().getUserInfo!.contains('ADMIN')) {
+                      AuthService().getUserRole!.contains('ADMIN')) {
                     Navigator.pushNamed(context, '/second');
                   } else if (AuthService().isLoggedIn &&
-                      AuthService().getUserInfo!.contains('DELIVERY')) {
+                      AuthService().getUserRole!.contains('DELIVERY')) {
                     _checkDeliveyman();
                     Navigator.pushNamed(context, '/third');
                   } else {

@@ -1,3 +1,4 @@
+import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 
@@ -16,7 +17,7 @@ class VehicleRepository {
   }
 
 
-  Future<Vehicle> getVehicleByDeliveryMan(String deliveryMan) {
+  Future<VehicleByDmanDto> getVehicleByDeliveryMan(String deliveryMan) {
     return httpVehicle.getVehicleByDeliveryMan(deliveryMan);
   }
 //

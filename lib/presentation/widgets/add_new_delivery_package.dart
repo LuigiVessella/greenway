@@ -19,7 +19,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
   double _lat = 0.0;
   double _lon = 0.0;
   String? address;
-
+  final _formKey = GlobalKey<FormState>();
   Future<List<Address>> _getAddress(String userInput) async {
     //late Delivery newDelivery;
 
@@ -60,23 +60,37 @@ class _AddNewPackageState extends State<AddNewPackage> {
         child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
-            Row(
-              children: [
-                Expanded(
-                    child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Nome',
-                  ),
-                  onChanged: (value) {},
+            Form(
+                key: _formKey,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo obbligatiorio';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Nome',
+                      ),
+                      onChanged: (value) {},
+                    )),
+                    Expanded(
+                        child: TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo obbligatiorio';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Cognome',
+                            ),
+                            onChanged: (value) {})),
+                  ],
                 )),
-                Expanded(
-                    child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Cognome',
-                        ),
-                        onChanged: (value) {})),
-              ],
-            ),
             const SizedBox(
               height: 40,
             ),
@@ -127,10 +141,12 @@ class _AddNewPackageState extends State<AddNewPackage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(
-                  context,
-                  {'lat': _lat, 'lon': _lon, 'address': address},
-                );
+                if (_formKey.currentState!.validate()) {
+                  Navigator.pop(
+                    context,
+                    {'lat': _lat, 'lon': _lon, 'address': address},
+                  );
+                }
               },
               child: const Text('Ok'),
             )

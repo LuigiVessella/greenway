@@ -18,20 +18,5 @@ class HttpDeliveryManResponse {
     print('Creazione deliveryman: ${response.statusCode}');
   }
 
-  Future<List<DeliveryDmanDto>> getDeliveriesByDeliveryMan() async {
 
-    final queryParams = {
-      'pageNo': 0,
-      'pageSize': 5,
-    };
-
-    var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deliveryMen', queryParams),
-        headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
-          'Content-Type': 'application/json'
-        });
-
-        return deliveriesByDmanFromJson(response.body);
-}
 }

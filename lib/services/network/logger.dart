@@ -9,6 +9,8 @@ import 'package:openidconnect/openidconnect.dart' as webauth;
 
 class AuthService {
   static final AuthService _instance = AuthService._privateConstructor();
+  
+  var _userRole;
   factory AuthService() => _instance;
 
   //con factory stiamo praticamente dicendo che non possono esistere più istanze di questa classe. se esistono, sono uguali.
@@ -106,8 +108,9 @@ class AuthService {
    _expDate = JwtDecoder.getExpirationDate(_accessToken.toString()).toString();
     print(_expDate);
     print(_decodedToken);
-   _userInfo = _decodedToken?["realm_access"].toString();
-   print(_userInfo);
+   _userInfo = _decodedToken?["preferred_username"].toString();
+   _userRole = _decodedToken?["realm_access"].toString();
+   print('username $_userInfo');
   }
 
   void _processTokenResponse(TokenResponse? response) {
@@ -153,6 +156,7 @@ class AuthService {
   bool get isBusy => _isBusy != false;
   bool get isLoginComplete => _isLoggingComplete != false;
   String? get getUserInfo => _userInfo;
+  String? get getUserRole => _userRole;
 
   String? get accessToken {
       DateTime now = DateTime.now();

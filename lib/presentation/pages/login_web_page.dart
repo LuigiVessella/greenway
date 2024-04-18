@@ -113,10 +113,11 @@ class _InteractivePageState extends State<InteractivePage> {
                           redirectUrl: defaultRedirectUrl,
                           scopes: defaultscopes,
                           configuration: discoveryDocument!,
-                          autoRefresh: false,
+                          autoRefresh: true,
                           useWebPopup: usePopup,
                         ),
                       );
+                      
                       setState(() {
                         identity = response;
                         errorMessage = null;

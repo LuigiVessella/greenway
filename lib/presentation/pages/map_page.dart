@@ -15,34 +15,55 @@ class NavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            padding: const EdgeInsets.all(20.0),
-            child: FlutterMap(
-              options: const MapOptions(
-                initialCenter: LatLng(41.3518, 14.3689),
-                initialZoom: 9.2,
+            child: Column(children: <Widget>[
+      Row(
+        children: [
+          SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: ListView(
+                padding: const EdgeInsets.all(8.0),
+                scrollDirection: Axis.horizontal,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Aggiungi percorso di ritorno')),
+                  ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Visualizza marcatori'))
+                ],
+              ))
+        ],
+      ),
+      Expanded(
+          child: FlutterMap(
+        options: const MapOptions(
+          initialCenter: LatLng(41.3518, 14.3689),
+          initialZoom: 9.2,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.greenway',
+          ),
+          PolylineLayer(polylines: [
+            Polyline(
+                points: decodePolyline(polyline).unpackPolyline(),
+                color: Colors.blue,
+                strokeWidth: 3.0)
+          ]),
+          CurrentLocationLayer(),
+          RichAttributionWidget(
+            attributions: [
+              TextSourceAttribution(
+                'OpenStreetMap contributors',
+                onTap: () =>
+                    launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
               ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.example.greenway',
-                ),
-                PolylineLayer(polylines: [
-                  Polyline(
-                      points: decodePolyline(polyline).unpackPolyline(),
-                      color: Colors.blue,
-                      strokeWidth: 3.0)
-                ]),
-                CurrentLocationLayer(),
-                RichAttributionWidget(
-                  attributions: [
-                    TextSourceAttribution(
-                      'OpenStreetMap contributors',
-                      onTap: () => launchUrl(
-                          Uri.parse('https://openstreetmap.org/copyright')),
-                    ),
-                  ],
-                ),
-              ],
-            )));
+            ],
+          ),
+        ],
+      ))
+    ])));
   }
 }

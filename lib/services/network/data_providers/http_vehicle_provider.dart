@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
@@ -40,10 +41,10 @@ class HttpVehicleResponse {
     return vehicleDtoFromJson(response.body);
   }
 
-  Future<Vehicle> getVehicleByDeliveryMan(String deliveryMan) async {
+  Future<VehicleByDmanDto> getVehicleByDeliveryMan(String deliveryMan) async {
+
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}',
-            '/api/v1/vehicles/$deliveryMan'),
+        Uri.http('${dotenv.env['restApiEndpoint']}','/api/v1/vehicles/deliveryman/$deliveryMan'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
@@ -52,7 +53,7 @@ class HttpVehicleResponse {
     print(response.statusCode);
     print(response.body);
 
-    return vehicleFromJson(response.body);
+    return vehicleByDmanDtoFromJson(response.body);
   }
 
   Future<NavigationDataDto> getVehicleRoute() async {

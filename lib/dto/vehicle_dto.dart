@@ -45,23 +45,27 @@ class VehicleDto {
 }
 
 class Content {
-    String modelName;
-    int maxAutonomyKm;
-    int maxCapacityKg;
+    int? id;
+    String? modelName;
+    int? maxAutonomyKm;
+    int? maxCapacityKg;
 
     Content({
-       required this.modelName,
-       required this.maxAutonomyKm,
-       required this.maxCapacityKg,
+        this.id,
+        this.modelName,
+        this.maxAutonomyKm,
+        this.maxCapacityKg,
     });
 
     factory Content.fromJson(Map<String, dynamic> json) => Content(
+        id: json["id"],
         modelName: json["modelName"],
         maxAutonomyKm: json["maxAutonomyKm"],
         maxCapacityKg: json["maxCapacityKg"],
     );
 
     Map<String, dynamic> toJson() => {
+        "id": id,
         "modelName": modelName,
         "maxAutonomyKm": maxAutonomyKm,
         "maxCapacityKg": maxCapacityKg,
