@@ -22,7 +22,17 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Admin'),
+          title: const Text('Home Page'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              tooltip: "Aggiungi punto deposito",
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Aggiungerai punto deposito')));
+              },
+            )
+          ],
         ),
         body: ListView(children: [
           SvgPicture.asset(

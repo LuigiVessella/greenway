@@ -1,50 +1,52 @@
 import 'dart:convert';
+import 'dart:ui';
 
-import 'package:greenway/dto/navigation_dto.dart'; // Importa la classe contenente DeliveryNavigation
+import 'package:flutter/material.dart';
+import 'package:greenway/dto/navigation_dto.dart';
+import 'package:greenway/services/other/unpack_polyline.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:google_polyline_algorithm/src/google_polyline_algorithm.dart';
 
 class NavigationDataParser {
-
   // Funzione per unire le polyline
-  String combinePolylines(NavigationDataDto data) {
-    String combinedGeometry = '';
+  List<String> combinePolylines(NavigationDataDTO data) {
+    List<List<num>> latLngsSteps = [];
+    List<String> tripPolylines = [];
+    String legPolyline = '';
 
-    for (final trip in data.routes) {
-      for (final leg in trip.legs) {
-        for (final step in leg.steps) {
-          combinedGeometry += step.geometry;
+    for (final trip in data.routes!) {
+      for (final leg in trip.legs!) {
+        latLngsSteps.clear();
+        for (final step in leg.steps!) {
+          latLngsSteps += (decodePolyline(
+              step.geometry!)); // qua ho le coordinate di ogni step
         }
+        legPolyline = encodePolyline(latLngsSteps);
+        tripPolylines.add(legPolyline);
+      }
+    }
+    print("legs: ${tripPolylines.length}");
+
+    return tripPolylines;
+  }
+
+  //Funzione per concatenare i nomi delle strade
+ // List<List<String>> 
+  void concatenateRoadNames(NavigationDataDTO data) {
+    List<String> tripStreetNames = [];
+    //List<String> legStreetsNames = [];
+    String legStreetsName = '';
+
+    for (final trip in data.routes!) {
+      for (final leg in trip.legs!) {
+        legStreetsName = '';
+        for (final step in leg.steps!) {
+          legStreetsName += '${step.name} \n';
+        }
+        tripStreetNames.add(legStreetsName);
       }
     }
 
-    return combinedGeometry;
+    print(tripStreetNames[0]);  
   }
-
-  // Funzione per concatenare i nomi delle strade
-  String concatenateRoadNames(NavigationDataDto data) {
-    final Set<String> uniqueRoadNames = {};
-
-    for (final trip in data.routes) {
-      for (final leg in trip.legs) {
-        for (final step in leg.steps) {
-          uniqueRoadNames.add(step.name);
-        }
-      }
-    }
-
-    return uniqueRoadNames.join(', ');
-  }
-
-  // Esempio d'uso:
-  void parseData() {
-    String jsonString = '...'; // Il tuo JSON
-    NavigationDataDto parsedData = navigationDataDtoFromJson(jsonString);
-
-    final combinedPolyline = combinePolylines(parsedData);
-    final concatenatedRoadNames = concatenateRoadNames(parsedData);
-
-    print('Polyline combinata: $combinedPolyline');
-    print('Nomi strade concatenati: $concatenatedRoadNames');
-  }
-
 }
-

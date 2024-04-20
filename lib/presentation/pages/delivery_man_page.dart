@@ -17,9 +17,9 @@ class DeliveryManPage extends StatelessWidget {
           appBar: AppBar(
             bottom: const TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.delivery_dining)),
-                Tab(icon: Icon(Icons.local_shipping_rounded)),
-                Tab(icon: Icon(Icons.map_outlined)),
+                Tab(icon: Icon(Icons.delivery_dining), text: "Consegne",),
+                Tab(icon: Icon(Icons.local_shipping_rounded), text: "Veicolo"),
+                Tab(icon: Icon(Icons.map_outlined), text:"Mappa"),
               ],
             ),
             title: const Text('Le tue attività:'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenway/dto/add_delivery_dto.dart';
 import 'package:greenway/entity/delivery.dart';
 
 import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
@@ -14,14 +15,7 @@ class AddNewDelivery extends StatefulWidget {
 class _AddNewDeliveryState extends State<AddNewDelivery> {
   var resultSenderG, resultReceiverG;
 
-  Delivery newDelivery = Delivery(
-      sender: "Mario Rossi",
-      senderAddress: "Via Roma",
-      receiver: "Beatrice Bianchi",
-      receiverAddress: "Via Napoli",
-      receiverCoordinates:
-          Coordinates(type: "Point", coordinates: [14.275188, 40.860434]),
-      weightKg: "1.5");
+  NewDeliveryDTO newDeliveryDTO = NewDeliveryDTO();
 
   List<Delivery> createdDeliveries = [];
 
@@ -29,7 +23,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Consegna:'),
+          title: const Text('Genera etichetta'),
         ),
         body: Center(
             child: Column(
@@ -38,7 +32,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               const SizedBox(
                 height: 40,
               ),
-              const Text('I pacchi di questa consegna:'),
+              const Text('Le tue spedizioni:'),
               SizedBox(
                 height: 300,
                 child: ListView.builder(
@@ -48,24 +42,24 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                       return Card(
                         child: ListTile(
                           leading: const Icon(Icons.local_shipping),
-                          title: Text(createdDeliveries[index].receiverAddress),
+                          title: Text('A: ${createdDeliveries[index].receiverAddress}'),
                           subtitle: Text(
-                              'da ${createdDeliveries[index].senderAddress}'),
+                              'Da: ${createdDeliveries[index].sender}'),
                         ),
                       );
                     }),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              
               const Divider(),
+              const Text('Vuoi spedire?'),
+              const SizedBox(height: 40,),
               ElevatedButton(
                   onPressed: () {
                     _navigateAndDisplaySelection(context, 'sender');
                   },
                   child: const Text('Aggiungi mittente')),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               ElevatedButton(
                   onPressed: () {
@@ -73,7 +67,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                   },
                   child: const Text('Aggiungi destinatario')),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               ElevatedButton(
                   onPressed: () {
@@ -110,31 +104,43 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
     }
 
     if (resultSender != null) {
-      print('sender address: ${resultSender['address']}');
       setState(() {
-        resultSenderG = resultSender;
+        newDeliveryDTO.sender = resultSender['name'];
+        newDeliveryDTO.senderAddress = resultSender['address'];
       });
     }
 
     if (resultReceiver != null) {
-      print('receiver address: ${resultReceiver['address']}');
       setState(() {
-        resultReceiverG = resultReceiver;
+        newDeliveryDTO.receiver = resultReceiver['name'];
+        newDeliveryDTO.receiverAddress = resultReceiver['address'];
+        newDeliveryDTO.receiverCoordinates = NewCoordinatesDTO(
+          type: "Point",
+          coordinates: [
+            resultReceiver['lon'],
+            resultReceiver['lat'],
+          ],
+        );
       });
     }
   }
 
   bool _addNewDelivery() {
-    //aggiorno l'oggetto newDelivery creato sopra
-    //questa cosa va sistemata in quanto creerò un delivery dto da poter modificare liberamente e solo infine assegnarlo a una delivery
-    newDelivery.sender = 'Luigi Vessella';
-    newDelivery.receiverAddress = resultReceiverG['address'];
-    newDelivery.senderAddress = resultSenderG['address'];
+    Delivery newDelivery = Delivery(
+        sender: newDeliveryDTO.sender!,
+        senderAddress: newDeliveryDTO.senderAddress!,
+        receiver: newDeliveryDTO.receiver!,
+        receiverAddress: newDeliveryDTO.receiverAddress!,
+        receiverCoordinates: Coordinates(
+            type: newDeliveryDTO.receiverCoordinates!.type!,
+            coordinates: newDeliveryDTO.receiverCoordinates!.coordinates!),
+        weightKg: '1.0');
 
     setState(() {
       createdDeliveries.add(newDelivery);
     });
 
+    //TODO: aggiungere un controllo sulla risposta del metodo
     DeliveryRepository dv = DeliveryRepository();
     dv.addNewDelivery(newDelivery);
     return true;

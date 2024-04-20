@@ -1,69 +1,192 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:greenway/dto/navigation_dto.dart';
+import 'package:greenway/entity/vehicle/vehicle.dart';
+import 'package:greenway/repositories/vehicle_repository.dart';
+import 'package:greenway/services/parser/navigation_data_parser.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/other/unpack_polyline.dart';
 
-class NavigationWidget extends StatelessWidget {
+class NavigationWidget extends StatefulWidget {
   const NavigationWidget({super.key});
 
-  final String polyline =
-      'qtgxFylxuAEJ?LD\\RnA?PCREPILmAn@??]eAOi@c@}B[}A_@oBa@gC??mA@cD|@??IcCCq@KqCAII_CMgDCg@??[?}CCO?SAaDCGAq@@W?e@E??U_@]a@IEaCIG@E@C@s@bA?@A@A?A?S?U?K?IAMG??CEAAACEAE?E@CD??UFSDyA???QAE?gDCsAC{AA???mAT{B??{Ae@iA]ME??XkAHSDMHGREx@KB???FIBI?OASMwDOuDMwCCm@??REFCHGJMLYD[?WE[ISAAIMOKQGU?MDQJMNCJ??Yg@k@cAg@_AKSGKiAwBcB{AKIKEaAi@k@Gi@Jg@N??M@EAQGCOEOEOEIWa@g@q@KKIGICKCIAG?K@_@Je@PYHM@M?MCOGYe@Iq@F]N{@Xy@f@a@^OlB[DAFCNK??HAFAN?JF\\NNBF?L???LC\\GRGRININMHKb@o@DKFSH[FYBUBWJcCV{EBKBIFGFCVCNCJK??@?B?BA@ABC@G?GCGCC??IUAKAQDqADkAHqAXiCFc@Fc@\\mC@I@I?O??FFFDb@F@@B@fAd@rAj@|@^LFv@\\zAl@FBB@@@vAj@FBD@F?x@EF?f@CJCdAi@t@a@d@Wd@WxAw@HEBAHGLIPMDGHG?AFKFIN[FUBQBMB]@a@BUDMBKJMLMf@[l@WHGTK??UEC?A?C?A@E@{Al@KHGDA?C??AAAKq@AA?A@A@A@AjAg@nAg@XoDPW??a@aBI[Oq@??cAb@??I_@????I]Ka@YoAWcA??WRk@b@]VYm@??aC_DOASCE?O???K_CAm@?U?i@PuA??k@Gu@EKAQGKCQI??OIOGMCSEQCYA]C_@Cc@GQAOCc@CSAWAOA??QCe@Ee@Ak@@g@BM@??ASE{AOyEAQ??eDRqAH[Bi@BeAH??CDCHCH?JNdALv@NlADXJt@F@??iBn@c@T??@XaAlDIXENCHCLEp@MxAGbA?L?H?J@JBJDHDHFHDFHDjBx@JFLJFDJFNNDDDHFHDF?@BF@FBJ@R@H??U@ILCDq@rA[l@y@jBSrAQpAIj@mArFm@dBIVIb@AHEV?BCd@An@?r@DpA?h@A@EvAA^?vAm@p@Yl@a@~@??Lb@R@JJH@??HAJAVIb@Md@Mf@LDDHHHPDH@FBN\\rB?LADE@ADAF??ADABKJINOJGBE@mBZ_@Ng@@Yx@Oz@G\\Hp@Xd@NFLBL?LAXId@Q^KJAF?H@JBHBHFJJf@p@V@DHDNDNBN?J?TAR?BCrAChBAtC?@Bd@Fv@B\\Fn@@JBPB@@P??HPDFFDL@d@CPA??LFDDBBVXrAfBbAtA~@nADD??lClDLP??YNeB~@IB{@d@{@`@??CMm@gCW_A??';
+  @override
+  State<NavigationWidget> createState() => _NavigationWidgetState();
+}
+
+class _NavigationWidgetState extends State<NavigationWidget> {
+  @override
+  void initState() {
+    super.initState();
+    _getNavigationData();
+
+    colors.add(Colors.blue);
+    colors.add(Colors.red);
+  }
+
+  final VehicleRepository _vr = VehicleRepository();
+  final NavigationDataParser dataParser = NavigationDataParser();
+  List<Color> colors = [];
+  List<String> tripRoute = [];
+  String? backTrip = '';
+  bool _viewBackTrip = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-            child: Column(children: <Widget>[
-      Row(
-        children: [
-          SizedBox(
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                padding: const EdgeInsets.all(8.0),
-                scrollDirection: Axis.horizontal,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Aggiungi percorso di ritorno')),
-                  ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Visualizza marcatori'))
-                ],
-              ))
-        ],
-      ),
-      Expanded(
-          child: FlutterMap(
-        options: const MapOptions(
-          initialCenter: LatLng(41.3518, 14.3689),
-          initialZoom: 9.2,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.greenway',
-          ),
-          PolylineLayer(polylines: [
-            Polyline(
-                points: decodePolyline(polyline).unpackPolyline(),
-                color: Colors.blue,
-                strokeWidth: 3.0)
-          ]),
-          CurrentLocationLayer(),
-          RichAttributionWidget(
-            attributions: [
-              TextSourceAttribution(
-                'OpenStreetMap contributors',
-                onTap: () =>
-                    launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+    return FutureBuilder<NavigationDataDTO>(
+      future:
+          _getNavigationData(), // a previously-obtained Future<String> or null
+      builder: (context, snapshot) {
+        List<Widget> children;
+        if (snapshot.hasData) {
+          tripRoute.addAll(dataParser.combinePolylines(snapshot.data!));
+          backTrip = tripRoute.lastOrNull;
+          dataParser.concatenateRoadNames(snapshot.data!);
+          children = <Widget>[
+            Row(
+              children: [
+                SizedBox(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView(
+                      padding: const EdgeInsets.all(8.0),
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              if (backTrip != null && _viewBackTrip != true) {
+                                setState(() {
+                                  _viewBackTrip = true;
+                                });
+                              } else if (_viewBackTrip != false) {
+                                setState(() {
+                                  _viewBackTrip = false;
+                                });
+                              }
+                            },
+                            child: const Text('Aggiungi percorso di ritorno')),
+                        ElevatedButton(
+                            onPressed: () {},
+                            child: const Text('Visualizza marcatori')),
+                        ElevatedButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  showDragHandle: true,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return SizedBox(
+                                        height: 300,
+                                       
+                                        child: Center(
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                              const Text('Modal BottomSheet'),
+                                              ElevatedButton(
+                                                child: const Text(
+                                                    'Close BottomSheet'),
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                              ),
+                                            ])));
+                                  });
+                            },
+                            child: const Text('Visualizza indicazioni'))
+                      ],
+                    ))
+              ],
+            ),
+            Expanded(
+                child: FlutterMap(
+              options: const MapOptions(
+                initialCenter: LatLng(41.3518, 14.3689),
+                initialZoom: 9.2,
               ),
-            ],
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.greenway',
+                ),
+                PolylineLayer(polylines: [
+                  Polyline(
+                      points: decodePolyline(tripRoute[0]).unpackPolyline(),
+                      color: Colors.blue,
+                      strokeWidth: 3.0),
+                ]),
+                Visibility(
+                    visible: _viewBackTrip,
+                    child: PolylineLayer(polylines: [
+                      Polyline(
+                          points: decodePolyline(tripRoute[1]).unpackPolyline(),
+                          color: Colors.purple,
+                          strokeWidth: 2.0)
+                    ])),
+                CurrentLocationLayer(),
+                const MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: LatLng(40.884837, 14.266262),
+                      width: 30,
+                      height: 30,
+                      child: Icon(Icons.warehouse),
+                    ),
+                  ],
+                ),
+                RichAttributionWidget(
+                  attributions: [
+                    TextSourceAttribution(
+                      'OpenStreetMap contributors',
+                      onTap: () => launchUrl(
+                          Uri.parse('https://openstreetmap.org/copyright')),
+                    ),
+                  ],
+                ),
+              ],
+            ))
+          ];
+        } else if (snapshot.hasError) {
+          children = <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text('Error: ${snapshot.error}'),
+            ),
+          ];
+        } else {
+          children = const <Widget>[
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Text('Awaiting result...'),
+            ),
+          ];
+        }
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
           ),
-        ],
-      ))
-    ])));
+        );
+      },
+    );
+  }
+
+  Future<NavigationDataDTO> _getNavigationData() async {
+    NavigationDataDTO navData = await _vr.getVehicleRoute('1');
+
+    return navData;
   }
 }

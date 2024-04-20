@@ -2,7 +2,9 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:greenway/components/components.dart';
 import 'package:greenway/presentation/pages/login_web_page.dart';
 import 'package:greenway/repositories/deliveryman_repository.dart';
 import 'package:greenway/services/network/logger.dart';
@@ -25,83 +27,116 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+        body: Center(
+      child: Padding(
+        padding: const EdgeInsets.all(25),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Visibility(
               visible: _isBusy,
               child: const LinearProgressIndicator(),
             ),
             const SizedBox(
-              height: 100,
+              height: 60,
             ),
             SvgPicture.asset('lib/assets/undraw_package_arrived_63rf.svg',
                 height: 100),
-            const SizedBox(height: 50),
-            const Text("Benvenuto in GreenWay, esegui il login"),
-            const Divider(),
-            const SizedBox(height: 150,),
-            
-            ElevatedButton(
-                style: const ButtonStyle(
-                    minimumSize: MaterialStatePropertyAll(Size(200, 40)),
-                    maximumSize: MaterialStatePropertyAll(Size(300, 50))),
-                onPressed: () async {
-                  if (kIsWeb) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const InteractivePage()));
-                  }
-                  else if (Platform.isIOS) {
-                    AuthService().signInWithAutoCodeExchange(
-                        preferEphemeralSession: true);
-                  } else {
-                    AuthService().signInWithAutoCodeExchange();
-                  }
-                  _checkBusy();
-                  Future.delayed(
-                    const Duration(seconds: 2),
-                    () {
-                      _checkBusy();
-                    },
-                  );
-                },
-                child: const Text('Login')),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () async {
-                AuthService().endSession();
-              },
-              child: const Text('Logout'),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-                onPressed: () {
-                  final snackBar = SnackBar(
-                      content: const Text('Please login first'),
-                      action: SnackBarAction(
-                        label: 'Undo',
-                        onPressed: () {
-                          // Some code to undo the change.
-                        },
-                      ));
-                  if (AuthService().isLoggedIn &&
-                      AuthService().getUserRole!.contains('ADMIN')) {
-                    Navigator.pushNamed(context, '/second');
-                  } else if (AuthService().isLoggedIn &&
-                      AuthService().getUserRole!.contains('DELIVERY')) {
-                    _checkDeliveyman();
-                    Navigator.pushNamed(context, '/third');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                },
-                child: const Text('Procedi')),
+            Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                        right: 15.0, left: 15, bottom: 15),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const ScreenTitle(title: 'Ciao'),
+                          const Text(
+                              'Benvenuto in GreenWay, il navigatore Green',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 20,
+                              )),
+                          const Divider(),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          FilledButton(
+                              onPressed: () async {
+                                if (kIsWeb) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const InteractivePage()));
+                                } else if (Platform.isIOS) {
+                                  AuthService().signInWithAutoCodeExchange(
+                                      preferEphemeralSession: true);
+                                } else {
+                                  AuthService().signInWithAutoCodeExchange();
+                                }
+                                _checkBusy();
+                                Future.delayed(
+                                  const Duration(seconds: 2),
+                                  () {
+                                    _checkBusy();
+                                  },
+                                );
+                              },
+                              child: const SizedBox(
+                                width: 200,
+                                child: Text('Login',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                              )),
+                          ElevatedButton(
+                            onPressed: () async {
+                              AuthService().endSession();
+                            },
+                            child: const SizedBox(
+                              width: 200,
+                              child: Text('Logout',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                final snackBar = SnackBar(
+                                    content: const Text('Please login first'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () {
+                                        // Some code to undo the change.
+                                      },
+                                    ));
+                                if (AuthService().isLoggedIn &&
+                                    AuthService()
+                                        .getUserRole!
+                                        .contains('ADMIN')) {
+                                  Navigator.pushNamed(context, '/second');
+                                } else if (AuthService().isLoggedIn &&
+                                    AuthService()
+                                        .getUserRole!
+                                        .contains('DELIVERY')) {
+                                  _checkDeliveyman();
+                                  Navigator.pushNamed(context, '/third');
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                              },
+                              child: const Text('Procedi')),
+                        ])))
           ],
         ),
       ),
-    );
+    ));
   }
 
   void _checkBusy() {

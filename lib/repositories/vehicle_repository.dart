@@ -1,4 +1,5 @@
 import 'package:greenway/dto/delivery_dman_dto.dart';
+import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 
@@ -19,6 +20,10 @@ class VehicleRepository {
 
   Future<VehicleByDmanDto> getVehicleByDeliveryMan(String deliveryMan) {
     return httpVehicle.getVehicleByDeliveryMan(deliveryMan);
+  }
+
+  Future<NavigationDataDTO> getVehicleRoute(String vehicleID){
+    return httpVehicle.getVehicleRoute(vehicleID);
   }
 //
   // void updateVehicle(Vehicle vehicle) {
