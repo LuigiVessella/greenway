@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/presentation/widgets/identity_view.dart';
+import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logger_web.dart';
 import 'package:openidconnect/openidconnect.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -16,23 +18,12 @@ class InteractivePage extends StatefulWidget {
 }
 
 class _InteractivePageState extends State<InteractivePage> {
-  final defaultscopes = [
-    "openid",
-    "profile",
-    "email",
-  ];
-
-  final defaultRedirectUrl = "http://localhost:61401/callback.html";
   final _formKey = GlobalKey<FormState>();
 
-  String clientId = dotenv.env['clientID']!;
-  String discoveryUrl = dotenv.env['discoveryUrl']!;
-  String clientSecret = dotenv.env['CLIENT_SECRET']!;
-  OpenIdConfiguration? discoveryDocument;
-  AuthorizationResponse? identity;
   bool usePopup = true;
 
   String? errorMessage;
+  AuthorizationResponse? identity;
 
   @override
   Widget build(BuildContext context) {
@@ -46,92 +37,25 @@ class _InteractivePageState extends State<InteractivePage> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
-              TextFormField(
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(labelText: "Discovery Url"),
-                keyboardType: TextInputType.url,
-                initialValue: discoveryUrl,
-                onChanged: (value) => discoveryUrl = value,
-                validator: (value) {
-                  const errorMessage =
-                      "Please enter a valid openid discovery document url";
-                  if (value == null || value.isEmpty) return errorMessage;
-                  try {
-                    Uri.parse(value);
-                    return null;
-                  } on Exception catch (e) {
-                    print(e.toString());
-                    return errorMessage;
-                  }
-                },
-              ),
               TextButton.icon(
                 onPressed: () async {
-                  _formKey.currentState!.save();
-                  if (!_formKey.currentState!.validate()) return;
-
                   try {
-                    final configuration =
-                        await OpenIdConnect.getConfiguration(discoveryUrl);
+                    final response =  
+                        await OIDCAuthService().authenticate(context: context);
+
                     setState(() {
-                      discoveryDocument = configuration;
-                      errorMessage = null;
+                      identity = OIDCAuthService().identity;
+                      AuthService().setAccessToken(identity!.accessToken);
                     });
                   } on Exception catch (e) {
                     setState(() {
                       errorMessage = e.toString();
-                      discoveryDocument = null;
+                      identity = null;
                     });
                   }
                 },
-                icon: const Icon(Icons.search),
-                label: const Text("Lookup OpenId Connect Configuration"),
-              ),
-              Visibility(
-                visible: kIsWeb,
-                child: SwitchListTile.adaptive(
-                  value: usePopup,
-                  title: const Text("Use Web Popup"),
-                  onChanged: (value) {
-                    setState(() {
-                      usePopup = value;
-                    });
-                  },
-                ),
-              ),
-              Visibility(
-                visible: discoveryDocument != null,
-                child: TextButton.icon(
-                  onPressed: () async {
-                    try {
-                      final response = await OpenIdConnect.authorizeInteractive(
-                        context: context,
-                        title: "Login",
-                        request: await InteractiveAuthorizationRequest.create(
-                          clientId: clientId,
-                          clientSecret: clientSecret,
-                          redirectUrl: defaultRedirectUrl,
-                          scopes: defaultscopes,
-                          configuration: discoveryDocument!,
-                          autoRefresh: true,
-                          useWebPopup: usePopup,
-                        ),
-                      );
-                      
-                      setState(() {
-                        identity = response;
-                        errorMessage = null;
-                      });
-                    } on Exception catch (e) {
-                      setState(() {
-                        errorMessage = e.toString();
-                        identity = null;
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.login),
-                  label: const Text("Login"),
-                ),
+                icon: const Icon(Icons.login),
+                label: const Text("Login"),
               ),
               Visibility(
                 visible: identity != null,
@@ -145,12 +69,7 @@ class _InteractivePageState extends State<InteractivePage> {
                 visible: identity != null,
                 child: TextButton.icon(
                   onPressed: () async {
-                    OpenIdConnect.logout(
-                      request: LogoutRequest(
-                        idToken: identity!.idToken,
-                        configuration: discoveryDocument!,
-                      ),
-                    );
+                    OIDCAuthService().logout();
                     setState(() {
                       identity = null;
                     });

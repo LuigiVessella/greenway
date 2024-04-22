@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:greenway/dto/navigation_dto.dart';
-import 'package:greenway/entity/vehicle/vehicle.dart';
+import 'package:greenway/presentation/widgets/show_trip_info.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/parser/navigation_data_parser.dart';
 import 'package:latlong2/latlong.dart';
@@ -31,8 +33,11 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   final NavigationDataParser dataParser = NavigationDataParser();
   List<Color> colors = [];
   List<String> tripRoute = [];
+  List<String> tripStreetNames = [];
   String? backTrip = '';
+
   bool _viewBackTrip = false;
+  bool _viewMarkers = true;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +47,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
       builder: (context, snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
+          tripStreetNames.clear();
+          tripRoute.clear();
           tripRoute.addAll(dataParser.combinePolylines(snapshot.data!));
           backTrip = tripRoute.lastOrNull;
-          dataParser.concatenateRoadNames(snapshot.data!);
+          tripRoute.removeLast();
+          tripStreetNames
+              .addAll(dataParser.concatenateRoadNames(snapshot.data!));
           children = <Widget>[
             Row(
               children: [
@@ -69,7 +78,17 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                             },
                             child: const Text('Aggiungi percorso di ritorno')),
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (_viewMarkers != true) {
+                                setState(() {
+                                  _viewMarkers = true;
+                                });
+                              } else {
+                                setState(() {
+                                  _viewMarkers = false;
+                                });
+                              }
+                            },
                             child: const Text('Visualizza marcatori')),
                         ElevatedButton(
                             onPressed: () {
@@ -78,21 +97,15 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return SizedBox(
-                                        height: 300,
-                                       
+                                        height: 400,
                                         child: Center(
                                             child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: <Widget>[
-                                              const Text('Modal BottomSheet'),
-                                              ElevatedButton(
-                                                child: const Text(
-                                                    'Close BottomSheet'),
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                              ),
+                                              TripInfo(
+                                                  tripInfo: tripStreetNames),
                                             ])));
                                   });
                             },
@@ -104,39 +117,61 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             Expanded(
                 child: FlutterMap(
               options: const MapOptions(
-                initialCenter: LatLng(41.3518, 14.3689),
-                initialZoom: 9.2,
+                initialCenter: LatLng(41.353153, 14.355927),
+                initialZoom: 15,
               ),
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.greenway',
                 ),
-                PolylineLayer(polylines: [
-                  Polyline(
-                      points: decodePolyline(tripRoute[0]).unpackPolyline(),
-                      color: Colors.blue,
-                      strokeWidth: 3.0),
-                ]),
+                PolylineLayer(
+                  polylineCulling: true,
+                  polylines: tripRoute.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final polylineString = entry.value;
+
+                    return Polyline(
+                      points: decodePolyline(polylineString).unpackPolyline(),
+                      color: colors[index],
+                      strokeWidth: 3.0,
+                    );
+                  }).toList(),
+                ),
                 Visibility(
                     visible: _viewBackTrip,
                     child: PolylineLayer(polylines: [
                       Polyline(
-                          points: decodePolyline(tripRoute[1]).unpackPolyline(),
-                          color: Colors.purple,
-                          strokeWidth: 2.0)
+                          points: decodePolyline(backTrip!).unpackPolyline(),
+                          color: Colors.green,
+                          strokeWidth: 3.0)
                     ])),
-                CurrentLocationLayer(),
-                const MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: LatLng(40.884837, 14.266262),
-                      width: 30,
-                      height: 30,
-                      child: Icon(Icons.warehouse),
+                CurrentLocationLayer(
+                  style: const LocationMarkerStyle(
+                    marker: DefaultLocationMarker(
+                      child: Icon(
+                        Icons.navigation,
+                        color: Colors.white,
+                      ),
                     ),
-                  ],
+                    markerSize: Size(40, 40),
+                    markerDirection: MarkerDirection.heading,
+                  ),
                 ),
+                Visibility(
+                    visible: _viewMarkers,
+                    child: MarkerLayer(
+                      markers: tripRoute
+                          .map((polylineString) => Marker(
+                                point: decodePolyline(polylineString)
+                                    .unpackPolyline()
+                                    .last,
+                                width: 30,
+                                height: 30,
+                                child: const Icon(Icons.location_pin),
+                              ))
+                          .toList(),
+                    )),
                 RichAttributionWidget(
                   attributions: [
                     TextSourceAttribution(
@@ -188,5 +223,11 @@ class _NavigationWidgetState extends State<NavigationWidget> {
     NavigationDataDTO navData = await _vr.getVehicleRoute('1');
 
     return navData;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }

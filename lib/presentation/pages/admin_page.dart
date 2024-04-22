@@ -22,10 +22,11 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: const Text('Home Page'),
           actions: [
             IconButton(
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.warehouse),
               tooltip: "Aggiungi punto deposito",
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(

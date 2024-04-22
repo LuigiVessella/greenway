@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/services/other/unpack_polyline.dart';
 import 'package:latlong2/latlong.dart';
@@ -31,8 +27,7 @@ class NavigationDataParser {
   }
 
   //Funzione per concatenare i nomi delle strade
- // List<List<String>> 
-  void concatenateRoadNames(NavigationDataDTO data) {
+  List<String>  concatenateRoadNames(NavigationDataDTO data) {
     List<String> tripStreetNames = [];
     //List<String> legStreetsNames = [];
     String legStreetsName = '';
@@ -47,6 +42,6 @@ class NavigationDataParser {
       }
     }
 
-    print(tripStreetNames[0]);  
+    return tripStreetNames;  
   }
 }

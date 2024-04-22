@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenway/entity/addresses.dart';
-import 'package:greenway/entity/delivery.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class AddNewPackage extends StatefulWidget {
   const AddNewPackage({super.key, required this.title});
@@ -15,7 +14,7 @@ class AddNewPackage extends StatefulWidget {
 }
 
 class _AddNewPackageState extends State<AddNewPackage> {
-  List<Address> _addressList = [];
+  final List<Address> _addressList = [];
   double _lat = 0.0;
   double _lon = 0.0;
   String? address;
@@ -23,8 +22,16 @@ class _AddNewPackageState extends State<AddNewPackage> {
   String? _nameComplete;
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerSecondName = TextEditingController();
+  Timer? _debounce;
 
-  Future<List<Address>> _getAddress(String userInput) async {
+  _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 3000), () {
+      _getAddress(query);
+    });
+  }
+
+  Future<void> _getAddress(String userInput) async {
     //late Delivery newDelivery;
 
     var client = http.Client();
@@ -46,11 +53,13 @@ class _AddNewPackageState extends State<AddNewPackage> {
           .map((data) => Address.fromJson(data))
           .toList(); // Mappa gli oggetti Address
       setState(() {
-        _addressList = addresses;
+        _addressList.clear();
+        _addressList.addAll(addresses);
       });
-      return addresses;
     } else {
-      return [];
+      setState(() {
+        _addressList.addAll([]);
+      });
     }
   }
 
@@ -70,7 +79,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
                   children: [
                     Expanded(
                         child: TextFormField(
-                          controller: _controllerName,
+                      controller: _controllerName,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Campo obbligatiorio';
@@ -82,9 +91,10 @@ class _AddNewPackageState extends State<AddNewPackage> {
                       ),
                       onChanged: (value) {},
                     )),
+                    
                     Expanded(
                         child: TextFormField(
-                          controller: _controllerSecondName ,
+                            controller: _controllerSecondName,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Campo obbligatiorio';
@@ -102,11 +112,11 @@ class _AddNewPackageState extends State<AddNewPackage> {
             ),
             TextFormField(
               onChanged: (text) async {
-                _addressList = (await _getAddress(text));
+                _onSearchChanged(text);
               },
               decoration: const InputDecoration(
-                  labelText: 'Street name:',
-                  prefixIcon: Icon(Icons.api_rounded),
+                  labelText: 'Street address:',
+                  prefixIcon: Icon(Icons.house),
                   border: OutlineInputBorder()),
             ),
             SizedBox(
@@ -136,30 +146,44 @@ class _AddNewPackageState extends State<AddNewPackage> {
               height: 40,
             ),
             Card(
-              elevation: 10,
+              elevation: 5,
               child: SizedBox(
-                height: 30,
+                
                 child: Text(
-                  'lat: $_lat e lon: $_lon',
+                  'LAT: $_lat / LON: $_lon',
                   textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.bold)
                 ),
               ),
             ),
             ElevatedButton(
               onPressed: () {
-                _nameComplete = '${_controllerName.text} ${_controllerSecondName.text}';
+                _nameComplete =
+                    '${_controllerName.text} ${_controllerSecondName.text}';
                 if (_formKey.currentState!.validate()) {
                   Navigator.pop(
                     context,
-                    {'lat': _lat, 'lon': _lon, 'address': address, 'name': '$_nameComplete'},
+                    {
+                      'lat': _lat,
+                      'lon': _lon,
+                      'address': address,
+                      'name': '$_nameComplete'
+                    },
                   );
                 }
               },
-              child: const Text('Ok'),
+              child: const Text('Salva informazioni '),
             )
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _addressList.clear();
+    super.dispose();
   }
 }

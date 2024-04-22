@@ -6,6 +6,7 @@ import 'package:greenway/services/network/logger.dart';
 class PackageList extends StatelessWidget {
   const PackageList({super.key});
 
+  
   @override
   Widget build(BuildContext context) {
     VehicleRepository vr = VehicleRepository();
@@ -22,20 +23,29 @@ class PackageList extends StatelessWidget {
                 itemCount: vehicleDTO.deliveries.length,
                 itemBuilder: (context, index) {
                   return Card(
+                    semanticContainer: false,
                       elevation: 5.0,
                       child: ExpansionTile(
-                          tilePadding: const EdgeInsets.all(15),
-                          childrenPadding: const EdgeInsets.all(9.0),
-                          title: Text('Consegna ${index+1}'),
+                          tilePadding: const EdgeInsets.all(7),
+                          childrenPadding: const EdgeInsets.all(1.0),
+                          title: Text('Consegna ${index+1}', style: const TextStyle(fontWeight: FontWeight.bold),),
                           children: [
                             ListTile(
-                              leading: const Icon(Icons.local_shipping),
+                              leading: const Icon(Icons.local_post_office),
                               title:
                                   Text(vehicleDTO.deliveries[index].receiver),
                               subtitle: Text(
                                   'presso: ${vehicleDTO.deliveries[index].receiverAddress}'),
                             ),
-                            Text('Estimated delivery time: ${vehicleDTO.deliveries[index].estimatedDeliveryTime}')
+                            const Divider(),
+                            Text('Consegna prevista: ${vehicleDTO.deliveries[index].estimatedDeliveryTime}', ),
+                             Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                FilledButton(
+                                  onPressed:() {}, 
+                                child: const Text('Consegnata'))],
+                            )
                           ]));
                 },
               ));

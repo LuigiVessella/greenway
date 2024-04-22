@@ -20,7 +20,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Informazioni sul veicolo:"),
+        title: const Text("Informazioni sul veicolo"),
         centerTitle: true,
       ),
       body: Container(
@@ -34,7 +34,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
               controller: modelTextController,
               decoration: const InputDecoration(
                   labelText: 'Model name:',
-                  prefixIcon: Icon(Icons.api_rounded),
+                  prefixIcon: Icon(Icons.info),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(
@@ -44,7 +44,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
               controller: maxAutonomyTextController,
               decoration: const InputDecoration(
                   labelText: 'Battery Capacity (km):',
-                  prefixIcon: Icon(Icons.api_rounded),
+                  prefixIcon: Icon(Icons.info),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(
@@ -54,7 +54,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
               controller: maxCapacityTextController,
               decoration: const InputDecoration(
                   labelText: 'Vehicle capacity (kg):',
-                  prefixIcon: Icon(Icons.api_rounded),
+                  prefixIcon: Icon(Icons.info),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(

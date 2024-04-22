@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/presentation/pages/map_page.dart';
 import 'package:greenway/presentation/widgets/show_package_list.dart';
 import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
-import 'package:greenway/services/network/logger.dart';
+
 
 class DeliveryManPage extends StatelessWidget {
   const DeliveryManPage({super.key});
@@ -15,14 +14,15 @@ class DeliveryManPage extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            elevation: 0.2,
             bottom: const TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.delivery_dining), text: "Consegne",),
-                Tab(icon: Icon(Icons.local_shipping_rounded), text: "Veicolo"),
+                Tab(icon: Icon(Icons.warehouse_outlined), text: "Consegne",),
+                Tab(icon: Icon(Icons.electric_car), text: "Veicolo"),
                 Tab(icon: Icon(Icons.map_outlined), text:"Mappa"),
               ],
             ),
-            title: const Text('Le tue attività:'),
+            title: const Text('La tua giornata'),
           ),
           body: TabBarView(
             children: [

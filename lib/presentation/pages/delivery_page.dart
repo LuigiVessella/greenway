@@ -4,6 +4,7 @@ import 'package:greenway/entity/delivery.dart';
 
 import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
 import 'package:greenway/repositories/delivery_repository.dart';
+import 'package:greenway/repositories/system_repository.dart';
 
 class AddNewDelivery extends StatefulWidget {
   const AddNewDelivery({super.key});
@@ -24,6 +25,12 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Genera etichetta'),
+          actions: <Widget>[
+            IconButton(
+              tooltip: 'Programma consegne',
+              onPressed:(){ _scheduleDeliveries();},
+             icon: const Icon(Icons.schedule))
+          ],
         ),
         body: Center(
             child: Column(
@@ -32,7 +39,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               const SizedBox(
                 height: 40,
               ),
-              const Text('Le tue spedizioni:'),
+              const Text('Le tue spedizioni:', style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(
                 height: 300,
                 child: ListView.builder(
@@ -51,7 +58,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               ),
               
               const Divider(),
-              const Text('Vuoi spedire?'),
+              const Text('Vuoi spedire?', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 40,),
               ElevatedButton(
                   onPressed: () {
@@ -144,5 +151,10 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
     DeliveryRepository dv = DeliveryRepository();
     dv.addNewDelivery(newDelivery);
     return true;
+  }
+
+  void _scheduleDeliveries() {
+    SystemRepository sr = SystemRepository();
+    sr.trigDeliverySheduling();
   }
 }

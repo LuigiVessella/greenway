@@ -1,10 +1,8 @@
-// ignore_for_file: unused_field
-
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:openidconnect/openidconnect.dart' as webauth;
+
 // ... altre importazioni, configurazione come dotenv
 
 class AuthService {
@@ -16,8 +14,7 @@ class AuthService {
   //con factory stiamo praticamente dicendo che non possono esistere più istanze di questa classe. se esistono, sono uguali.
   final FlutterAppAuth _appAuth = const FlutterAppAuth();
 
-  webauth.OpenIdConfiguration? discoveryDocument;
-  webauth.AuthorizationResponse? identity;
+ 
 
   //variabili private
   bool _isBusy = false;
@@ -106,11 +103,8 @@ class AuthService {
     _isBusy = false;
     _decodedToken = JwtDecoder.decode(_accessToken.toString());
    _expDate = JwtDecoder.getExpirationDate(_accessToken.toString()).toString();
-    print(_expDate);
-    print(_decodedToken);
    _userInfo = _decodedToken?["preferred_username"].toString();
    _userRole = _decodedToken?["realm_access"].toString();
-   print('username $_userInfo');
   }
 
   void _processTokenResponse(TokenResponse? response) {
@@ -142,6 +136,7 @@ class AuthService {
     _refreshToken = null;
     _userInfo = null;
     _expDate = null;
+    _isLoggingComplete = false;
   }
 
   void _clearBusyState() {
@@ -171,4 +166,8 @@ class AuthService {
   } 
   
   String? get refreshToken => _refreshToken;
+
+  void setAccessToken(String accessToken) {
+    _accessToken = accessToken;
+  }
 }

@@ -77,7 +77,8 @@ class VehicleListDmanWidget extends StatelessWidget {
                           title: Text(vehicleDTO.modelName),
                           subtitle: Text(
                               'max capacity: ${vehicleDTO.maxCapacityKg}kg'),
-                        )
+                        ),
+                        FilledButton(onPressed: (){}, child: const Text('Rientra')),
                       ]));
                 },
               ));
