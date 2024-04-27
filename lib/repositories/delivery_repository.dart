@@ -12,6 +12,11 @@ class DeliveryRepository{
     httpDelivery.addDelivery(delivery);
   }
 
+  void completeDelivery(String deliveryID) {
+    httpDelivery.completeDelivery(deliveryID);
+  }
+
+
 
   //Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) {
   //  return httpDelivery.getDeliveryByDeliveryMan(deliveryManId);

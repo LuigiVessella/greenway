@@ -19,9 +19,11 @@ class _AddNewPackageState extends State<AddNewPackage> {
   double _lon = 0.0;
   String? address;
   final _formKey = GlobalKey<FormState>();
+  final _formAddressKey = GlobalKey<FormState>();
   String? _nameComplete;
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerSecondName = TextEditingController();
+  final TextEditingController _controllerAddress = TextEditingController();
   Timer? _debounce;
 
   _onSearchChanged(String query) {
@@ -40,6 +42,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
       'nominatim.openstreetmap.org',
       '/search',
       {
+        'country': 'Italia',
         'state': 'Campania',
         'street': userInput,
         'format': 'jsonv2',
@@ -91,34 +94,43 @@ class _AddNewPackageState extends State<AddNewPackage> {
                       ),
                       onChanged: (value) {},
                     )),
-                    
                     Expanded(
                         child: TextFormField(
-                            controller: _controllerSecondName,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Campo obbligatiorio';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Cognome',
-                            ),
-                            onChanged: (value) {})),
+                      controller: _controllerSecondName,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo obbligatiorio';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Cognome',
+                      ),
+                      onChanged: (value) {},
+                    )),
                   ],
                 )),
             const SizedBox(
               height: 40,
             ),
-            TextFormField(
-              onChanged: (text) async {
+            Form(
+              key: _formAddressKey,
+                child: TextFormField(
+              controller: _controllerAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Campo obbligatiorio';
+                }
+                return null;
+              },
+              onChanged: (text) {
                 _onSearchChanged(text);
               },
               decoration: const InputDecoration(
                   labelText: 'Street address:',
                   prefixIcon: Icon(Icons.house),
                   border: OutlineInputBorder()),
-            ),
+            )),
             SizedBox(
               height: 270,
               child: ListView.builder(
@@ -133,6 +145,8 @@ class _AddNewPackageState extends State<AddNewPackage> {
                           onTap: () {
                             if (mounted) {
                               setState(() {
+                                _controllerAddress.text =
+                                    _addressList[index].displayName!;
                                 _lat = double.parse(_addressList[index].lat!);
                                 _lon = double.parse(_addressList[index].lon!);
                                 address = _addressList[index].displayName;
@@ -148,19 +162,16 @@ class _AddNewPackageState extends State<AddNewPackage> {
             Card(
               elevation: 5,
               child: SizedBox(
-                
-                child: Text(
-                  'LAT: $_lat / LON: $_lon',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontWeight: FontWeight.bold)
-                ),
+                child: Text('LAT: $_lat / LON: $_lon',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             ElevatedButton(
               onPressed: () {
                 _nameComplete =
                     '${_controllerName.text} ${_controllerSecondName.text}';
-                if (_formKey.currentState!.validate()) {
+                if (_formKey.currentState!.validate() && _formAddressKey.currentState!.validate()) {
                   Navigator.pop(
                     context,
                     {

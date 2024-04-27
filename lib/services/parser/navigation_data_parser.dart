@@ -9,25 +9,27 @@ class NavigationDataParser {
     List<List<num>> latLngsSteps = [];
     List<String> tripPolylines = [];
     String legPolyline = '';
-
-    for (final trip in data.routes!) {
-      for (final leg in trip.legs!) {
-        latLngsSteps.clear();
-        for (final step in leg.steps!) {
-          latLngsSteps += (decodePolyline(
-              step.geometry!)); // qua ho le coordinate di ogni step
+    
+    if (data.routes != null) {
+      for (final trip in data.routes!) {
+        for (final leg in trip.legs!) {
+          latLngsSteps.clear();
+          for (final step in leg.steps!) {
+            latLngsSteps += (decodePolyline(
+                step.geometry!)); // qua ho le coordinate di ogni step
+          }
+          legPolyline = encodePolyline(latLngsSteps);
+          tripPolylines.add(legPolyline);
         }
-        legPolyline = encodePolyline(latLngsSteps);
-        tripPolylines.add(legPolyline);
       }
+      print("legs: ${tripPolylines.length}");
     }
-    print("legs: ${tripPolylines.length}");
 
     return tripPolylines;
   }
 
   //Funzione per concatenare i nomi delle strade
-  List<String>  concatenateRoadNames(NavigationDataDTO data) {
+  List<String> concatenateRoadNames(NavigationDataDTO data) {
     List<String> tripStreetNames = [];
     //List<String> legStreetsNames = [];
     String legStreetsName = '';
@@ -42,6 +44,6 @@ class NavigationDataParser {
       }
     }
 
-    return tripStreetNames;  
+    return tripStreetNames;
   }
 }

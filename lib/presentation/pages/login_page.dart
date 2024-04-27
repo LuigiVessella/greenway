@@ -1,11 +1,9 @@
 import 'dart:io' show Platform;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/components/components.dart';
-import 'package:greenway/presentation/pages/login_web_page.dart';
 import 'package:greenway/repositories/deliveryman_repository.dart';
 import 'package:greenway/services/network/logger.dart';
 
@@ -64,13 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           FilledButton(
                               onPressed: () async {
-                                if (kIsWeb) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const InteractivePage()));
-                                } else if (Platform.isIOS) {
+                                if (Platform.isIOS) {
                                   AuthService().signInWithAutoCodeExchange(
                                       preferEphemeralSession: true);
                                 } else {
@@ -119,13 +111,14 @@ class _LoginPageState extends State<LoginPage> {
                                     AuthService()
                                         .getUserRole!
                                         .contains('ADMIN')) {
-                                  Navigator.pushNamed(context, '/second');
+                                  Navigator.pushNamed(context, '/adminPage');
                                 } else if (AuthService().isLoggedIn &&
                                     AuthService()
                                         .getUserRole!
                                         .contains('DELIVERY')) {
                                   _checkDeliveyman();
-                                  Navigator.pushNamed(context, '/third');
+                                  Navigator.pushNamed(
+                                      context, '/deliveryManPage');
                                 } else {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);

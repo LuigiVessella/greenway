@@ -53,6 +53,7 @@ dependencies:
   flutter_map_animated_marker: ^2.0.0
   openidconnect: ^1.0.28
   flutter_launcher_icons: ^0.13.1
+  flutter_randomcolor: ^1.0.15
 
 
 

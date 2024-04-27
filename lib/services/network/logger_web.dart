@@ -13,6 +13,9 @@ class OIDCAuthService {
   String clientId = dotenv.env['clientID']!;
   String discoveryUrl = dotenv.env['discoveryUrl']!;
   String clientSecret = dotenv.env['CLIENT_SECRET']!;
+
+  bool _isLogged = false;
+
   OpenIdConfiguration? discoveryDocument;
   AuthorizationResponse? identity;
 
@@ -40,7 +43,7 @@ class OIDCAuthService {
         request: await InteractiveAuthorizationRequest.create(
           clientId: clientId,
           clientSecret: clientSecret,
-          redirectUrl: "http://localhost:50458/callback.html", // Redirect URL
+          redirectUrl: "http://localhost:53408/callback.html", // Redirect URL
           scopes: ["openid", "profile", "email"],
           configuration: discoveryDocument!,
           autoRefresh: true,
@@ -49,6 +52,7 @@ class OIDCAuthService {
       );
 
       identity = response;
+      _isLogged = true;
       return response;
     } on Exception catch (e) {
       throw Exception('Errore durante l\'autenticazione OpenID Connect: $e');
@@ -68,6 +72,7 @@ class OIDCAuthService {
           configuration: discoveryDocument!,
         ),
       );
+      _isLogged = false;
       identity = null;
     } on Exception catch (e) {
       throw Exception('Errore durante il logout OpenID Connect: $e');
@@ -75,9 +80,9 @@ class OIDCAuthService {
   }
 
   // Metodo per verificare se l'utente è loggato
-  bool isAuthenticated() {
-    return identity != null;
-  }
+  bool isAuthenticated() => _isLogged;
+
+  
 
   // Metodo per ottenere i token d'accesso e d'identità
   String? get accessToken => identity?.accessToken;

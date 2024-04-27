@@ -22,7 +22,7 @@ class VehicleRepository {
     return httpVehicle.getVehicleByDeliveryMan(deliveryMan);
   }
 
-  Future<NavigationDataDTO> getVehicleRoute(String vehicleID){
+  Future<NavigationDataDTO?> getVehicleRoute(String vehicleID){
     return httpVehicle.getVehicleRoute(vehicleID);
   }
 //

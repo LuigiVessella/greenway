@@ -23,11 +23,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   @override
   void initState() {
     super.initState();
-    _getNavigationData();
+    
+    _navData = _vr.getVehicleRoute('1');
 
     colors.add(Colors.blue);
     colors.add(Colors.red);
   }
+  
 
   final VehicleRepository _vr = VehicleRepository();
   final NavigationDataParser dataParser = NavigationDataParser();
@@ -36,17 +38,19 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   List<String> tripStreetNames = [];
   String? backTrip = '';
 
+  late Future<NavigationDataDTO?> _navData;
   bool _viewBackTrip = false;
   bool _viewMarkers = true;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NavigationDataDTO>(
-      future:
-          _getNavigationData(), // a previously-obtained Future<String> or null
+    return FutureBuilder<NavigationDataDTO?>(
+      
+      future:_navData, 
       builder: (context, snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
+          
           tripStreetNames.clear();
           tripRoute.clear();
           tripRoute.addAll(dataParser.combinePolylines(snapshot.data!));
@@ -187,13 +191,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
         } else if (snapshot.hasError) {
           children = <Widget>[
             const Icon(
-              Icons.error_outline,
-              color: Colors.red,
+              Icons.info_outline_rounded,
+              color: Colors.orange,
               size: 60,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Text('Error: ${snapshot.error}'),
+              padding: const EdgeInsets.all(16),
+              child: Text('Info: ${snapshot.error}'),
             ),
           ];
         } else {
@@ -219,11 +223,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
     );
   }
 
-  Future<NavigationDataDTO> _getNavigationData() async {
-    NavigationDataDTO navData = await _vr.getVehicleRoute('1');
-
-    return navData;
-  }
 
   @override
   void dispose() {

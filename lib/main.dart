@@ -5,20 +5,36 @@ import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
 import 'package:greenway/presentation/pages/delivery_man_page.dart';
 import 'package:greenway/presentation/pages/login_page.dart';
-import 'package:greenway/presentation/pages/login_web_page.dart';
+import 'package:greenway/presentation/pages/web_pages/login_web_page.dart';
+import 'package:greenway/presentation/pages/map_page.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
 
 Future<void> main() async {
-  runApp(const MyApp());
   await dotenv.load(fileName: "lib/config/auth/auth_client.env");
+   kIsWeb ? runApp(const MyWebApp()) : runApp(const MyApp());
+  
 }
+class MyWebApp extends StatelessWidget {
+  const MyWebApp({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'GreenWay',
+      debugShowCheckedModeBanner: true,
+      theme: firstAppTheme,
+      home: const InteractivePage(),
+
+    );
+  }
+}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'GreenWay',
       debugShowCheckedModeBanner: false,
       theme: firstAppTheme,
       initialRoute: kIsWeb ? '/loginWeb' : '/',  // Logica di selezione della route
@@ -27,11 +43,11 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/loginWeb': (context) => const InteractivePage(),
         // Il nome second è collegato ad admin page, third welcome page e cosi via.
-        '/second': (context) => const AdminPage(),
-        '/third': (context) => const DeliveryManPage(),
+        '/adminPage': (context) => const AdminPage(),
+        '/deliveryManPage': (context) => const DeliveryManPage(),
         '/deliveryS':(context) => const AddNewPackage(title: 'Aggiungi mittente',),
         '/deliveryR':(context) => const AddNewPackage(title: 'Aggiungi destinatario',),
-
+        'mapPage': (context) => const NavigationWidget()
       },
     );
   }

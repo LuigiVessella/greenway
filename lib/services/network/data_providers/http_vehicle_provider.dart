@@ -6,6 +6,7 @@ import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logger_web.dart';
 import 'package:http/http.dart' as http;
 
 class HttpVehicleResponse {
@@ -20,33 +21,34 @@ class HttpVehicleResponse {
         },
         body: vehicleToJson(vehicle));
 
-        return response.statusCode;
+    return response.statusCode;
   }
 
   Future<VehicleDto> getAllVehicles() async {
-   
+    String? accessToken = AuthService().isLoggedIn ? AuthService().accessToken : OIDCAuthService().accessToken;
+    print(accessToken);
     final queryParams = {
       'pageNo': '0',
       'pageSize': '10',
     };
 
-   // await Future.delayed(const Duration(seconds: 3));
+    // await Future.delayed(const Duration(seconds: 3));
 
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/vehicles', queryParams),
+        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/vehicles',
+            queryParams),
         headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
-      });
+        });
 
-
-    return vehicleDtoFromJson(response.body);
+    return VehicleDto.fromJson(jsonDecode(response.body));
   }
 
   Future<VehicleByDmanDto> getVehicleByDeliveryMan(String deliveryMan) async {
-
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}','/api/v1/vehicles/deliveryman/$deliveryMan'),
+        Uri.http('${dotenv.env['restApiEndpoint']}',
+            '/api/v1/vehicles/deliveryman/$deliveryMan'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
@@ -55,18 +57,30 @@ class HttpVehicleResponse {
     print(response.statusCode);
     print(response.body);
 
-    return vehicleByDmanDtoFromJson(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return VehicleByDmanDto.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 401) {
+      return Future.error('Non sei loggato: ${response.statusCode}');
+    } else {
+      return Future.error(
+          'Non ci sono pacchi o veicoli associati: ${response.statusCode}');
+    }
   }
 
-  Future<NavigationDataDTO> getVehicleRoute(String vehicleID) async {
+  Future<NavigationDataDTO?> getVehicleRoute(String vehicleID) async {
     var response = await client.get(
-        Uri.http(
-            '${dotenv.env['restApiEndpoint']}', 'api/v1/vehicles/1/route'),
+        Uri.http('${dotenv.env['restApiEndpoint']}', 'api/v1/vehicles/1/route'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
         });
+
     print('Response vehicleroute ${response.statusCode}');
-    return NavigationDataDTO.fromJson(jsonDecode(response.body));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return NavigationDataDTO.fromJson(jsonDecode(response.body));
+    } else {
+      return Future.error('Non ci sono consegne da mostrare!');
+    }
   }
 }

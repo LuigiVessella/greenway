@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:greenway/presentation/pages/web_pages/admin_web_dashboard.dart';
 import 'package:greenway/presentation/widgets/identity_view.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/network/logger_web.dart';
 import 'package:openidconnect/openidconnect.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 //import 'credentials.dart';
 //
@@ -29,7 +28,7 @@ class _InteractivePageState extends State<InteractivePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('OpenIdConnect Code Flow with PKCE Example'),
+        title: const Text('Benvenuto, effettua il login!'),
       ),
       body: Center(
         child: Form(
@@ -40,7 +39,7 @@ class _InteractivePageState extends State<InteractivePage> {
               TextButton.icon(
                 onPressed: () async {
                   try {
-                    final response =  
+                    final response =
                         await OIDCAuthService().authenticate(context: context);
 
                     setState(() {
@@ -65,6 +64,16 @@ class _InteractivePageState extends State<InteractivePage> {
                 visible: errorMessage != null,
                 child: SelectableText(errorMessage ?? ""),
               ),
+              Visibility(
+                visible: OIDCAuthService().isAuthenticated(),
+                  child: FilledButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const WebDashboard()));
+                      },
+                      child: const Text('Procedi'))),
               Visibility(
                 visible: identity != null,
                 child: TextButton.icon(

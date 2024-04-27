@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final vehicle = vehicleFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -11,34 +8,26 @@ Vehicle vehicleFromJson(String str) => Vehicle.fromJson(json.decode(str));
 String vehicleToJson(Vehicle data) => json.encode(data.toJson());
 
 class Vehicle {
-    int? id;
-    String modelName;
-    int maxAutonomyKm;
-    int maxCapacityKg;
-   
-    List<Delivery>? deliveries = List.empty();
+  num? id;
+  String? modelName;
+  num? maxAutonomyKm;
+  num? maxCapacityKg;
 
-    Vehicle({
-        this.id,
-        required this.modelName,
-        required this.maxAutonomyKm,
-        required this.maxCapacityKg,
-        this.deliveries,
-    });
+  Vehicle({this.id, this.modelName, this.maxAutonomyKm, this.maxCapacityKg});
 
-    factory Vehicle.fromJson(Map<String, dynamic> json) => Vehicle(
-        id: json["id"],
-        modelName: json["modelName"],
-        maxAutonomyKm: json["maxAutonomyKm"],
-        maxCapacityKg: json["maxCapacityKg"],
-        deliveries: List<Delivery>.from(json["deliveries"].map((x) => Delivery.fromJson(x))),
-    );
+  Vehicle.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    modelName = json['modelName'];
+    maxAutonomyKm = json['maxAutonomyKm'];
+    maxCapacityKg = json['maxCapacityKg'];
+  }
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "modelName": modelName,
-        "maxAutonomyKm": maxAutonomyKm,
-        "maxCapacityKg": maxCapacityKg,
-        if(deliveries!=null)"deliveries": List<dynamic>.from(deliveries!.map((x) => x.toJson())),
-    };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['modelName'] = modelName;
+    data['maxAutonomyKm'] = maxAutonomyKm;
+    data['maxCapacityKg'] = maxCapacityKg;
+    return data;
+  }
 }

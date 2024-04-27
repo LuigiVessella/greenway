@@ -15,29 +15,21 @@ class HttpDeliveryResponse {
         },
         body: deliveryToJson(delivery));
 
-    print(response.statusCode);
+    print('add delivery response: ${response.statusCode}');
     print(response.body);
   }
 
- //Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) async {
- //  final queryParams = {
- //    'pageNo': 0,
- //    'pageSize': 5,
- //  };
+  Future<void> completeDelivery(String deliveryID) async {
+    var response = await client.get(
+      Uri.http('${dotenv.env['restApiEndpoint']}',
+          '/api/v1/deliveries/$deliveryID/complete'),
+      headers: {
+        'Authorization': 'Bearer ${AuthService().accessToken}',
+        'Content-Type': 'application/json'
+      },
+    );
+    print('Complete delivery response: ${response.statusCode}');
+  }
 
- //  var response = await client.get(
- //      Uri.http('${dotenv.env['restApiEndpoint']}',
- //          '/api/v1/deliveries/$deliveryManId', queryParams),
- //      headers: {
- //        'Authorization': 'Bearer ${AuthService().accessToken}',
- //        'Content-Type': 'application/json'
- //      });
-
- //  List<Delivery> deliveries = deliveriesFromJson(response.body);
-
- //  return deliveries;
- //}
-
- 
-
+  
 }

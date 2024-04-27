@@ -36,7 +36,7 @@ class Routes {
 	String? weightName;
 	num? weight;
 	num? duration;
-	int? distance;
+	num? distance;
 
 	Routes({this.geometry, this.legs, this.weightName, this.weight, this.duration, this.distance});
 
@@ -156,12 +156,12 @@ class Steps {
 }
 
 class Maneuver {
-	int? bearingAfter;
-	int? bearingBefore;
+	num? bearingAfter;
+	num? bearingBefore;
 	List<num>? location;
 	String? modifier;
 	String? type;
-	int? exit;
+	num? exit;
 
 	Maneuver({this.bearingAfter, this.bearingBefore, this.location, this.modifier, this.type, this.exit});
 
@@ -187,11 +187,11 @@ class Maneuver {
 }
 
 class Intersections {
-	int? out;
+	num? out;
 	List<bool>? entry;
 	List<int>? bearings;
 	List<num>? location;
-	int? intersectionIn;
+	num? intersectionIn;
 
 	Intersections({this.out, this.entry, this.bearings, this.location, this.intersectionIn});
 
