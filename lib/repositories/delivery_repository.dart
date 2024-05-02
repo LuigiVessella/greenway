@@ -17,6 +17,9 @@ class DeliveryRepository{
   }
 
 
+  Future<void> addDepotPoint(){
+    return httpDelivery.addDepotPoint();
+  }
 
   //Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) {
   //  return httpDelivery.getDeliveryByDeliveryMan(deliveryManId);

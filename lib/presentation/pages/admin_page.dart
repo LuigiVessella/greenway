@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/components/components.dart';
 import 'package:greenway/presentation/pages/delivery_page.dart';
 import 'package:greenway/presentation/widgets/add_new_vehicle_widget.dart';
 import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
+import 'package:greenway/repositories/delivery_repository.dart';
+import 'package:greenway/repositories/vehicle_repository.dart';
 
 //import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +21,7 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   var resultSenderG, resultReceiverG;
-
+  DeliveryRepository dr = DeliveryRepository();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,8 +33,26 @@ class _AdminPageState extends State<AdminPage> {
               icon: const Icon(Icons.warehouse),
               tooltip: "Aggiungi punto deposito",
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Aggiungerai punto deposito')));
+                dr
+                    .addDepotPoint()
+                    .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.green,
+                                content: Row(children: [
+                          Icon(Icons.abc),
+                          Text('Punto deposito creato')
+                        ]))))
+                    .catchError((error, stackTrace) =>
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Row(children: [
+                                  Icon(Icons.error),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text('Errore: il deposito esiste già, o anomalia')
+                                ]))));
               },
             )
           ],
@@ -54,7 +75,10 @@ class _AdminPageState extends State<AdminPage> {
                   const Text(
                     'Benvenuto admin',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                   const Divider(),
                   const SizedBox(
@@ -64,7 +88,7 @@ class _AdminPageState extends State<AdminPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const VehicleListAdminWidget(),
+                  updateList(),
                   const Divider(),
                   Container(
                       padding: const EdgeInsets.all(10.0),
@@ -90,8 +114,12 @@ class _AdminPageState extends State<AdminPage> {
                                       builder: (context) =>
                                           const AddNewDelivery()));
                             },
-                            child: const Text('Crea etichetta')),
+                            child: const Text('Spedizioni')),
                       ]))
                 ]))));
+  }
+
+  Widget updateList() {
+    return const VehicleListAdminWidget();
   }
 }

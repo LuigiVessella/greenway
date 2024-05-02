@@ -82,7 +82,7 @@ class VehicleListDmanWidget extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   FilledButton(
-                                      onPressed: () {},
+                                      onPressed: () {vr.putLeaveVehicle(vehicleDTO.id.toString());},
                                       child: const Text('Rientra')),
                                 ]),
                           ]));

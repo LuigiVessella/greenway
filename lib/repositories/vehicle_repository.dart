@@ -9,7 +9,7 @@ class VehicleRepository {
   ///http vehicle provider ci fornisce tutta la comunicazione con il server
   HttpVehicleResponse httpVehicle = HttpVehicleResponse();
 
-  Future<int> addVehicle(Vehicle vehicle) {
+  Future<void> addVehicle(Vehicle vehicle) {
     return httpVehicle.addVehicle(vehicle);
   }
 
@@ -24,6 +24,10 @@ class VehicleRepository {
 
   Future<NavigationDataDTO?> getVehicleRoute(String vehicleID){
     return httpVehicle.getVehicleRoute(vehicleID);
+  }
+
+  void putLeaveVehicle (String vehicleID) {
+    httpVehicle.putLeaveVehicle(vehicleID);
   }
 //
   // void updateVehicle(Vehicle vehicle) {

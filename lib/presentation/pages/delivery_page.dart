@@ -24,12 +24,17 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Genera etichetta'),
+          title: const Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [Text('Spedizioni'), Text('Da qui puoi gestire le tue spedizioni', textScaler: TextScaler.linear(0.5))],
+          ),
           actions: <Widget>[
             IconButton(
-              tooltip: 'Programma consegne',
-              onPressed:(){ _scheduleDeliveries();},
-             icon: const Icon(Icons.schedule))
+                tooltip: 'Programma consegne',
+                onPressed: () {
+                  _scheduleDeliveries();
+                },
+                icon: const Icon(Icons.schedule))
           ],
         ),
         body: Center(
@@ -39,7 +44,10 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               const SizedBox(
                 height: 40,
               ),
-              const Text('Le tue spedizioni:', style: TextStyle(fontWeight: FontWeight.bold),),
+              const Text(
+                'Le tue spedizioni:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 height: 300,
                 child: ListView.builder(
@@ -49,17 +57,20 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                       return Card(
                         child: ListTile(
                           leading: const Icon(Icons.local_shipping),
-                          title: Text('A: ${createdDeliveries[index].receiverAddress}'),
-                          subtitle: Text(
-                              'Da: ${createdDeliveries[index].sender}'),
+                          title: Text(
+                              'A: ${createdDeliveries[index].receiverAddress}'),
+                          subtitle:
+                              Text('Da: ${createdDeliveries[index].sender}'),
                         ),
                       );
                     }),
               ),
-              
               const Divider(),
-              const Text('Vuoi spedire?', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 40,),
+              const Text('Vuoi spedire?',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(
+                height: 40,
+              ),
               ElevatedButton(
                   onPressed: () {
                     _navigateAndDisplaySelection(context, 'sender');
@@ -155,6 +166,24 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
 
   void _scheduleDeliveries() {
     SystemRepository sr = SystemRepository();
-    sr.trigDeliverySheduling();
+    sr
+        .trigDeliverySheduling()
+        .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                backgroundColor: Colors.green,
+                content: Row(children: [
+                  Icon(Icons.abc),
+                  Text('Consegne programmate')
+                ]))))
+        .catchError((error, stackTrace) =>
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.orange,
+                content: Row(children: [
+                  Icon(Icons.info),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text('Nessun corriere disponibile ora')
+                ]))));
   }
 }

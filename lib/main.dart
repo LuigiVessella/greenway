@@ -21,7 +21,7 @@ class MyWebApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'GreenWay',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: firstAppTheme,
       home: const InteractivePage(),
 
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       title: 'GreenWay',
       debugShowCheckedModeBanner: false,
       theme: firstAppTheme,
-      initialRoute: kIsWeb ? '/loginWeb' : '/',  // Logica di selezione della route
+      initialRoute: '/',  // Logica di selezione della route
       routes: {
         //Definiamo a priori i nomi e tutti i possibili routing all'interno dell'app
         '/': (context) => const LoginPage(),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
@@ -12,20 +13,34 @@ import 'package:http/http.dart' as http;
 class HttpVehicleResponse {
   var client = http.Client();
 
-  Future<int> addVehicle(Vehicle vehicle) async {
+  Future<void> addVehicle(Vehicle vehicle) async {
+    try{
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+
     var response = await client.post(
         Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/vehicles'),
         headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
         },
         body: vehicleToJson(vehicle));
 
-    return response.statusCode;
+        if (response.statusCode == 200 || response.statusCode == 201) {
+      print('add depot point response: ${response.statusCode}');
+      print(response.body);
+    } else {
+      return Future.error('error');
+    }
+    }catch(e){
+      return Future.error('network error');
+    }
   }
 
   Future<VehicleDto> getAllVehicles() async {
-    String? accessToken = AuthService().isLoggedIn ? AuthService().accessToken : OIDCAuthService().accessToken;
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+
     print(accessToken);
     final queryParams = {
       'pageNo': '0',
@@ -39,7 +54,8 @@ class HttpVehicleResponse {
             queryParams),
         headers: {
           'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'http://localhost:62033'
         });
 
     return VehicleDto.fromJson(jsonDecode(response.body));
@@ -68,8 +84,9 @@ class HttpVehicleResponse {
   }
 
   Future<NavigationDataDTO?> getVehicleRoute(String vehicleID) async {
+    print(vehicleID);
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}', 'api/v1/vehicles/1/route'),
+        Uri.http('${dotenv.env['restApiEndpoint']}', 'api/v1/vehicles/$vehicleID/route'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
@@ -82,5 +99,18 @@ class HttpVehicleResponse {
     } else {
       return Future.error('Non ci sono consegne da mostrare!');
     }
+  }
+
+  Future<void> putLeaveVehicle(String vehicleID) async {
+    var response = await client.get(
+        Uri.http('${dotenv.env['restApiEndpoint']}',
+            'api/v1/vehicles/$vehicleID/leave'),
+        headers: {
+          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Content-Type': 'application/json'
+        });
+
+    print(response.statusCode);
+    print(response.body);
   }
 }

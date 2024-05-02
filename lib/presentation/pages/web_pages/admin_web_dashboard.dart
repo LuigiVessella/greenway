@@ -76,17 +76,15 @@ class _WebDashboardState extends State<WebDashboard> {
     switch (index) {
       case 0:
         return const TabOne();
-        break;
+
       case 1:
         return const TabTwo();
-        break;
+
       case 2:
         return const TabTree();
-        break;
+
       default:
-        return Container(
-          child: const Text("Something feels fishy! :P"),
-        );
+        return const Text("Something feels fishy! :P");
     }
   }
 }

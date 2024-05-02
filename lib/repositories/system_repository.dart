@@ -4,7 +4,7 @@ class SystemRepository{
   final HttpSystemResponse httpSystemResponse = HttpSystemResponse();
 
 
-  void trigDeliverySheduling(){
-    httpSystemResponse.triggerDeliveryScheduling();
+  Future<void> trigDeliverySheduling(){
+    return httpSystemResponse.triggerDeliveryScheduling();
   }
 }

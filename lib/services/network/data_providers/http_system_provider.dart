@@ -13,7 +13,12 @@ class HttpSystemResponse{
           'Content-Type': 'application/json'
         });
 
-        print('scheduling status ${response.statusCode}');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('add depot point response: ${response.statusCode}');
+      print(response.body);
+    } else {
+      return Future.error('error');
+    }
   }
   
 }

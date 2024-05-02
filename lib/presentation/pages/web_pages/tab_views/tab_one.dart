@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
+import 'package:greenway/presentation/widgets/web_widget/vehicle_list_web.dart';
 
 class TabOne extends StatelessWidget {
   const TabOne({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: const AdminPage()
-    );
+    return const AdminPage();
+    
   }
 }
 
@@ -18,10 +17,7 @@ class TabTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: const Text('Qui vedrai dati su mappa ed elevazione'),
-    );
+    return const VehicleListWeb();
   }
 }
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:greenway/entity/delivery.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:http/http.dart' as http;
@@ -31,5 +33,29 @@ class HttpDeliveryResponse {
     print('Complete delivery response: ${response.statusCode}');
   }
 
-  
+  Future<void> addDepotPoint() async {
+    final data = {
+      "depositAddress": "Via Roma",
+      "depositCoordinates": {
+        "type": "Point",
+        "coordinates": [14.266262, 40.884837]
+      }
+    };
+
+    var response = await client.post(
+      Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deposit'),
+      headers: {
+        'Authorization': 'Bearer ${AuthService().accessToken}',
+        'Content-Type': 'application/json'
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('add depot point response: ${response.statusCode}');
+      print(response.body);
+    } else {
+      return Future.error('error');
+    }
+  }
 }

@@ -39,8 +39,10 @@ class _InteractivePageState extends State<InteractivePage> {
               TextButton.icon(
                 onPressed: () async {
                   try {
-                    final response =
-                        await OIDCAuthService().authenticate(context: context);
+                    if (mounted) {
+                      final response = await OIDCAuthService()
+                          .authenticate(context: context);
+                    }
 
                     setState(() {
                       identity = OIDCAuthService().identity;
@@ -65,7 +67,7 @@ class _InteractivePageState extends State<InteractivePage> {
                 child: SelectableText(errorMessage ?? ""),
               ),
               Visibility(
-                visible: OIDCAuthService().isAuthenticated(),
+                  visible: OIDCAuthService().isAuthenticated(),
                   child: FilledButton(
                       onPressed: () {
                         Navigator.push(

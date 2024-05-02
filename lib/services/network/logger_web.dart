@@ -26,24 +26,27 @@ class OIDCAuthService {
       discoveryDocument = configuration;
       return configuration;
     } on Exception catch (e) {
-      throw Exception('Errore durante il recupero della configurazione OpenID Connect: $e');
+      throw Exception(
+          'Errore durante il recupero della configurazione OpenID Connect: $e');
     }
   }
 
   // Metodo per l'autenticazione
-  Future<AuthorizationResponse?> authenticate({bool usePopup = true, required BuildContext context}) async {
+  Future<AuthorizationResponse?> authenticate(
+      {bool usePopup = true, required BuildContext context}) async {
     if (discoveryDocument == null) {
       await _fetchConfiguration(); // Recupera la configurazione se necessario
     }
 
     try {
       final response = await OpenIdConnect.authorizeInteractive(
-        context: context, // L'esempio richiedeva il 'context', ma qui non sarà necessario 
+        context:
+            context, // L'esempio richiedeva il 'context', ma qui non sarà necessario
         title: "Login",
         request: await InteractiveAuthorizationRequest.create(
           clientId: clientId,
           clientSecret: clientSecret,
-          redirectUrl: "http://localhost:53408/callback.html", // Redirect URL
+          redirectUrl: "http://localhost:64510/callback.html", // Redirect URL
           scopes: ["openid", "profile", "email"],
           configuration: discoveryDocument!,
           autoRefresh: true,
@@ -81,8 +84,6 @@ class OIDCAuthService {
 
   // Metodo per verificare se l'utente è loggato
   bool isAuthenticated() => _isLogged;
-
-  
 
   // Metodo per ottenere i token d'accesso e d'identità
   String? get accessToken => identity?.accessToken;

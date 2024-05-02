@@ -4,9 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
+import 'package:greenway/config/themes/first_theme.dart';
+import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
+import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/presentation/widgets/show_trip_info.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
+import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/parser/navigation_data_parser.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,13 +27,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   @override
   void initState() {
     super.initState();
-    
-    _navData = _vr.getVehicleRoute('1');
+
+    _navData = _vr.getVehicleRoute('2');
 
     colors.add(Colors.blue);
     colors.add(Colors.red);
+    colors.add(Colors.orange);
   }
-  
 
   final VehicleRepository _vr = VehicleRepository();
   final NavigationDataParser dataParser = NavigationDataParser();
@@ -45,12 +49,10 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<NavigationDataDTO?>(
-      
-      future:_navData, 
+      future: _navData,
       builder: (context, snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
-          
           tripStreetNames.clear();
           tripRoute.clear();
           tripRoute.addAll(dataParser.combinePolylines(snapshot.data!));
@@ -59,65 +61,78 @@ class _NavigationWidgetState extends State<NavigationWidget> {
           tripStreetNames
               .addAll(dataParser.concatenateRoadNames(snapshot.data!));
           children = <Widget>[
-            Row(
-              children: [
-                SizedBox(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView(
-                      padding: const EdgeInsets.all(8.0),
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              if (backTrip != null && _viewBackTrip != true) {
-                                setState(() {
-                                  _viewBackTrip = true;
-                                });
-                              } else if (_viewBackTrip != false) {
-                                setState(() {
-                                  _viewBackTrip = false;
-                                });
-                              }
-                            },
-                            child: const Text('Aggiungi percorso di ritorno')),
-                        ElevatedButton(
-                            onPressed: () {
-                              if (_viewMarkers != true) {
-                                setState(() {
-                                  _viewMarkers = true;
-                                });
-                              } else {
-                                setState(() {
-                                  _viewMarkers = false;
-                                });
-                              }
-                            },
-                            child: const Text('Visualizza marcatori')),
-                        ElevatedButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                  showDragHandle: true,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return SizedBox(
-                                        height: 400,
-                                        child: Center(
-                                            child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                              TripInfo(
-                                                  tripInfo: tripStreetNames),
-                                            ])));
-                                  });
-                            },
-                            child: const Text('Visualizza indicazioni'))
-                      ],
-                    ))
-              ],
-            ),
+            // ignore: sized_box_for_whitespace
+            Container(
+                height: 60,
+                width: MediaQuery.of(context).size.width,
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(8.0),
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    FilterChip(
+                      labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black87),
+                      label: const Text(
+                        'Visualizza ritorno',
+                      ),
+                      selected: _viewBackTrip,
+                      onSelected: (bool selected) {
+                        if (backTrip != null && _viewBackTrip != true) {
+                          setState(() {
+                            _viewBackTrip = true;
+                          });
+                        } else if (_viewBackTrip != false) {
+                          setState(() {
+                            _viewBackTrip = false;
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      width: 3,
+                    ),
+                    FilterChip(
+                      labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black87),
+                      label: const Text(
+                        'Visualizza marcatori',
+                      ),
+                      selected: _viewMarkers,
+                      onSelected: (bool selected) {
+                        if (_viewMarkers != true) {
+                          setState(() {
+                            _viewMarkers = true;
+                          });
+                        } else {
+                          setState(() {
+                            _viewMarkers = false;
+                          });
+                        }
+                      },
+                    ),
+                    const VerticalDivider(),
+                    ElevatedButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                              showDragHandle: true,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SizedBox(
+                                    height: 400,
+                                    child: Center(
+                                        child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                          TripInfo(tripInfo: tripStreetNames),
+                                        ])));
+                              });
+                        },
+                        child: const Text('Visualizza indicazioni'))
+                  ],
+                )),
             Expanded(
                 child: FlutterMap(
               options: const MapOptions(
@@ -222,7 +237,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
       },
     );
   }
-
 
   @override
   void dispose() {
