@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenway/presentation/pages/web_pages/tab_views/tab_one.dart';
+import 'package:greenway/presentation/pages/web_pages/tab_views/tabs.dart';
 
 class WebDashboard extends StatefulWidget {
   const WebDashboard({super.key});

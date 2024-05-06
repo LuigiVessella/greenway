@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/add_delivery_dto.dart';
 import 'package:greenway/entity/delivery.dart';
 
@@ -24,10 +25,11 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [Text('Spedizioni'), Text('Da qui puoi gestire le tue spedizioni', textScaler: TextScaler.linear(0.5))],
-          ),
+          centerTitle: true,
+          title: const Text('Spedizioni'),
+          bottom: const PreferredSize(
+              preferredSize: Size.zero,
+              child: Text('Da qui puoi gestire le tue spedizioni')),
           actions: <Widget>[
             IconButton(
                 tooltip: 'Programma consegne',
@@ -44,10 +46,19 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               const SizedBox(
                 height: 40,
               ),
-              const Text(
-                'Le tue spedizioni:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Row(
+                
+                mainAxisAlignment: MainAxisAlignment.start,
+                
+                children: [
+                const SizedBox(width: 5,),
+                Text(
+                  textAlign: TextAlign.right ,
+                  'Le tue spedizioni:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: firstAppTheme.primaryColor, fontSize: 16),
+
+                )
+              ]),
               SizedBox(
                 height: 300,
                 child: ListView.builder(
@@ -56,18 +67,29 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         child: ListTile(
-                          leading: const Icon(Icons.local_shipping),
+                          leading: const Icon(Icons.house),
                           title: Text(
                               'A: ${createdDeliveries[index].receiverAddress}'),
                           subtitle:
-                              Text('Da: ${createdDeliveries[index].sender}'),
+                              Text('Da: ${createdDeliveries[index].sender}', style: const TextStyle(fontStyle: FontStyle.italic),),
                         ),
                       );
                     }),
               ),
               const Divider(),
-              const Text('Vuoi spedire?',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Row(
+                
+                mainAxisAlignment: MainAxisAlignment.start,
+                
+                children: [
+                const SizedBox(width: 5,),
+                Text(
+                  textAlign: TextAlign.right ,
+                  'Vuoi spedire?',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: firstAppTheme.primaryColor, fontSize: 16),
+
+                )
+              ]),
               const SizedBox(
                 height: 40,
               ),

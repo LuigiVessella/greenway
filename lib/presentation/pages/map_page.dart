@@ -1,14 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/presentation/widgets/show_trip_info.dart';
+import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/parser/navigation_data_parser.dart';
@@ -28,7 +32,10 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   void initState() {
     super.initState();
 
-    _navData = _vr.getVehicleRoute('2');
+    _navData = _vr
+        .getVehicleByDeliveryMan(AuthService().getUserInfo!)
+        .then((value) => _vr.getVehicleRoute(value.id.toString()))
+        .catchError((e) => null);
 
     colors.add(Colors.blue);
     colors.add(Colors.red);
@@ -43,6 +50,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   String? backTrip = '';
 
   late Future<NavigationDataDTO?> _navData;
+  late Future<VehicleByDmanDto> _vehicle;
   bool _viewBackTrip = false;
   bool _viewMarkers = true;
 
@@ -115,17 +123,49 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                     ElevatedButton(
                         onPressed: () {
                           showModalBottomSheet(
+                              isScrollControlled: true,
+                              enableDrag: true,
                               showDragHandle: true,
                               context: context,
                               builder: (BuildContext context) {
                                 return SizedBox(
-                                    height: 400,
+                                    height: 450,
                                     child: Center(
                                         child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    'Durata: ${Duration(seconds: snapshot.data!.routes![0].duration!.floor()).inHours}h e '
+                                                    '${Duration(seconds: snapshot.data!.routes![0].duration!.floor() % 3600).inMinutes}min'
+                                                    ' (${(snapshot.data!.routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)',
+                                                    style: TextStyle(
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontSize: 18,
+                                                        color: firstAppTheme
+                                                            .primaryColor,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ))
+                                            ],
+                                          ),
+                                          const Padding(
+                                              padding: EdgeInsets.all(9),
+                                              child: Text(
+                                                  'Il percorso mostrato è stato calcolato considerando l\' elevazione del territorio',
+                                                  style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                  ))),
+                                          const Divider(),
                                           TripInfo(tripInfo: tripStreetNames),
                                         ])));
                               });
@@ -242,5 +282,9 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+  }
+
+  void getNavData(String vehicleID) {
+    _navData = vr.getVehicleRoute(vehicleID);
   }
 }

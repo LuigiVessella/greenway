@@ -71,6 +71,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.info))],
       ),
       body: Center(
         child: ListView(
@@ -114,23 +115,23 @@ class _AddNewPackageState extends State<AddNewPackage> {
               height: 40,
             ),
             Form(
-              key: _formAddressKey,
+                key: _formAddressKey,
                 child: TextFormField(
-              controller: _controllerAddress,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Campo obbligatiorio';
-                }
-                return null;
-              },
-              onChanged: (text) {
-                _onSearchChanged(text);
-              },
-              decoration: const InputDecoration(
-                  labelText: 'Street address:',
-                  prefixIcon: Icon(Icons.house),
-                  border: OutlineInputBorder()),
-            )),
+                  controller: _controllerAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obbligatiorio';
+                    }
+                    return null;
+                  },
+                  onChanged: (text) {
+                    _onSearchChanged(text);
+                  },
+                  decoration: const InputDecoration(
+                      labelText: 'Street address:',
+                      prefixIcon: Icon(Icons.house),
+                      border: OutlineInputBorder()),
+                )),
             SizedBox(
               height: 270,
               child: ListView.builder(
@@ -156,35 +157,41 @@ class _AddNewPackageState extends State<AddNewPackage> {
                         ));
                   }),
             ),
-            const SizedBox(
-              height: 40,
-            ),
-            Card(
-              elevation: 5,
-              child: SizedBox(
-                child: Text('LAT: $_lat / LON: $_lon',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+            Column(children: [
+              const SizedBox(
+                height: 40,
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _nameComplete =
-                    '${_controllerName.text} ${_controllerSecondName.text}';
-                if (_formKey.currentState!.validate() && _formAddressKey.currentState!.validate()) {
-                  Navigator.pop(
-                    context,
-                    {
-                      'lat': _lat,
-                      'lon': _lon,
-                      'address': address,
-                      'name': '$_nameComplete'
-                    },
-                  );
-                }
-              },
-              child: const Text('Salva informazioni '),
-            )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(('Coordinate: LAT: ${_lat.toStringAsFixed(3)} / LON: ${_lon.toStringAsFixed(3)}'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _nameComplete =
+                      '${_controllerName.text} ${_controllerSecondName.text}';
+                  if (_formKey.currentState!.validate() &&
+                      _formAddressKey.currentState!.validate()) {
+                    Navigator.pop(
+                      context,
+                      {
+                        'lat': _lat,
+                        'lon': _lon,
+                        'address': address,
+                        'name': '$_nameComplete'
+                      },
+                    );
+                  }
+                },
+                child: const Text('Salva informazioni '),
+              )
+            ])
           ],
         ),
       ),

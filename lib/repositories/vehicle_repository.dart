@@ -1,4 +1,5 @@
 import 'package:greenway/dto/delivery_dman_dto.dart';
+import 'package:greenway/dto/elevation_data_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
@@ -28,6 +29,10 @@ class VehicleRepository {
 
   void putLeaveVehicle (String vehicleID) {
     httpVehicle.putLeaveVehicle(vehicleID);
+  }
+
+  Future<ElevationDataDTO> getElevationData(String vehicleID) {
+    return httpVehicle.getElevationData(vehicleID);
   }
 //
   // void updateVehicle(Vehicle vehicle) {

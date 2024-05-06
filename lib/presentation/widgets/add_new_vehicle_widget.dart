@@ -16,6 +16,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
   final modelTextController = TextEditingController();
   final maxAutonomyTextController = TextEditingController();
   final maxCapacityTextController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,67 +31,94 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
               const SizedBox(
                 height: 10,
               ),
-              TextFormField(
-                controller: modelTextController,
-                decoration: const InputDecoration(
-                    labelText: 'Model name:',
-                    prefixIcon: Icon(Icons.info),
-                    border: OutlineInputBorder()),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: maxAutonomyTextController,
-                decoration: const InputDecoration(
-                    labelText: 'Battery Capacity (km):',
-                    prefixIcon: Icon(Icons.battery_full),
-                    border: OutlineInputBorder()),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: maxCapacityTextController,
-                decoration: const InputDecoration(
-                    labelText: 'Vehicle capacity (kg):',
-                    prefixIcon: Icon(Icons.balance),
-                    border: OutlineInputBorder()),
-              ),
+              Form(
+                  key: _formKey,
+                  child: Column(children: [
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo obbligatiorio';
+                        }
+                        return null;
+                      },
+                      controller: modelTextController,
+                      decoration: const InputDecoration(
+                          labelText: 'Model name:',
+                          prefixIcon: Icon(Icons.info),
+                          border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo obbligatiorio';
+                        }
+                        return null;
+                      },
+                      controller: maxAutonomyTextController,
+                      decoration: const InputDecoration(
+                          labelText: 'Battery Capacity (km):',
+                          prefixIcon: Icon(Icons.battery_full),
+                          border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo obbligatiorio';
+                        }
+                        return null;
+                      },
+                      controller: maxCapacityTextController,
+                      decoration: const InputDecoration(
+                          labelText: 'Vehicle capacity (kg):',
+                          prefixIcon: Icon(Icons.balance),
+                          border: OutlineInputBorder()),
+                    )
+                  ])),
               const SizedBox(
                 height: 10,
               ),
               ElevatedButton(
                   onPressed: () {
-                    vr
-                        .addVehicle(Vehicle(
-                          modelName: modelTextController.text,
-                          maxAutonomyKm:
-                              int.parse(maxAutonomyTextController.text),
-                          maxCapacityKg:
-                              int.parse(maxCapacityTextController.text),
-                        ))
-                        .then((value) => ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                                backgroundColor: Colors.green,
-                                content: Row(children: [
-                                  Icon(Icons.abc),
-                                  Text('Veicolo aggiunto correttamente')
-                                ]))))
-                        .then(
-                          (value) => Navigator.pop(context),
-                        )
-                        .catchError((error, stackTrace) =>
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Row(children: [
-                                      Icon(Icons.error),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text('Errore: impossibile aggiungere il veicolo')
-                                    ]))));
+                    if (_formKey.currentState!.validate()) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      vr
+                          .addVehicle(Vehicle(
+                            modelName: modelTextController.text,
+                            maxAutonomyKm:
+                                int.parse(maxAutonomyTextController.text),
+                            maxCapacityKg:
+                                int.parse(maxCapacityTextController.text),
+                          ))
+                          .then((value) => ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Row(children: [
+                                    Icon(Icons.info),
+                                    Text('Veicolo aggiunto correttamente')
+                                  ]))))
+                         
+                          .then(
+                            (value) => Navigator.pop(context),
+                          )
+                          .catchError((error, stackTrace) =>
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Row(children: [
+                                        Icon(Icons.error),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                            'Errore: impossibile aggiungere il veicolo')
+                                      ]))));
+                    }
                   },
                   child: const Text('Aggiungi'))
             ])));
