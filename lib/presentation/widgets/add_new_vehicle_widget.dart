@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
@@ -27,7 +26,8 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
         ),
         body: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Column(children: [
+            child: SingleChildScrollView(
+                child: Column(children: [
               const SizedBox(
                 height: 10,
               ),
@@ -102,7 +102,6 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                                     Icon(Icons.info),
                                     Text('Veicolo aggiunto correttamente')
                                   ]))))
-                         
                           .then(
                             (value) => Navigator.pop(context),
                           )
@@ -121,6 +120,6 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                     }
                   },
                   child: const Text('Aggiungi'))
-            ])));
+            ]))));
   }
 }

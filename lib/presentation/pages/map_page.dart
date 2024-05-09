@@ -1,16 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:flutter_randomcolor/flutter_randomcolor.dart';
+
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:greenway/config/themes/first_theme.dart';
-import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
-import 'package:greenway/dto/vehicle_dto.dart';
+
 import 'package:greenway/presentation/widgets/show_trip_info.dart';
 import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
@@ -50,7 +47,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   String? backTrip = '';
 
   late Future<NavigationDataDTO?> _navData;
-  late Future<VehicleByDmanDto> _vehicle;
   bool _viewBackTrip = false;
   bool _viewMarkers = true;
 
@@ -192,7 +188,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
 
                     return Polyline(
                       points: decodePolyline(polylineString).unpackPolyline(),
-                      color: colors[index],
+                      color: colors.elementAtOrNull(index) ?? Colors.blue,
                       strokeWidth: 3.0,
                     );
                   }).toList(),
@@ -220,17 +216,30 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                 Visibility(
                     visible: _viewMarkers,
                     child: MarkerLayer(
-                      markers: tripRoute
-                          .map((polylineString) => Marker(
-                                point: decodePolyline(polylineString)
-                                    .unpackPolyline()
-                                    .last,
-                                width: 30,
-                                height: 30,
-                                child: const Icon(Icons.location_pin),
-                              ))
-                          .toList(),
-                    )),
+                        markers: tripRoute
+                            .map((polylineString) => Marker(
+                                  point: decodePolyline(polylineString)
+                                      .unpackPolyline()
+                                      .last,
+                                  width: 30,
+                                  height: 30,
+                                  child: const Icon(Icons.location_pin),
+                                ))
+                            .toList())),
+                Visibility(
+                    visible: _viewMarkers,
+                    child: MarkerLayer(markers: [
+                      Marker(
+                        point: decodePolyline(backTrip!).unpackPolyline().last,
+                        width: 30,
+                        height: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.warehouse),
+                          onPressed: () {},
+                          tooltip: 'Il veicolo parte da qui',
+                        ),
+                      ),
+                    ])),
                 RichAttributionWidget(
                   attributions: [
                     TextSourceAttribution(

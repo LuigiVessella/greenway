@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/presentation/pages/login_page.dart';
+import 'package:greenway/presentation/widgets/web_widget/elevation_chart.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/network/logger.dart';
 
@@ -68,9 +70,12 @@ class VehicleListDmanWidget extends StatelessWidget {
                   return Card(
                       elevation: 5.0,
                       child: ExpansionTile(
-                          tilePadding: const EdgeInsets.all(15),
-                          childrenPadding: const EdgeInsets.all(9.0),
-                          title: Text('Il tuo veicolo: ${vehicleDTO.id}'),
+                          tilePadding: const EdgeInsets.all(7),
+                          childrenPadding: const EdgeInsets.all(1),
+                          title: const Text(
+                            'Informazioni sul veicolo',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
                           children: [
                             ListTile(
                               leading: const Icon(Icons.local_shipping),
@@ -81,8 +86,23 @@ class VehicleListDmanWidget extends StatelessWidget {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ElevationChart(
+                                                      vehicleID: vehicleDTO.id
+                                                          .toString()),
+                                            ));
+                                      },
+                                      child: const Text('dati elevazione')),
                                   FilledButton(
-                                      onPressed: () {vr.putLeaveVehicle(vehicleDTO.id.toString());},
+                                      onPressed: () {
+                                        vr.putLeaveVehicle(
+                                            vehicleDTO.id.toString());
+                                      },
                                       child: const Text('Rientra')),
                                 ]),
                           ]));

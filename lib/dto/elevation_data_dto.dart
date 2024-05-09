@@ -26,9 +26,9 @@ class ElevationDataDTO {
 
 class Results {
   String? dataset;
-  int? elevation;
+  num? elevation;
   Location? location;
-
+  num? meters; 
   Results({this.dataset, this.elevation, this.location});
 
   Results.fromJson(Map<String, dynamic> json) {
@@ -51,8 +51,8 @@ class Results {
 }
 
 class Location {
-  double? lat;
-  double? lng;
+  num? lat;
+  num? lng;
 
   Location({this.lat, this.lng});
 

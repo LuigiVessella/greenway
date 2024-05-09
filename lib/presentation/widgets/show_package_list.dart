@@ -32,7 +32,7 @@ class PackageList extends StatelessWidget {
                           childrenPadding: const EdgeInsets.all(1.0),
                           title: Text(
                             'Consegna ${vehicleDTO.deliveries![index].id}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                           children: [
                             ListTile(

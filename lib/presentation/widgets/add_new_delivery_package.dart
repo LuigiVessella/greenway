@@ -73,9 +73,11 @@ class _AddNewPackageState extends State<AddNewPackage> {
         title: Text(widget.title),
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.info))],
       ),
-      body: Center(
-        child: ListView(
-          padding: const EdgeInsets.all(8.0),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+         
           children: [
             Form(
                 key: _formKey,
@@ -195,7 +197,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   @override

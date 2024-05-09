@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
+import 'package:greenway/presentation/widgets/web_widget/elevation_chart.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 
 class VehicleListWeb extends StatelessWidget {
@@ -16,8 +17,7 @@ class VehicleListWeb extends StatelessWidget {
           VehicleDto vehicleDTO = snapshot.data!; // Lista dei veicoli
 
           return Container(
-            margin: const EdgeInsets.all(8.0),
-          
+              margin: const EdgeInsets.all(8.0),
               child: ListView.builder(
                 itemCount: vehicleDTO.content!.length,
                 itemBuilder: (context, index) {
@@ -35,7 +35,16 @@ class VehicleListWeb extends StatelessWidget {
                               'max capacity: ${vehicleDTO.content![index].maxCapacityKg}kg'),
                         ),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ElevationChart(
+                                      vehicleID: vehicleDTO.content![index].id
+                                          .toString(),
+                                    ),
+                                  ));
+                            },
                             child: const Text('Visualizza dati elevazione')),
                         TextButton(
                             onPressed: () {},

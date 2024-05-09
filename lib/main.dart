@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,9 +13,9 @@ import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "lib/config/auth/auth_client.env");
-   kIsWeb ? runApp(const MyWebApp()) : runApp(const MyApp());
-  
+  kIsWeb ? runApp(const MyWebApp()) : runApp(const MyApp());
 }
+
 class MyWebApp extends StatelessWidget {
   const MyWebApp({super.key});
 
@@ -24,10 +26,10 @@ class MyWebApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: firstAppTheme,
       home: const InteractivePage(),
-
     );
   }
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'GreenWay',
       debugShowCheckedModeBanner: false,
       theme: firstAppTheme,
-      initialRoute: '/',  // Logica di selezione della route
+      initialRoute: '/', // Logica di selezione della route
       routes: {
         //Definiamo a priori i nomi e tutti i possibili routing all'interno dell'app
         '/': (context) => const LoginPage(),
@@ -45,8 +47,12 @@ class MyApp extends StatelessWidget {
         // Il nome second è collegato ad admin page, third welcome page e cosi via.
         '/adminPage': (context) => const AdminPage(),
         '/deliveryManPage': (context) => const DeliveryManPage(),
-        '/deliveryS':(context) => const AddNewPackage(title: 'Aggiungi mittente',),
-        '/deliveryR':(context) => const AddNewPackage(title: 'Aggiungi destinatario',),
+        '/deliveryS': (context) => const AddNewPackage(
+              title: 'Aggiungi mittente',
+            ),
+        '/deliveryR': (context) => const AddNewPackage(
+              title: 'Aggiungi destinatario',
+            ),
         'mapPage': (context) => const NavigationWidget()
       },
     );

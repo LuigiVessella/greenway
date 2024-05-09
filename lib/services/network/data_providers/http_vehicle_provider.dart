@@ -90,7 +90,8 @@ class HttpVehicleResponse {
     print(vehicleID);
     var response = await client.get(
         Uri.http('${dotenv.env['restApiEndpoint']}',
-            'api/v1/vehicles/$vehicleID/route'),
+            'api/v1/vehicles/$vehicleID/route', {'navigationType': 'ELEVATION_OPTIMIZED'}),
+            
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
@@ -119,6 +120,7 @@ class HttpVehicleResponse {
   }
 
   Future<ElevationDataDTO> getElevationData(String vehicleID) async {
+    await Future.delayed(const Duration(minutes: 1));
     var response = await client.get(
         Uri.http('${dotenv.env['restApiEndpoint']}',
             'api/v1/vehicles/$vehicleID/route/elevation'),
@@ -127,10 +129,11 @@ class HttpVehicleResponse {
           'Content-Type': 'application/json'
         });
 
+    print('elevation data response: ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       return ElevationDataDTO.fromJson(jsonDecode(response.body));
     } else {
-      return Future.error('Non ci sono consegne da mostrare!');
+      return Future.error('Non ci sono dati da mostrare!');
     }
   }
 }

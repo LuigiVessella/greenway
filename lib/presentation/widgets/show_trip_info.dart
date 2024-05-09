@@ -13,13 +13,13 @@ class TripInfo extends StatelessWidget {
         return Card(
             elevation: 2.0,
             child: ExpansionTile(
-                tilePadding: const EdgeInsets.all(5),
-                childrenPadding: const EdgeInsets.all(5.0),
-                title: const Text('Indicazioni stradali:'),
+                tilePadding: const EdgeInsets.all(4),
+                childrenPadding: const EdgeInsets.all(2.0),
+                title:  Text('Viaggio ${index + 1}', style: const TextStyle(fontWeight: FontWeight.w600),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.directions),
-                    title: Text('Viaggio ${index + 1}', style: const TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),),
+                    title: const Text('Indicazioni:', style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),),
                     subtitle: Text(tripInfo[index], style: const TextStyle(fontWeight: FontWeight.bold),),
                   )
                 ]));
