@@ -1,12 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:greenway/dto/elevation_data_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
-import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/other/unpack_polyline.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -31,10 +27,9 @@ class ElevationChart extends StatelessWidget {
             height: 500,
             child: SfCartesianChart(
                 zoomPanBehavior: ZoomPanBehavior(
-                  zoomMode: ZoomMode.x,
-                  enablePanning: true,
-                  maximumZoomLevel: 0.1
-                ),
+                    zoomMode: ZoomMode.x,
+                    enablePanning: true,
+                    maximumZoomLevel: 0.1),
                 title: const ChartTitle(text: 'Grafico elevazione'),
                 // Initialize category axis
                 primaryXAxis: const NumericAxis(
@@ -43,23 +38,21 @@ class ElevationChart extends StatelessWidget {
                 primaryYAxis: const NumericAxis(
                   name: 'altitude meters',
                 ),
-                 legend: const Legend(
-                isVisible: true,
-                // Border color and border width of legend
-                
-                borderWidth: 2
-              ),
+                legend: const Legend(
+                    isVisible: true,
+                    // Border color and border width of legend
+
+                    borderWidth: 2),
                 series: <LineSeries<ChartData, num>>[
                   LineSeries<ChartData, num>(
                     name: 'Altitudine',
-                      dataSource: processJsonForChart(snapshot.data),
-                      xValueMapper: (ChartData data, _) => data.distance
-                          .round(), // data already holds the distance string
-                      yValueMapper: (ChartData data, _) =>
-                          data.elevation.round(),
-                      dataLabelSettings:
-                          const DataLabelSettings(isVisible: false),
-                      ),
+                    dataSource: processJsonForChart(snapshot.data),
+                    xValueMapper: (ChartData data, _) => data.distance
+                        .round(), // data already holds the distance string
+                    yValueMapper: (ChartData data, _) => data.elevation.round(),
+                    dataLabelSettings:
+                        const DataLabelSettings(isVisible: false),
+                  ),
                 ]),
           )));
         } else if (snapshot.hasError) {
@@ -134,24 +127,21 @@ class ElevationChart extends StatelessWidget {
     for (final route in navData.routes!) {
       for (int i = 0; i < decodePolyline(route.geometry!).length - 1; i++) {
         List<num> firstPoint = points[i];
-        print('punto $i: $firstPoint');
+
         List<num> secondPoint = points[i + 1];
-        print('punto $i: $secondPoint');
 
         num distance = Geolocator.distanceBetween(
             firstPoint[0].toDouble(),
             firstPoint[1].toDouble(),
             secondPoint[0].toDouble(),
             secondPoint[1].toDouble());
-        print('distance: $distance');
+
         distances.add(distance);
         if (i % 10 == 0) {
           chartData.add(ChartData(navData.elevations![i],
               distanceSum > 1000 ? (distanceSum / 1000) : distanceSum));
         }
         distanceSum += distance;
-
-        print('chartdata lenght ${chartData.length}');
       }
     }
     return chartData;

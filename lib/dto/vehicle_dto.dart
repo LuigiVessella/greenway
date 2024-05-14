@@ -1,9 +1,3 @@
-// To parse this JSON data, do
-//
-//     final vehicleDto = vehicleDtoFromJson(jsonString);
-
-import 'dart:convert';
-
 import 'package:greenway/entity/vehicle/vehicle.dart';
 
 class VehicleDto {

@@ -1,10 +1,7 @@
-
 import 'dart:convert';
 
-import 'package:greenway/entity/delivery.dart';
 
 Vehicle vehicleFromJson(String str) => Vehicle.fromJson(json.decode(str));
-
 String vehicleToJson(Vehicle data) => json.encode(data.toJson());
 
 class Vehicle {

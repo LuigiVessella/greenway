@@ -1,13 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-
-import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
-
 import 'package:greenway/presentation/widgets/show_trip_info.dart';
 import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
@@ -99,7 +94,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       labelStyle: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.black87),
                       label: const Text(
-                        'Visualizza marcatori',
+                        'Punti di consegna',
                       ),
                       selected: _viewMarkers,
                       onSelected: (bool selected) {
