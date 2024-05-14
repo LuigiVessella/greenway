@@ -123,46 +123,44 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                               showDragHandle: true,
                               context: context,
                               builder: (BuildContext context) {
-                                return SizedBox(
-                                    height: 450,
+                                return SingleChildScrollView(
                                     child: Center(
                                         child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    'Durata: ${Duration(seconds: snapshot.data!.routes![0].duration!.floor()).inHours}h e '
-                                                    '${Duration(seconds: snapshot.data!.routes![0].duration!.floor() % 3600).inMinutes}min'
-                                                    ' (${(snapshot.data!.routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)',
-                                                    style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.normal,
-                                                        fontSize: 18,
-                                                        color: firstAppTheme
-                                                            .primaryColor,
-                                                        fontWeight:
-                                                            FontWeight.w800),
-                                                  ))
-                                            ],
-                                          ),
-                                          const Padding(
-                                              padding: EdgeInsets.all(9),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Text(
-                                                  'Il percorso mostrato è stato calcolato considerando l\' elevazione del territorio',
-                                                  style: TextStyle(
-                                                    fontStyle: FontStyle.italic,
-                                                  ))),
-                                          const Divider(),
-                                          TripInfo(tripInfo: tripStreetNames),
-                                        ])));
+                                                'Durata: ${Duration(seconds: snapshot.data!.routes![0].duration!.floor()).inHours}h e '
+                                                '${Duration(seconds: snapshot.data!.routes![0].duration!.floor() % 3600).inMinutes}min'
+                                                ' (${(snapshot.data!.routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)',
+                                                style: TextStyle(
+                                                    fontStyle: FontStyle.normal,
+                                                    fontSize: 18,
+                                                    color: firstAppTheme
+                                                        .primaryColor,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ))
+                                        ],
+                                      ),
+                                      const Padding(
+                                          padding: EdgeInsets.all(9),
+                                          child: Text(
+                                              'Il percorso mostrato è stato calcolato considerando l\' elevazione del territorio',
+                                              style: TextStyle(
+                                                fontStyle: FontStyle.italic,
+                                              ))),
+                                      const Divider(),
+                                      TripInfo(tripInfo: tripStreetNames),
+                                    ])));
                               });
                         },
                         child: const Text('Visualizza indicazioni'))
@@ -250,7 +248,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                 RichAttributionWidget(
                   attributions: [
                     TextSourceAttribution(
-                      'OpenStreetMap contributors',
+                      'GreenWay Team x Unina x OpenStreetMap',
                       onTap: () => launchUrl(
                           Uri.parse('https://openstreetmap.org/copyright')),
                     ),

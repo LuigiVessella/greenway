@@ -9,42 +9,75 @@ import 'package:greenway/services/network/logger.dart';
 
 final VehicleRepository vr = VehicleRepository();
 
-class VehicleListAdminWidget extends StatelessWidget {
+class VehicleListAdminWidget extends StatefulWidget {
   const VehicleListAdminWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<VehicleDto>(
-      future:
-          vr.getAllVehicles(), // Chiama la tua funzione che ritorna il Future
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          VehicleDto vehicleDTO = snapshot.data!; // Lista dei veicoli
+  State<VehicleListAdminWidget> createState() => _VehicleListAdminWidgetState();
+}
 
-          return SizedBox(
-              height: 250,
-              child: ListView.builder(
-                itemCount: vehicleDTO.content!.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                      child: ListTile(
-                    leading: const Icon(Icons.local_shipping),
-                    title: Text(vehicleDTO.content![index].modelName!),
-                    subtitle: Text(
-                        'max capacity: ${vehicleDTO.content![index].maxCapacityKg}kg'),
-                  ));
-                },
-              ));
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-                'Errore durante il caricamento dei veicoli ${snapshot.error}'),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
+class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
+  late Future<VehicleDto> _vehicles;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _vehicles = vr.getAllVehicles();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const Expanded(child: 
+          Text('I tuoi veicoli: ')),
+          const Text('Aggiorna'),
+          IconButton(
+            enableFeedback: true,
+            tooltip: 'Aggiorna lista veicoli',
+              onPressed: () {
+                _vehicles = vr.getAllVehicles();
+                setState(() {
+                  
+                });
+              },
+              icon: const Icon(Icons.update)),
+        ],
+      ),
+      FutureBuilder<VehicleDto>(
+        future: _vehicles, // Chiama la tua funzione che ritorna il Future
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            VehicleDto vehicleDTO = snapshot.data!; // Lista dei veicoli
+
+            return SizedBox(
+                height: 250,
+                child: ListView.builder(
+                  itemCount: vehicleDTO.content!.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.local_shipping),
+                      title: Text(vehicleDTO.content![index].modelName!),
+                      subtitle: Text(
+                          'carico massimo: ${vehicleDTO.content![index].maxCapacityKg}kg'),
+                    ));
+                  },
+                ));
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                  'Errore durante il caricamento dei veicoli ${snapshot.error}'),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      )
+    ]);
   }
 }
 

@@ -114,8 +114,11 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                                         Text(
                                             'Errore: impossibile aggiungere il veicolo')
                                       ]))))
-                          .whenComplete(
-                            () => Navigator.pop(context),
+                          .then(
+                            (value) => Future.delayed(const Duration(seconds: 3)),
+                          )
+                          .then(
+                            (value) => Navigator.pop(context),
                           );
                     }
                   },

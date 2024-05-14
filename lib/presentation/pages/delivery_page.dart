@@ -46,17 +46,17 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               const SizedBox(
                 height: 40,
               ),
-              Row(
-                
-                mainAxisAlignment: MainAxisAlignment.start,
-                
-                children: [
-                const SizedBox(width: 5,),
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                const SizedBox(
+                  width: 5,
+                ),
                 Text(
-                  textAlign: TextAlign.right ,
+                  textAlign: TextAlign.right,
                   'Le tue spedizioni:',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: firstAppTheme.primaryColor, fontSize: 16),
-
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: firstAppTheme.primaryColor,
+                      fontSize: 16),
                 )
               ]),
               SizedBox(
@@ -70,24 +70,26 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                           leading: const Icon(Icons.house),
                           title: Text(
                               'A: ${createdDeliveries[index].receiverAddress}'),
-                          subtitle:
-                              Text('Da: ${createdDeliveries[index].sender}', style: const TextStyle(fontStyle: FontStyle.italic),),
+                          subtitle: Text(
+                            'Da: ${createdDeliveries[index].sender}',
+                            style: const TextStyle(fontStyle: FontStyle.italic),
+                          ),
                         ),
                       );
                     }),
               ),
               const Divider(),
-              Row(
-                
-                mainAxisAlignment: MainAxisAlignment.start,
-                
-                children: [
-                const SizedBox(width: 5,),
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                const SizedBox(
+                  width: 5,
+                ),
                 Text(
-                  textAlign: TextAlign.right ,
+                  textAlign: TextAlign.right,
                   'Vuoi spedire?',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: firstAppTheme.primaryColor, fontSize: 16),
-
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: firstAppTheme.primaryColor,
+                      fontSize: 16),
                 )
               ]),
               const SizedBox(
@@ -166,24 +168,49 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
   }
 
   bool _addNewDelivery() {
-    Delivery newDelivery = Delivery(
-        sender: newDeliveryDTO.sender!,
-        senderAddress: newDeliveryDTO.senderAddress!,
-        receiver: newDeliveryDTO.receiver!,
-        receiverAddress: newDeliveryDTO.receiverAddress!,
-        receiverCoordinates: Coordinates(
-            type: newDeliveryDTO.receiverCoordinates!.type!,
-            coordinates: newDeliveryDTO.receiverCoordinates!.coordinates!),
-        weightKg: '1.0');
+    try {
+      Delivery newDelivery = Delivery(
+          sender: newDeliveryDTO.sender!,
+          senderAddress: newDeliveryDTO.senderAddress!,
+          receiver: newDeliveryDTO.receiver!,
+          receiverAddress: newDeliveryDTO.receiverAddress!,
+          receiverCoordinates: Coordinates(
+              type: newDeliveryDTO.receiverCoordinates!.type!,
+              coordinates: newDeliveryDTO.receiverCoordinates!.coordinates!),
+          weightKg: '1.0');
 
-    setState(() {
-      createdDeliveries.add(newDelivery);
-    });
+      setState(() {
+        createdDeliveries.add(newDelivery);
+      });
+     
+      DeliveryRepository dv = DeliveryRepository();
+      dv.addNewDelivery(newDelivery);
+      return true;
 
-    //TODO: aggiungere un controllo sulla risposta del metodo
-    DeliveryRepository dv = DeliveryRepository();
-    dv.addNewDelivery(newDelivery);
-    return true;
+
+    } on TypeError {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.orange,
+          content: Row(children: [
+            Icon(Icons.info),
+            SizedBox(
+              width: 10,
+            ),
+            Text('Inserisci mittente e destinatario!', style: TextStyle(fontWeight: FontWeight.bold),)
+          ])));
+      return false;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Row(children: [
+            Icon(Icons.info),
+            SizedBox(
+              width: 10,
+            ),
+            Text('Anomalia ')
+          ])));
+      return false;
+    }
   }
 
   void _scheduleDeliveries() {
