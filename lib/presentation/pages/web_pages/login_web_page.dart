@@ -13,6 +13,7 @@ class InteractivePage extends StatefulWidget {
   const InteractivePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _InteractivePageState createState() => _InteractivePageState();
 }
 
@@ -40,8 +41,7 @@ class _InteractivePageState extends State<InteractivePage> {
                 onPressed: () async {
                   try {
                     if (mounted) {
-                      final response = await OIDCAuthService()
-                          .authenticate(context: context);
+                      await OIDCAuthService().authenticate(context: context);
                     }
 
                     setState(() {

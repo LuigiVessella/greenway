@@ -7,7 +7,7 @@ import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/services/network/data_providers/http_vehicle_provider.dart';
 
 class VehicleRepository {
-  ///http vehicle provider ci fornisce tutta la comunicazione con il server
+  /// http vehicle response ci fornisce tutta la comunicazione con il server tramite http (REST API)
   HttpVehicleResponse httpVehicle = HttpVehicleResponse();
 
   Future<void> addVehicle(Vehicle vehicle) {
@@ -24,6 +24,7 @@ class VehicleRepository {
   }
 
   Future<NavigationDataDTO?> getVehicleRoute(String vehicleID){
+    httpVehicle.enterVehicle(vehicleID);
     return httpVehicle.getVehicleRoute(vehicleID);
   }
 
@@ -34,12 +35,5 @@ class VehicleRepository {
   Future<ElevationDataDTO> getElevationData(String vehicleID) {
     return httpVehicle.getElevationData(vehicleID);
   }
-//
-  // void updateVehicle(Vehicle vehicle) {
-  //   httpVehicle.updateVehicle(vehicle);
-  // }
-//
-  // void deleteVehicle(Vehicle vehicle) {
-  //   httpVehicle.deleteVehicle(vehicle);
-  // }
+
 }

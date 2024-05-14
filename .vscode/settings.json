@@ -3,5 +3,7 @@
         "dotenv",
         "Polyline",
         "polylines"
-    ]
+    ],
+    "cSpell.language": "en",
+    "cSpell.enabled": false
 }

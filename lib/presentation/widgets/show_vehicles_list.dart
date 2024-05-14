@@ -5,6 +5,7 @@ import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/presentation/pages/login_page.dart';
+import 'package:greenway/presentation/widgets/test_widget.dart';
 import 'package:greenway/presentation/widgets/web_widget/elevation_chart.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/network/logger.dart';
@@ -92,6 +93,7 @@ class VehicleListDmanWidget extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
+                                                  //const Test(),
                                                   ElevationChart(
                                                       vehicleID: vehicleDTO.id
                                                           .toString()),

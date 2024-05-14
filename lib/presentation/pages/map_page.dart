@@ -31,10 +31,9 @@ class _NavigationWidgetState extends State<NavigationWidget> {
 
     _navData = _vr
         .getVehicleByDeliveryMan(AuthService().getUserInfo!)
-        .then((value) => _vr.getVehicleRoute(value.id.toString()))
-        .catchError((e) => null);
+        .then((value) => _vr.getVehicleRoute(value.id.toString()));
 
-    colors.add(Colors.blue);
+    colors.add(Colors.purple);
     colors.add(Colors.red);
     colors.add(Colors.orange);
   }
@@ -180,6 +179,14 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.greenway',
                 ),
+                //PolylineLayer(
+                //  polylines: [
+                //    Polyline(points:
+                //      decodePolyline(snapshot.data!.routes![0].geometry!).unpackPolyline(),
+                //      color: Colors.blue,
+                //     strokeWidth: 3.0
+                //    )]
+                //),
                 PolylineLayer(
                   polylineCulling: true,
                   polylines: tripRoute.asMap().entries.map((entry) {
@@ -188,7 +195,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
 
                     return Polyline(
                       points: decodePolyline(polylineString).unpackPolyline(),
-                      color: colors.elementAtOrNull(index) ?? Colors.blue,
+                      color: colors.elementAtOrNull(index) ?? Colors.red,
                       strokeWidth: 3.0,
                     );
                   }).toList(),
@@ -273,7 +280,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 16),
-              child: Text('Awaiting result...'),
+              child: Text('Sta impiegando troppo...'),
             ),
           ];
         }

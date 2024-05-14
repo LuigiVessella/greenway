@@ -44,21 +44,17 @@ class HttpVehicleResponse {
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
 
-    print(accessToken);
     final queryParams = {
       'pageNo': '0',
       'pageSize': '10',
     };
-
-    // await Future.delayed(const Duration(seconds: 3));
 
     var response = await client.get(
         Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/vehicles',
             queryParams),
         headers: {
           'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:62033'
+          'Content-Type': 'application/json'
         });
 
     return VehicleDto.fromJson(jsonDecode(response.body));
@@ -87,13 +83,14 @@ class HttpVehicleResponse {
   }
 
   Future<NavigationDataDTO?> getVehicleRoute(String vehicleID) async {
-    print(vehicleID);
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+
     var response = await client.get(
         Uri.http('${dotenv.env['restApiEndpoint']}',
-            'api/v1/vehicles/$vehicleID/route', {'navigationType': 'ELEVATION_OPTIMIZED'}),
-            
+            'api/v1/vehicles/$vehicleID/route', {'navigationType': 'STANDARD'}),
         headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
         });
 
@@ -120,7 +117,6 @@ class HttpVehicleResponse {
   }
 
   Future<ElevationDataDTO> getElevationData(String vehicleID) async {
-    await Future.delayed(const Duration(minutes: 1));
     var response = await client.get(
         Uri.http('${dotenv.env['restApiEndpoint']}',
             'api/v1/vehicles/$vehicleID/route/elevation'),
@@ -134,6 +130,24 @@ class HttpVehicleResponse {
       return ElevationDataDTO.fromJson(jsonDecode(response.body));
     } else {
       return Future.error('Non ci sono dati da mostrare!');
+    }
+  }
+
+  Future<void> enterVehicle(String vehicleID) async {
+    var response = await client.get(
+        Uri.http('${dotenv.env['restApiEndpoint']}',
+            'api/v1/vehicles/$vehicleID/enter'),
+        headers: {
+          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Content-Type': 'application/json'
+        });
+
+    print('enter response: ${response.statusCode}');
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return;
+    } else {
+      return Future.error('Attenzione consegne in transito');
     }
   }
 }

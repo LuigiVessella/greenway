@@ -1,11 +1,14 @@
 class NavigationDataDTO {
 	String? code;
+  String? geometry; 
 	List<Routes>? routes;
 	List<Waypoints>? waypoints;
+  List<num>? elevations;
 
 	NavigationDataDTO({this.code, this.routes, this.waypoints});
 
 	NavigationDataDTO.fromJson(Map<String, dynamic> json) {
+    geometry = json['geometry'];
 		code = json['code'];
 		if (json['routes'] != null) {
 			routes = <Routes>[];
@@ -15,6 +18,7 @@ class NavigationDataDTO {
 			waypoints = <Waypoints>[];
 			json['waypoints'].forEach((v) { waypoints!.add(Waypoints.fromJson(v)); });
 		}
+    elevations = json['elevations'].cast<num>();
 	}
 
 	Map<String, dynamic> toJson() {

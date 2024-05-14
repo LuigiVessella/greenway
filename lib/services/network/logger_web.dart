@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:openidconnect/openidconnect.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -55,6 +54,31 @@ class OIDCAuthService {
       );
 
       identity = response;
+
+      _isLogged = true;
+      
+      return response;
+    } on Exception catch (e) {
+      throw Exception('Errore durante l\'autenticazione OpenID Connect: $e');
+    }
+  }
+
+  Future<AuthorizationResponse?> refresh() async {
+    if (discoveryDocument == null) {
+      await _fetchConfiguration(); // Recupera la configurazione se necessario
+    }
+
+    RefreshRequest request = RefreshRequest(
+        clientId: clientId,
+        scopes: ["openid", "profile", "email"],
+        refreshToken: identity!.refreshToken!,
+        configuration: discoveryDocument!);
+
+    try {
+      final response = await OpenIdConnect.refreshToken(request: request);
+
+      identity = response;
+
       _isLogged = true;
       return response;
     } on Exception catch (e) {
@@ -86,6 +110,16 @@ class OIDCAuthService {
   bool isAuthenticated() => _isLogged;
 
   // Metodo per ottenere i token d'accesso e d'identità
-  String? get accessToken => identity?.accessToken;
-  String? get idToken => identity?.idToken;
+  String? get accessToken {
+    DateTime now = DateTime.now();
+
+    if (now.isBefore(identity!.expiresAt)) {
+      return identity!.accessToken;
+    } else {
+      OIDCAuthService._instance.refresh();
+      return identity!.accessToken;
+    }
+  }
+
+  String? get idToken => identity!.idToken;
 }

@@ -194,7 +194,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
             const SnackBar(
                 backgroundColor: Colors.green,
                 content: Row(children: [
-                  Icon(Icons.abc),
+                  Icon(Icons.check),
                   Text('Consegne programmate')
                 ]))))
         .catchError((error, stackTrace) =>

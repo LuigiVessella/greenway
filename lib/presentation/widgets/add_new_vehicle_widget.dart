@@ -102,9 +102,6 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                                     Icon(Icons.info),
                                     Text('Veicolo aggiunto correttamente')
                                   ]))))
-                          .then(
-                            (value) => Navigator.pop(context),
-                          )
                           .catchError((error, stackTrace) =>
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
@@ -116,7 +113,10 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                                         ),
                                         Text(
                                             'Errore: impossibile aggiungere il veicolo')
-                                      ]))));
+                                      ]))))
+                          .whenComplete(
+                            () => Navigator.pop(context),
+                          );
                     }
                   },
                   child: const Text('Aggiungi'))
