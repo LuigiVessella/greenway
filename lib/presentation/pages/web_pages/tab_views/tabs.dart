@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
+import 'package:greenway/presentation/pages/web_pages/delivery_tab.dart';
 import 'package:greenway/presentation/widgets/web_widget/vehicle_list_web.dart';
 
 class TabOne extends StatelessWidget {
@@ -26,9 +27,8 @@ class TabTree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: const Text('Qui vedrai un riepilogo ed il rendimento'),
+    return const SafeArea(
+      child: DeliveryWebTab(),
     );
   }
 }

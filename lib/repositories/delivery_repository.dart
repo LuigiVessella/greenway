@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:greenway/dto/all_deliveries_dto.dart';
 import 'package:greenway/entity/delivery.dart';
 import 'package:greenway/services/network/data_providers/http_delivery_provider.dart';
 
@@ -21,9 +24,17 @@ class DeliveryRepository{
     return httpDelivery.addDepotPoint();
   }
 
-  //Future<List<Delivery>> getDeliveryByDeliveryMan(String deliveryManId) {
-  //  return httpDelivery.getDeliveryByDeliveryMan(deliveryManId);
-  //}
 
+  Future<AllDeliveriesDTO> getAllDeliveries()async {
+    final response = await httpDelivery.getAllDeliveries();
+    
+    if(response.statusCode == 200 || response.statusCode == 201) {
+      return AllDeliveriesDTO.fromJson(jsonDecode(response.body));
+    }
+    else {
+      throw Exception('Failed to load deliveries');
+    }
+
+  }
 
 }

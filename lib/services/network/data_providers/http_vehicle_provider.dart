@@ -82,25 +82,19 @@ class HttpVehicleResponse {
     }
   }
 
-  Future<NavigationDataDTO?> getVehicleRoute(String vehicleID) async {
+  Future<http.Response> getVehicleRoute(String vehicleID) async {
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
 
     var response = await client.get(
         Uri.http('${dotenv.env['restApiEndpoint']}',
-            'api/v1/vehicles/$vehicleID/route', {'navigationType': 'STANDARD'}),
+            'api/v1/vehicles/$vehicleID/route', {'navigationType': 'ELEVATION_OPTIMIZED'}),
         headers: {
           'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
         });
 
-    print('Response vehicleroute ${response.statusCode}');
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return NavigationDataDTO.fromJson(jsonDecode(response.body));
-    } else {
-      return Future.error('Non ci sono consegne da mostrare!');
-    }
+        return response;
   }
 
   Future<void> putLeaveVehicle(String vehicleID) async {
@@ -116,22 +110,7 @@ class HttpVehicleResponse {
     print(response.body);
   }
 
-  Future<ElevationDataDTO> getElevationData(String vehicleID) async {
-    var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}',
-            'api/v1/vehicles/$vehicleID/route/elevation'),
-        headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
-          'Content-Type': 'application/json'
-        });
 
-    print('elevation data response: ${response.statusCode}');
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return ElevationDataDTO.fromJson(jsonDecode(response.body));
-    } else {
-      return Future.error('Non ci sono dati da mostrare!');
-    }
-  }
 
   Future<void> enterVehicle(String vehicleID) async {
     var response = await client.get(
@@ -149,5 +128,22 @@ class HttpVehicleResponse {
     } else {
       return Future.error('Attenzione consegne in transito');
     }
+  }
+
+
+  Future<http.Response> getRoutesStandard(String vehicleID) async {
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+
+    var response = await client.get(
+        Uri.http('${dotenv.env['restApiEndpoint']}',
+            'api/v1/vehicles/$vehicleID/route', {'navigationType': 'STANDARD'}),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json'
+        });
+
+
+    return response;
   }
 }

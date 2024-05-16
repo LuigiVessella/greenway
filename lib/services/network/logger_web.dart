@@ -9,9 +9,9 @@ class OIDCAuthService {
   OIDCAuthService._internal();
 
   // Variabili
-  String clientId = dotenv.env['clientID']!;
-  String discoveryUrl = dotenv.env['discoveryUrl']!;
-  String clientSecret = dotenv.env['CLIENT_SECRET']!;
+ final String clientId = dotenv.env['clientID']!;
+ final String discoveryUrl = dotenv.env['discoveryUrl']!;
+ final String clientSecret = dotenv.env['CLIENT_SECRET']!;
 
   bool _isLogged = false;
 
@@ -63,13 +63,13 @@ class OIDCAuthService {
     }
   }
 
-  Future<AuthorizationResponse?> refresh() async {
+  void refresh() async {
     if (discoveryDocument == null) {
       await _fetchConfiguration(); // Recupera la configurazione se necessario
     }
 
     RefreshRequest request = RefreshRequest(
-      
+        clientSecret: clientSecret,
         clientId: clientId,
         scopes: ["openid", "profile", "email"],
         refreshToken: identity!.refreshToken!,
@@ -82,10 +82,10 @@ class OIDCAuthService {
       identity = response;
 
       _isLogged = true;
-      return response;
     } on Exception catch (e) {
       throw Exception('Errore durante l\'autenticazione OpenID Connect: $e');
     }
+
   }
 
   // Metodo per il logout

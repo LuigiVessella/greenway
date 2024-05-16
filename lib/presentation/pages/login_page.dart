@@ -1,7 +1,5 @@
 import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/components/components.dart';
 import 'package:greenway/repositories/deliveryman_repository.dart';
@@ -78,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: const SizedBox(
                                 width: 200,
-                                child: Text('Login',
+                                child: Text('Accedi',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -90,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: const SizedBox(
                               width: 200,
-                              child: Text('Logout',
+                              child: Text('Esci',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -99,14 +97,13 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           ElevatedButton(
                               onPressed: () {
-                                final snackBar = SnackBar(
-                                    content: const Text('Please login first'),
-                                    action: SnackBarAction(
-                                      label: 'Undo',
-                                      onPressed: () {
-                                        // Some code to undo the change.
-                                      },
-                                    ));
+                                const snackBar = SnackBar(
+                                  backgroundColor: Colors.orange,
+                                  content: Text(
+                                    'Esegui il login!',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                );
                                 if (AuthService().isLoggedIn &&
                                     AuthService()
                                         .getUserRole!

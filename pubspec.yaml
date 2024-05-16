@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  charts_flutter:
+      git:
+        url: https://github.com/google/charts.git
+        path: charts_flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,7 +58,6 @@ dependencies:
   openidconnect: ^1.0.28
   flutter_launcher_icons: ^0.13.1
   flutter_randomcolor: ^1.0.15
-  syncfusion_flutter_charts: ^25.1.42+1
   google_fonts: ^6.2.1
  
 
@@ -76,6 +79,7 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
 
 flutter_launcher_icons:
   android: "launcher_icon"

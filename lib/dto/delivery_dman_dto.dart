@@ -3,7 +3,7 @@ class VehicleByDmanDto {
   String? modelName;
   num? maxAutonomyKm;
   num? maxCapacityKg;
-  List<DeliveriesDto>? deliveries;
+  List<DeliveryDTO>? deliveries;
 
   VehicleByDmanDto(
       {this.id,
@@ -18,9 +18,9 @@ class VehicleByDmanDto {
     maxAutonomyKm = json['maxAutonomyKm'];
     maxCapacityKg = json['maxCapacityKg'];
     if (json['deliveries'] != null) {
-      deliveries = <DeliveriesDto>[];
+      deliveries = <DeliveryDTO>[];
       json['deliveries'].forEach((v) {
-        deliveries!.add(DeliveriesDto.fromJson(v));
+        deliveries!.add(DeliveryDTO.fromJson(v));
       });
     }
   }
@@ -38,7 +38,7 @@ class VehicleByDmanDto {
   }
 }
 
-class DeliveriesDto {
+class DeliveryDTO {
   num? id;
   String? sender;
   String? senderAddress;
@@ -47,8 +47,10 @@ class DeliveriesDto {
   ReceiverCoordinatesDto? receiverCoordinates;
   String? estimatedDeliveryTime;
   num? weightKg;
+  bool? inTransit;
+  String? deliveryTime;
 
-  DeliveriesDto(
+  DeliveryDTO(
       {this.id,
       this.sender,
       this.senderAddress,
@@ -58,7 +60,7 @@ class DeliveriesDto {
       this.estimatedDeliveryTime,
       this.weightKg});
 
-  DeliveriesDto.fromJson(Map<String, dynamic> json) {
+  DeliveryDTO.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     sender = json['sender'];
     senderAddress = json['senderAddress'];
@@ -69,6 +71,8 @@ class DeliveriesDto {
         : null;
     estimatedDeliveryTime = json['estimatedDeliveryTime'];
     weightKg = json['weightKg'];
+    inTransit = json['inTransit'];
+    deliveryTime = json['deliveryTime'];
   }
 
   Map<String, dynamic> toJson() {

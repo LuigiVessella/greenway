@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:greenway/entity/delivery.dart';
 import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logger_web.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -57,5 +59,22 @@ class HttpDeliveryResponse {
     } else {
       return Future.error('error');
     }
+  }
+
+  Future<http.Response> getAllDeliveries() async {
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+    final params = {"pageNo": "0", "pageSize": "10"};
+
+    var response = await client.get(
+      Uri.http(
+          '${dotenv.env['restApiEndpoint']}', '/api/v1/deliveries', params),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json'
+      },
+    );
+
+    return response;
   }
 }

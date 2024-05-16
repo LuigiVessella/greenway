@@ -40,13 +40,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   List<String> tripStreetNames = [];
   String? backTrip = '';
 
-  late Future<NavigationDataDTO?> _navData;
+  late Future<NavigationDataDTO> _navData;
   bool _viewBackTrip = false;
   bool _viewMarkers = true;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NavigationDataDTO?>(
+    return FutureBuilder<NavigationDataDTO>(
       future: _navData,
       builder: (context, snapshot) {
         List<Widget> children;

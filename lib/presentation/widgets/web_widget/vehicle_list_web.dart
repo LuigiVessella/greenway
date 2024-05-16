@@ -16,8 +16,10 @@ class VehicleListWeb extends StatelessWidget {
         if (snapshot.hasData) {
           VehicleDto vehicleDTO = snapshot.data!; // Lista dei veicoli
 
-          return Container(
-              margin: const EdgeInsets.all(8.0),
+          return SafeArea(
+            child:Container(
+             
+              margin: const EdgeInsets.all(15),
               child: ListView.builder(
                 itemCount: vehicleDTO.content!.length,
                 itemBuilder: (context, index) {
@@ -51,7 +53,7 @@ class VehicleListWeb extends StatelessWidget {
                             child: const Text('Stato spedizione'))
                       ]));
                 },
-              ));
+              )));
         } else if (snapshot.hasError) {
           return Center(
             child: Text(
