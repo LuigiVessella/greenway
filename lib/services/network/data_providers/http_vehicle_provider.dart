@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
-import 'package:greenway/dto/elevation_data_dto.dart';
-import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/services/network/logger.dart';

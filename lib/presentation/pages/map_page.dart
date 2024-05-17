@@ -4,7 +4,6 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/presentation/widgets/show_trip_info.dart';
-import 'package:greenway/presentation/widgets/show_vehicles_list.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/parser/navigation_data_parser.dart';
@@ -26,7 +25,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
 
     _navData = _vr
         .getVehicleByDeliveryMan(AuthService().getUserInfo!)
-        .then((value) => _vr.getVehicleRoute(value.id.toString()));
+        .then((value) => _vr.getVehicleRoutes(value.id.toString()));
 
     colors.add(Colors.purple);
     colors.add(Colors.red);
@@ -40,24 +39,33 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   List<String> tripStreetNames = [];
   String? backTrip = '';
 
-  late Future<NavigationDataDTO> _navData;
+  int currentNavDataIndex = 0;
+
+  late Future<List<NavigationDataDTO>> _navData;
   bool _viewBackTrip = false;
   bool _viewMarkers = true;
+  bool _elevationRoute = false;
+
+  String _routeText = 'Standard';
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NavigationDataDTO>(
+    return FutureBuilder<List<NavigationDataDTO>>(
       future: _navData,
       builder: (context, snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
           tripStreetNames.clear();
           tripRoute.clear();
-          tripRoute.addAll(dataParser.combinePolylines(snapshot.data!));
+
+          //qui invece cambierà dinamicamente in base all current index
+          tripRoute.addAll(
+              dataParser.combinePolylines(snapshot.data![currentNavDataIndex]));
+
           backTrip = tripRoute.lastOrNull;
           tripRoute.removeLast();
-          tripStreetNames
-              .addAll(dataParser.concatenateRoadNames(snapshot.data!));
+          tripStreetNames.addAll(dataParser
+              .concatenateRoadNames(snapshot.data![currentNavDataIndex]));
           children = <Widget>[
             // ignore: sized_box_for_whitespace
             Container(
@@ -109,6 +117,32 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                         }
                       },
                     ),
+                    const SizedBox(
+                      width: 3,
+                    ),
+                    Switch(
+                      // This bool value toggles the switch.
+                      value: _elevationRoute,
+                      activeColor: firstAppTheme.primaryColor,
+                      onChanged: (bool value) {
+                        // This is called when the user toggles the switch.
+                        setState(() {
+                          _elevationRoute = value;
+                          setState(() {
+                            if (value == false) {
+                              _routeText = 'Standard';
+                            } else {
+                              _routeText = 'Elevation';
+                            }
+                            currentNavDataIndex == 0
+                                ? currentNavDataIndex = 1
+                                : currentNavDataIndex = 0;
+                          });
+                        });
+                      },
+                    ),
+                    Container(
+                        alignment: Alignment.center, child: Text(_routeText)),
                     const VerticalDivider(),
                     ElevatedButton(
                         onPressed: () {
@@ -133,9 +167,9 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                'Durata: ${Duration(seconds: snapshot.data!.routes![0].duration!.floor()).inHours}h e '
-                                                '${Duration(seconds: snapshot.data!.routes![0].duration!.floor() % 3600).inMinutes}min'
-                                                ' (${(snapshot.data!.routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)',
+                                                'Durata: ${Duration(seconds: snapshot.data![currentNavDataIndex].routes![0].duration!.floor()).inHours}h e '
+                                                '${Duration(seconds: snapshot.data![currentNavDataIndex].routes![0].duration!.floor() % 3600).inMinutes}min'
+                                                ' (${(snapshot.data![currentNavDataIndex].routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)',
                                                 style: TextStyle(
                                                     fontStyle: FontStyle.normal,
                                                     fontSize: 18,
@@ -172,14 +206,16 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.greenway',
                 ),
-                //PolylineLayer(
-                //  polylines: [
-                //    Polyline(points:
-                //      decodePolyline(snapshot.data!.routes![0].geometry!).unpackPolyline(),
-                //      color: Colors.blue,
-                //     strokeWidth: 3.0
-                //    )]
-                //),
+                Visibility(
+                    visible: !_elevationRoute,
+                    child: PolylineLayer(polylines: [
+                      Polyline(
+                          points: decodePolyline(
+                                  snapshot.data![1].routes![0].geometry!)
+                              .unpackPolyline(),
+                          color: Colors.blue.shade200,
+                          strokeWidth: 3.0)
+                    ])),
                 PolylineLayer(
                   polylineCulling: true,
                   polylines: tripRoute.asMap().entries.map((entry) {
@@ -289,11 +325,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-  }
-
-  void getNavData(String vehicleID) {
-    _navData = vr.getVehicleRoute(vehicleID);
   }
 }

@@ -104,20 +104,24 @@ class VehicleListDmanWidget extends StatelessWidget {
                           tilePadding: const EdgeInsets.all(7),
                           childrenPadding: const EdgeInsets.all(1),
                           title: const Text(
-                            'Informazioni sul veicolo',
+                            'Veicolo in viaggio: ',
                             style: TextStyle(fontWeight: FontWeight.w700),
                           ),
                           children: [
                             ListTile(
                               leading: const Icon(Icons.local_shipping),
-                              title: Text(vehicleDTO.modelName!),
+                              title: Text(vehicleDTO.modelName!.toUpperCase()),
                               subtitle: Text(
-                                  'max capacity: ${vehicleDTO.maxCapacityKg}kg'),
+                                  'Carico massimo: ${vehicleDTO.maxCapacityKg}kg\nNon è previsto rifornimento'),
                             ),
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
+                                 
+                                  Expanded(child:
                                   TextButton(
+                                    
+                                    
                                       onPressed: () {
                                         Navigator.push(
                                             context,
@@ -129,7 +133,7 @@ class VehicleListDmanWidget extends StatelessWidget {
                                                           .toString()),
                                             ));
                                       },
-                                      child: const Text('dati elevazione')),
+                                      child: const Text('PROFILO ELEVAZIONE', textAlign: TextAlign.center,))),
                                   FilledButton(
                                       onPressed: () {
                                         vr.putLeaveVehicle(

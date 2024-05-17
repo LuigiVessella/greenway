@@ -4,17 +4,30 @@ import 'package:greenway/repositories/delivery_repository.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/network/logger.dart';
 
-class PackageList extends StatelessWidget {
+class PackageList extends StatefulWidget {
   const PackageList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    VehicleRepository vr = VehicleRepository();
-    DeliveryRepository dr = DeliveryRepository();
+  State<PackageList> createState() => _PackageListState();
+}
 
+class _PackageListState extends State<PackageList> {
+  final VehicleRepository vr = VehicleRepository();
+  final DeliveryRepository dr = DeliveryRepository();
+
+  late Future<VehicleByDmanDto> data;
+
+  @override
+  void initState() {
+    data = vr.getVehicleByDeliveryMan(AuthService().getUserInfo!);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return FutureBuilder<VehicleByDmanDto>(
-      future: vr.getVehicleByDeliveryMan(AuthService()
-          .getUserInfo!), // Chiama la tua funzione che ritorna il Future
+      future: data, // Chiama la tua funzione che ritorna il Future
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           VehicleByDmanDto vehicleDTO = snapshot.data!; // Lista dei veicoli
@@ -54,6 +67,9 @@ class PackageList extends StatelessWidget {
                                       dr.completeDelivery(vehicleDTO
                                           .deliveries![index].id
                                           .toString());
+                                      setState(() {
+                                          data = vr.getVehicleByDeliveryMan(AuthService().getUserInfo!);
+                                      });
                                     },
                                     child: const Text('Consegnata'))
                               ],

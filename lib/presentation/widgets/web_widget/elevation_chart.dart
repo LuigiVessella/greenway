@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/other/unpack_polyline.dart';
@@ -19,33 +20,59 @@ class _ElevationChartState extends State<ElevationChart> {
   Widget build(BuildContext context) {
     VehicleRepository vr = VehicleRepository();
 
-    return FutureBuilder<NavigationDataDTO>(
-      future: vr.getVehicleRoute(widget.vehicleID),
+    return Scaffold(
+        body: FutureBuilder<List<NavigationDataDTO>>(
+      future: vr.getVehicleRoutes(widget.vehicleID),
       // Chiama la tua funzione che ritorna il Future
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Scaffold(
-              body: Center(
-                  child: SizedBox(
-                      width: kIsWeb ? 1500 : 500,
-                      height: 500,
-                      child: charts.LineChart([
-                         
-                        charts.Series<ChartData, num>(
-                          displayName: 'Grafico elevazione',
-                          id: 'Sales',
-                          colorFn: (_, __) =>
-                              charts.MaterialPalette.blue.shadeDefault,
-                          domainFn: (ChartData sales, _) => sales.distance,
-                          measureFn: (ChartData sales, _) => sales.elevation,
-                          data: processJsonForChart(snapshot.data!),
-                        ),
-                      ],
-                          primaryMeasureAxis: const charts.NumericAxisSpec(),
-                          secondaryMeasureAxis: const charts.NumericAxisSpec(),
-                          animate: true,
-                          defaultRenderer: charts.LineRendererConfig(
-                              includePoints: true)))));
+          return SafeArea(
+              child: SingleChildScrollView(
+                  padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+                  child: Column(children: [
+                    const Text('Grafico altitudine / profilo Standard'),
+                    SizedBox(
+                        width: kIsWeb ? 1500 : 500,
+                        height: 500,
+                        child: charts.LineChart([
+                          charts.Series<ChartData, num>(
+                            displayName: 'Grafico elevazione',
+                            id: 'Sales',
+                            colorFn: (_, __) =>
+                                charts.MaterialPalette.blue.shadeDefault,
+                            domainFn: (ChartData sales, _) => sales.distance,
+                            measureFn: (ChartData sales, _) => sales.elevation,
+                            data: processJsonForChart(snapshot.data![0]),
+                          ),
+                        ],
+                            primaryMeasureAxis: const charts.NumericAxisSpec(),
+                            secondaryMeasureAxis:
+                                const charts.NumericAxisSpec(),
+                            animate: true,
+                            defaultRenderer: charts.LineRendererConfig(
+                                includePoints: false))),
+                    const Text('Grafico altitudine / profilo Elevazione'),
+                    SizedBox(
+                        width: kIsWeb ? 1500 : 500,
+                        height: 500,
+                        child: charts.LineChart([
+                          charts.Series<ChartData, num>(
+                            displayName: 'Grafico elevazione',
+                            id: 'Sales',
+                            colorFn: (_, __) =>
+                                charts.MaterialPalette.blue.shadeDefault,
+                            domainFn: (ChartData sales, _) => sales.distance,
+                            measureFn: (ChartData sales, _) => sales.elevation,
+                            data: processJsonForChart(snapshot.data![1]),
+                          ),
+                        ],
+                            primaryMeasureAxis: const charts.NumericAxisSpec(),
+                            secondaryMeasureAxis:
+                                const charts.NumericAxisSpec(),
+                            animate: true,
+                            defaultRenderer: charts.LineRendererConfig(
+                                includePoints: false)))
+                  ])));
         } else if (snapshot.hasError) {
           if (snapshot.error.toString().contains('401')) {
             return Center(
@@ -87,24 +114,25 @@ class _ElevationChartState extends State<ElevationChart> {
                 ]));
           }
         } else {
-          return const Center(
-              child: Column(
+          return Container(
+              alignment: Alignment.center,
+              child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                CircularProgressIndicator(
-                  strokeWidth: 5,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Elaboro i dati',
-                  style: TextStyle(color: Colors.white, fontSize: 19),
-                )
-              ]));
+                    CircularProgressIndicator(
+                      strokeWidth: 5,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Elaboro i dati',
+                      style: TextStyle(fontSize: 19),
+                    )
+                  ]));
         }
       },
-    );
+    ));
   }
 
   List<ChartData> processJsonForChart(NavigationDataDTO navData) {
@@ -112,6 +140,7 @@ class _ElevationChartState extends State<ElevationChart> {
     List<num> distances = [];
     List<List<num>> points = decodePolyline(navData.routes![0].geometry!);
     double distanceSum = 0.0;
+
     print('points: ${points.length}');
     print('elevation lenght ${navData.elevations!.length}');
 
@@ -127,12 +156,16 @@ class _ElevationChartState extends State<ElevationChart> {
 
       distances.add(distance);
 
-      chartData.add(
-          ChartData(navData.elevations![i], (i == 0) ? 0 : distanceSum));
+      num? nullChecker = navData.elevations?[i];
+
+      if (nullChecker == null) {
+        continue;
+      } else {
+        chartData.add(
+            ChartData(navData.elevations![i] ?? 0, (i == 0) ? 0 : distanceSum));
+      }
 
       distanceSum = (distanceSum + distance);
-      if(distanceSum > 5000) break;
-      
     }
 
     return chartData;

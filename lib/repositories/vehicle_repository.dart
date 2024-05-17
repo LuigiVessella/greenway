@@ -46,10 +46,12 @@ class VehicleRepository {
 
     if (responseStandard.statusCode == 200 ||
         responseStandard.statusCode == 201) {
+          print('standard ${responseStandard.statusCode}');
       result
           .add(NavigationDataDTO.fromJson(jsonDecode(responseStandard.body)));
       if (responseElevation.statusCode == 200 ||
           responseElevation.statusCode == 201) {
+            print('elevation ${responseElevation.statusCode}');
         result.add(
             NavigationDataDTO.fromJson(jsonDecode(responseElevation.body)));
       } else {
