@@ -29,7 +29,9 @@ class _InteractivePageState extends State<InteractivePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Benvenuto, effettua il login!'),
+        
       ),
       body: Center(
         child: Form(

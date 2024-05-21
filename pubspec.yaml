@@ -30,10 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  charts_flutter:
-      git:
-        url: https://github.com/google/charts.git
-        path: charts_flutter
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -41,7 +38,6 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_appauth: ^6.0.5
   http: ^1.2.1
-  flutter_secure_storage: ^9.0.0
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.2.2
   jwt_decoder: ^2.0.1
@@ -57,8 +53,8 @@ dependencies:
   flutter_map_animated_marker: ^2.0.0
   openidconnect: ^1.0.28
   flutter_launcher_icons: ^0.13.1
-  flutter_randomcolor: ^1.0.15
   google_fonts: ^6.2.1
+  fl_chart: ^0.68.0
  
 
 

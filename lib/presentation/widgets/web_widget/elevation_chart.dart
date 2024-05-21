@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/other/unpack_polyline.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 
 class ElevationChart extends StatefulWidget {
   const ElevationChart({super.key, required this.vehicleID});
@@ -26,52 +26,82 @@ class _ElevationChartState extends State<ElevationChart> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SafeArea(
-              child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  child: Column(children: [
-                    const Text('Grafico altitudine / profilo Standard'),
-                    SizedBox(
-                        width: kIsWeb ? 1500 : 500,
-                        height: 500,
-                        child: charts.LineChart([
-                          charts.Series<ChartData, num>(
-                            displayName: 'Grafico elevazione',
-                            id: 'Sales',
-                            colorFn: (_, __) =>
-                                charts.MaterialPalette.blue.shadeDefault,
-                            domainFn: (ChartData sales, _) => sales.distance,
-                            measureFn: (ChartData sales, _) => sales.elevation,
-                            data: processJsonForChart(snapshot.data![0]),
-                          ),
-                        ],
-                            primaryMeasureAxis: const charts.NumericAxisSpec(),
-                            secondaryMeasureAxis:
-                                const charts.NumericAxisSpec(),
-                            animate: true,
-                            defaultRenderer: charts.LineRendererConfig(
-                                includePoints: false))),
-                    const Text('Grafico altitudine / profilo Elevazione'),
-                    SizedBox(
-                        width: kIsWeb ? 1500 : 500,
-                        height: 500,
-                        child: charts.LineChart([
-                          charts.Series<ChartData, num>(
-                            displayName: 'Grafico elevazione',
-                            id: 'Sales',
-                            colorFn: (_, __) =>
-                                charts.MaterialPalette.blue.shadeDefault,
-                            domainFn: (ChartData sales, _) => sales.distance,
-                            measureFn: (ChartData sales, _) => sales.elevation,
-                            data: processJsonForChart(snapshot.data![1]),
-                          ),
-                        ],
-                            primaryMeasureAxis: const charts.NumericAxisSpec(),
-                            secondaryMeasureAxis:
-                                const charts.NumericAxisSpec(),
-                            animate: true,
-                            defaultRenderer: charts.LineRendererConfig(
-                                includePoints: false)))
-                  ])));
+              child: Column(children: [
+              
+            const Text(
+              'PROFILO STANDARD',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            AspectRatio(
+              aspectRatio: 2,
+              child: LineChart(
+                LineChartData(
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: processJsonForChart(snapshot.data![0])
+                          .map((point) => FlSpot(point.distance.toDouble(),
+                              point.elevation.toDouble()))
+                          .toList(),
+                      isCurved: true,
+                      dotData: const FlDotData(
+                        show: false,
+                      ),
+                    ),
+                  ],
+                  titlesData: const FlTitlesData(
+                    topTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  ),
+                  gridData: const FlGridData(show: false),
+                  borderData: FlBorderData(
+                      border: const Border(
+                          bottom: BorderSide(), left: BorderSide())),
+                ),
+              ),
+            ),
+            const Divider(),
+            const Text(
+              'PROFILO ELEVAZIONE',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            AspectRatio(
+              aspectRatio: 2,
+              child: LineChart(
+                LineChartData(
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: processJsonForChart(snapshot.data![1])
+                          .map((point) => FlSpot(point.distance.toDouble(),
+                              point.elevation.toDouble()))
+                          .toList(),
+                      isCurved: true,
+                      dotData: const FlDotData(
+                        show: false,
+                      ),
+                    ),
+                  ],
+                   titlesData: const FlTitlesData(
+                    topTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  ),
+                  gridData: const FlGridData(show: false),
+                  borderData: FlBorderData(
+                      border: const Border(
+                          bottom: BorderSide(), left: BorderSide())),
+                ),
+              ),
+            )
+          ]));
         } else if (snapshot.hasError) {
           if (snapshot.error.toString().contains('401')) {
             return Center(
