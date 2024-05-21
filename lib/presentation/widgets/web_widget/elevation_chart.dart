@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/other/unpack_polyline.dart';

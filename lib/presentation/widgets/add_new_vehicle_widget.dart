@@ -17,6 +17,8 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
   final maxCapacityTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +30,10 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
             padding: const EdgeInsets.all(15.0),
             child: SingleChildScrollView(
                 child: Column(children: [
+              Visibility(
+                visible: _isLoading,
+                child: const LinearProgressIndicator(),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -86,6 +92,9 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
               ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        _isLoading = true;
+                      });
                       FocusManager.instance.primaryFocus?.unfocus();
                       vr
                           .addVehicle(Vehicle(
@@ -95,14 +104,27 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                             maxCapacityKg:
                                 int.parse(maxCapacityTextController.text),
                           ))
-                          .then((value) => ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                                  backgroundColor: Colors.green,
-                                  content: Row(children: [
-                                    Icon(Icons.info),
-                                    Text('Veicolo aggiunto correttamente')
-                                  ]))))
-                          .catchError((error, stackTrace) =>
+                          .then(
+                            (value) {
+                              setState(() {
+                                _isLoading = false;
+                              });
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Row(children: [
+                                        Icon(Icons.info),
+                                        Text('Veicolo aggiunto correttamente')
+                                      ])));
+                            },
+                          )
+                          .catchError(
+                            (error, stackTrace) {
+                              setState(() {
+                                _isLoading = false;
+                              });
+
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
                                       backgroundColor: Colors.red,
@@ -113,9 +135,12 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                                         ),
                                         Text(
                                             'Errore: impossibile aggiungere il veicolo')
-                                      ]))))
+                                      ])));
+                            },
+                          )
                           .then(
-                            (value) => Future.delayed(const Duration(seconds: 3)),
+                            (value) =>
+                                Future.delayed(const Duration(seconds: 3)),
                           )
                           .then(
                             (value) => Navigator.pop(context),

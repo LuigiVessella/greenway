@@ -76,6 +76,32 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   padding: const EdgeInsets.all(8.0),
                   scrollDirection: Axis.horizontal,
                   children: [
+                    Switch(
+                      // This bool value toggles the switch.
+                      value: _elevationRoute,
+                      activeColor: firstAppTheme.primaryColor,
+                      onChanged: (bool value) {
+                        // This is called when the user toggles the switch.
+                        setState(() {
+                          _elevationRoute = value;
+                          setState(() {
+                            if (value == false) {
+                              _routeText = 'Standard';
+                            } else {
+                              _routeText = 'Elevation';
+                            }
+                            currentNavDataIndex == 0
+                                ? currentNavDataIndex = 1
+                                : currentNavDataIndex = 0;
+                          });
+                        });
+                      },
+                    ),
+                    Container(
+                        alignment: Alignment.center, child: Text(_routeText)),
+                    const SizedBox(
+                      width: 3,
+                    ),
                     FilterChip(
                       labelStyle: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.black87),
@@ -120,29 +146,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                     const SizedBox(
                       width: 3,
                     ),
-                    Switch(
-                      // This bool value toggles the switch.
-                      value: _elevationRoute,
-                      activeColor: firstAppTheme.primaryColor,
-                      onChanged: (bool value) {
-                        // This is called when the user toggles the switch.
-                        setState(() {
-                          _elevationRoute = value;
-                          setState(() {
-                            if (value == false) {
-                              _routeText = 'Standard';
-                            } else {
-                              _routeText = 'Elevation';
-                            }
-                            currentNavDataIndex == 0
-                                ? currentNavDataIndex = 1
-                                : currentNavDataIndex = 0;
-                          });
-                        });
-                      },
-                    ),
-                    Container(
-                        alignment: Alignment.center, child: Text(_routeText)),
                     const VerticalDivider(),
                     ElevatedButton(
                         onPressed: () {
@@ -309,7 +312,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 16),
-              child: Text('Sta impiegando troppo...'),
+              child: Text('Sto caricando la mappa...'),
             ),
           ];
         }

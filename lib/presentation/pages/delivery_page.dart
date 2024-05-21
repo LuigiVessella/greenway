@@ -17,6 +17,9 @@ class AddNewDelivery extends StatefulWidget {
 class _AddNewDeliveryState extends State<AddNewDelivery> {
   var resultSenderG, resultReceiverG;
 
+  String senderString = 'Inserisci i dati';
+  String receiverString = 'Inserisci i dati';
+
   NewDeliveryDTO newDeliveryDTO = NewDeliveryDTO();
 
   List<Delivery> createdDeliveries = [];
@@ -93,13 +96,14 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                 )
               ]),
               const SizedBox(
-                height: 40,
+                height: 30,
               ),
               ElevatedButton(
                   onPressed: () {
                     _navigateAndDisplaySelection(context, 'sender');
                   },
                   child: const Text('Aggiungi mittente')),
+              Text(senderString),
               const SizedBox(
                 height: 10,
               ),
@@ -108,6 +112,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                     _navigateAndDisplaySelection(context, 'receiver');
                   },
                   child: const Text('Aggiungi destinatario')),
+              Text(receiverString),
               const SizedBox(
                 height: 10,
               ),
@@ -147,6 +152,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
 
     if (resultSender != null) {
       setState(() {
+        senderString = 'Dati inseriti';
         newDeliveryDTO.sender = resultSender['name'];
         newDeliveryDTO.senderAddress = resultSender['address'];
       });
@@ -154,6 +160,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
 
     if (resultReceiver != null) {
       setState(() {
+        receiverString = 'Dati inseriti';
         newDeliveryDTO.receiver = resultReceiver['name'];
         newDeliveryDTO.receiverAddress = resultReceiver['address'];
         newDeliveryDTO.receiverCoordinates = NewCoordinatesDTO(

@@ -8,6 +8,7 @@ class TripInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(padding: const EdgeInsets.all(8.0),
      child:SizedBox(height: 300, child:   ListView.builder(
+    
       itemCount: tripInfo.length,
       itemBuilder: (context, index) {
         return Card(
