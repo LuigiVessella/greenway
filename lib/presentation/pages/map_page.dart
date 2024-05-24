@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
@@ -43,13 +45,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   int currentNavDataIndex = 0;
 
   late Future<List<NavigationDataDTO>> _navData;
-  bool _viewBackTrip = false;
+  bool _viewBackTrip = true;
   bool _viewMarkers = true;
   bool _elevationRoute = false;
 
   String duration = '';
 
-  String _routeText = 'Standard';
+  final String _routeText = 'Standard';
 
   @override
   Widget build(BuildContext context) {
@@ -73,29 +75,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
           duration = calculateDurance(snapshot);
 
           children = <Widget>[
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Icon(Icons.electric_car),
-              Checkbox(
-                tristate: true,
-                value: _elevationRoute,
-                onChanged: (bool? value) {
-                  setState(() {
-                    setState(() {
-                      _elevationRoute = value ?? false;
-                      if (value == false) {
-                        _routeText = 'Standard';
-                      } else {
-                        _routeText = 'Elevation';
-                      }
-                      currentNavDataIndex == 0
-                          ? currentNavDataIndex = 1
-                          : currentNavDataIndex = 0;
-                    });
-                  });
-                },
-              ),
-              const Text('Ottimizzazione altitudine')
-            ]),
             Expanded(
                 child: Stack(children: [
               FlutterMap(
@@ -126,7 +105,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       return Polyline(
                         points: decodePolyline(polylineString).unpackPolyline(),
                         color: firstAppTheme.primaryColor,
-                        strokeWidth: 4.0,
+                        strokeWidth: 3.0,
                       );
                     }).toList(),
                   ),
@@ -158,8 +137,8 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                     point: decodePolyline(polylineString)
                                         .unpackPolyline()
                                         .last,
-                                    child: const Icon(Icons.location_pin,
-                                        color: Colors.red),
+                                    child:  const Icon(Icons.location_pin,
+                                        color: Colors.blue),
                                   ))
                               .toList())),
                   Visibility(
@@ -192,41 +171,171 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
                         IconButton.filled(
-                          tooltip: 'Punti consegna',
-                          icon:  Icon(Icons.location_pin, color: _viewMarkers ? Colors.red : Colors.white,),
-                          onPressed: () {
-                            if (_viewMarkers != true) {
-                              setState(() {
-                                _viewMarkers = true;
-                              });
-                            } else {
-                              setState(() {
-                                _viewMarkers = false;
-                              });
-                            }
-                          },
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        IconButton.filled(
-                         
-                         
                           tooltip: 'Visualizza ritorno',
-                          icon:  Icon(Icons.route, color: _viewBackTrip ? Colors.green : Colors.white,),
+                          icon: const Icon(
+                            Icons.layers,
+                          ),
                           onPressed: () {
-                            if (backTrip != null && _viewBackTrip != true) {
-                              setState(() {
-                                _viewBackTrip = true;
-                              });
-                            } else if (_viewBackTrip != false) {
-                              setState(() {
-                                _viewBackTrip = false;
-                              });
-                            }
+                            showModalBottomSheet(
+                                useSafeArea: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(
+                                      builder:
+                                          (context, setModalState) => SizedBox(
+                                                  child: Column(
+                                                children: [
+                                                  const Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                          'Ottimizza percorso:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+                                                    ],
+                                                  ),
+                                                  Row(children: [
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 15),
+                                                        child: Column(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 80,
+                                                                height: 80,
+                                                                child: Card(
+                                                                  shape: _elevationRoute
+                                                                      ? const StadiumBorder(
+                                                                          side: BorderSide(
+                                                                          color:
+                                                                              Colors.blue,
+                                                                          width:
+                                                                              2.0,
+                                                                        ))
+                                                                      : null,
+                                                                  child: IconButton(
+                                                                      icon: (SvgPicture.asset('lib/assets/elevation_icon_profile.svg')),
+                                                                      onPressed: () => {
+                                                                            if (_elevationRoute ==
+                                                                                false)
+                                                                              {
+                                                                                setState(() {
+                                                                                  _elevationRoute = true;
+                                                                                  currentNavDataIndex == 0 ? currentNavDataIndex = 1 : currentNavDataIndex = 0;
+                                                                                })
+                                                                              },
+                                                                            setModalState(() {}),
+                                                                          }),
+                                                                ),
+                                                              ),
+                                                              const Text(
+                                                                  'Elevation', )
+                                                            ])),
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 15),
+                                                        child: Column(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 80,
+                                                                height: 80,
+                                                                child: Card(
+                                                                  shape: !_elevationRoute
+                                                                      ? const StadiumBorder(
+                                                                          side: BorderSide(
+                                                                          color:
+                                                                              Colors.blue,
+                                                                          width:
+                                                                              2.0,
+                                                                        ))
+                                                                      : null,
+                                                                  child: IconButton(
+                                                                      icon: (SvgPicture.asset('lib/assets/standard_icon_profile.svg')),
+                                                                      onPressed: () => {
+                                                                            if (_elevationRoute ==
+                                                                                true)
+                                                                              {
+                                                                                setState(() {
+                                                                                  _elevationRoute = false;
+                                                                                  currentNavDataIndex == 0 ? currentNavDataIndex = 1 : currentNavDataIndex = 0;
+                                                                                }),
+                                                                                setModalState(() {})
+                                                                              }
+                                                                          }),
+                                                                ),
+                                                              ),
+                                                              const Text(
+                                                                  'Standard')
+                                                            ]))
+                                                  ]),
+                                                  const Divider(),
+                                                  const Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                          'Informazioni da mostrare:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
+                                                    ],
+                                                  ),
+                                                  Row(children: [
+                                                    const SizedBox(width: 5,),
+                                                    FilterChip(
+                                                        label: const Text(
+                                                            'Percorso Ritorno'),
+                                                        selected: _viewBackTrip,
+                                                        onSelected:
+                                                            (bool selected) {
+                                                          if (backTrip !=
+                                                                  null &&
+                                                              _viewBackTrip !=
+                                                                  true) {
+                                                            setState(() {
+                                                              _viewBackTrip =
+                                                                  true;
+                                                            });
+                                                          } else if (_viewBackTrip !=
+                                                              false) {
+                                                            setState(() {
+                                                              _viewBackTrip =
+                                                                  false;
+                                                            });
+                                                          }
+                                                          setModalState(() {});
+                                                        }),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    FilterChip(
+                                                        label: const Text(
+                                                            'Punti consegna'),
+                                                        selected: _viewMarkers,
+                                                        onSelected:
+                                                            (bool selected) {
+                                                          if (_viewMarkers !=
+                                                              true) {
+                                                            setState(() {
+                                                              _viewMarkers =
+                                                                  true;
+                                                            });
+                                                          } else if (_viewMarkers !=
+                                                              false) {
+                                                            setState(() {
+                                                              _viewMarkers =
+                                                                  false;
+                                                            });
+                                                          }
+                                                          setModalState(() {});
+                                                        })
+                                                  ])
+                                                ],
+                                              )));
+                                });
                           },
                         ),
                       ])),

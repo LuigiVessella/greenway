@@ -64,15 +64,26 @@ class _LoginPageState extends State<LoginPage> {
                                   AuthService().signInWithAutoCodeExchange(
                                       preferEphemeralSession: true);
                                 } else {
-                                  AuthService().signInWithAutoCodeExchange();
+                                  setState(() {
+                                    _isBusy = true;
+                                  });
+
+                                  await AuthService()
+                                      .signInWithAutoCodeExchange()
+                                      .then(
+                                    (value) {
+                                      setState(() {
+                                        _isBusy = false;
+                                      });
+                                    },
+                                  ).whenComplete(
+                                    () {
+                                      setState(() {
+                                        _isBusy = false;
+                                      });
+                                    },
+                                  );
                                 }
-                                _checkBusy();
-                                Future.delayed(
-                                  const Duration(seconds: 2),
-                                  () {
-                                    _checkBusy();
-                                  },
-                                );
                               },
                               child: const SizedBox(
                                 width: 200,
@@ -127,18 +138,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     ));
-  }
-
-  void _checkBusy() {
-    if (AuthService().isBusy) {
-      setState(() {
-        _isBusy = true;
-      });
-    } else {
-      setState(() {
-        _isBusy = false;
-      });
-    }
   }
 
   void _checkDeliveyman() {

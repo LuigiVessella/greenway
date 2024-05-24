@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/repositories/delivery_repository.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
@@ -38,37 +39,42 @@ class _PackageListState extends State<PackageList> {
                 itemCount: vehicleDTO.deliveries!.length,
                 itemBuilder: (context, index) {
                   return Card(
-                      semanticContainer: false,
-                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      // Define how the card's content should be clipped
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
                       child: ExpansionTile(
                           tilePadding: const EdgeInsets.all(7),
                           childrenPadding: const EdgeInsets.all(1.0),
-                          title: Text(
-                            'Consegna ${vehicleDTO.deliveries![index].id}',
+                          title: Text(vehicleDTO.deliveries![index].receiver!,
                             style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                           children: [
                             ListTile(
-                              leading: const Icon(Icons.local_post_office),
+                              leading:  CircleAvatar(child: SvgPicture.asset('lib/assets/avatar_ship.svg'),),
                               title:
                                   Text(vehicleDTO.deliveries![index].receiver!),
                               subtitle: Text(
                                   'presso: ${vehicleDTO.deliveries![index].receiverAddress}'),
                             ),
                             const Divider(),
-                            Text(
-                              'Consegna prevista: ${vehicleDTO.deliveries![index].estimatedDeliveryTime}',
-                            ),
+                            
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                FilledButton(
+                                Text(
+                              'Consegna prevista: ${vehicleDTO.deliveries![index].estimatedDeliveryTime!.split('T')[0]}',
+                            ),
+                                TextButton(
                                     onPressed: () {
                                       dr.completeDelivery(vehicleDTO
                                           .deliveries![index].id
                                           .toString());
                                       setState(() {
-                                          data = vr.getVehicleByDeliveryMan(AuthService().getUserInfo!);
+                                        data = vr.getVehicleByDeliveryMan(
+                                            AuthService().getUserInfo!);
                                       });
                                     },
                                     child: const Text('Consegnata'))

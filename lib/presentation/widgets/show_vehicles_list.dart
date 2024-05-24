@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
@@ -32,17 +33,14 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Expanded(child: 
-          Text('I tuoi veicoli: ')),
+          const Expanded(child: Text('I tuoi veicoli: ')),
           const Text('Aggiorna'),
           IconButton(
-            enableFeedback: true,
-            tooltip: 'Aggiorna lista veicoli',
+              enableFeedback: true,
+              tooltip: 'Aggiorna lista veicoli',
               onPressed: () {
                 _vehicles = vr.getAllVehicles();
-                setState(() {
-                  
-                });
+                setState(() {});
               },
               icon: const Icon(Icons.update)),
         ],
@@ -56,17 +54,43 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
             return SizedBox(
                 height: 250,
                 child: ListView.builder(
-                  itemCount: vehicleDTO.content!.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.local_shipping),
-                      title: Text(vehicleDTO.content![index].modelName!),
-                      subtitle: Text(
-                          'carico massimo: ${vehicleDTO.content![index].maxCapacityKg}kg'),
-                    ));
-                  },
-                ));
+                    itemCount: vehicleDTO.content!.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          // Define how the card's content should be clipped
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                // Add padding around the row widget
+                                Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: Row(children: [
+                                      SvgPicture.asset(
+                                        'lib/assets/electric_icon.svg',
+                                        height: 40,
+                                        width: 40,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      const SizedBox(width: 20,),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: 
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(vehicleDTO
+                                                .content![index].modelName!),
+                                            Text(
+                                                'carico massimo: ${vehicleDTO.content![index].maxCapacityKg}kg'),
+                                          ],
+                                        ),
+                                      )
+                                    ]))
+                              ]));
+                    }));
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
@@ -99,7 +123,11 @@ class VehicleListDmanWidget extends StatelessWidget {
                 itemCount: 1,
                 itemBuilder: (context, index) {
                   return Card(
-                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      // Define how the card's content should be clipped
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
                       child: ExpansionTile(
                           tilePadding: const EdgeInsets.all(7),
                           childrenPadding: const EdgeInsets.all(1),
@@ -117,23 +145,24 @@ class VehicleListDmanWidget extends StatelessWidget {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                 
-                                  Expanded(child:
-                                  TextButton(
-                                    
-                                    
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  //const Test(),
-                                                  ElevationChart(
-                                                      vehicleID: vehicleDTO.id
-                                                          .toString()),
-                                            ));
-                                      },
-                                      child: const Text('PROFILO ELEVAZIONE', textAlign: TextAlign.center,))),
+                                  Expanded(
+                                      child: TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      //const Test(),
+                                                      ElevationChart(
+                                                          vehicleID: vehicleDTO
+                                                              .id
+                                                              .toString()),
+                                                ));
+                                          },
+                                          child: const Text(
+                                            'PROFILO ELEVAZIONE',
+                                            textAlign: TextAlign.center,
+                                          ))),
                                   FilledButton(
                                       onPressed: () {
                                         vr.putLeaveVehicle(
