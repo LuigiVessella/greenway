@@ -30,71 +30,157 @@ class _ElevationChartState extends State<ElevationChart> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SafeArea(
-                  child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                  child: SingleChildScrollView(
+                      child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10),
-                                            topLeft: Radius.circular(10))),
-                                    child: const Text(
-                                      '<30m',
-                                      textAlign: TextAlign.center,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                                topLeft: Radius.circular(10))),
+                                        child: const Text(
+                                          '<30m',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Expanded(
+                                        child: Container(
+                                      color: Colors.yellow,
+                                      child: const Text('<70m',
+                                          textAlign: TextAlign.center),
+                                    )),
+                                    Expanded(
+                                      child: Container(
+                                        color: Colors.orange,
+                                        child: const Text('<150m',
+                                            textAlign: TextAlign.center),
+                                      ),
+                                    ),
+                                    Expanded(
+                                        child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.only(
+                                              bottomRight: Radius.circular(10),
+                                              topRight: Radius.circular(10))),
+                                      child: const Text('>150m',
+                                          textAlign: TextAlign.center),
+                                    ))
+                                  ],
                                 ),
-                                Expanded(
-                                    child: Container(
-                                  color: Colors.yellow,
-                                  child: const Text('<70m',
-                                      textAlign: TextAlign.center),
-                                )),
-                                Expanded(
-                                  child: Container(
-                                    color: Colors.orange,
-                                    child: const Text('<150m',
-                                        textAlign: TextAlign.center),
-                                  ),
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                                Expanded(
-                                    child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(10),
-                                          topRight: Radius.circular(10))),
-                                  child: const Text('>150m',
-                                      textAlign: TextAlign.center),
-                                ))
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const Text(
-                              'PROFILO STANDARD',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                                height: kIsWeb ? 400 : 240,
-                                width: kIsWeb ? 1000 : 370,
-                                child: AspectRatio(
-                                  aspectRatio: 2,
+                                const Text(
+                                  'PROFILO STANDARD',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                    height: kIsWeb ? 400 : 240,
+                                    width: kIsWeb ? 1000 : 370,
+                                    child: AspectRatio(
+                                      aspectRatio: 2,
+                                      child: LineChart(
+                                        LineChartData(
+                                          lineBarsData: [
+                                            LineChartBarData(
+                                              color: Colors.blue.shade100,
+                                              spots: processJsonForChart(
+                                                      snapshot.data![0])
+                                                  .map((point) => FlSpot(
+                                                      point.distance.toDouble(),
+                                                      point.elevation
+                                                          .toDouble()))
+                                                  .toList(),
+                                              isCurved: true,
+                                              dotData: FlDotData(getDotPainter:
+                                                  (spot, percent, barData,
+                                                      index) {
+                                                return calculateColor(spot);
+                                              }),
+                                            ),
+                                          ],
+                                          titlesData: FlTitlesData(
+                                            show: true,
+                                            bottomTitles: AxisTitles(
+                                              axisNameWidget: Text(
+                                                'Distanza (kM)',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: firstAppTheme
+                                                      .primaryColor,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              sideTitles: const SideTitles(
+                                                showTitles: true,
+                                                getTitlesWidget:
+                                                    bottomTitleWidgets,
+                                              ),
+                                            ),
+                                            leftTitles: AxisTitles(
+                                              axisNameSize: 20,
+                                              axisNameWidget: Text(
+                                                'Altitudine(m)',
+                                                style: TextStyle(
+                                                  color: firstAppTheme
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                              sideTitles: const SideTitles(
+                                                showTitles: true,
+                                                reservedSize: 35,
+                                                getTitlesWidget:
+                                                    leftTitleWidgets,
+                                              ),
+                                            ),
+                                            topTitles: const AxisTitles(
+                                                sideTitles: SideTitles(
+                                                    showTitles: false)),
+                                            rightTitles: const AxisTitles(
+                                                sideTitles: SideTitles(
+                                                    showTitles: false)),
+                                          ),
+                                          gridData:
+                                              const FlGridData(show: false),
+                                          borderData: FlBorderData(
+                                            show: true,
+                                            border: Border.all(
+                                                color: const Color(0xff37434d)),
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Divider(),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Text(
+                                  'PROFILO ELEVAZIONE',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: kIsWeb ? 400 : 240,
+                                  width: kIsWeb ? 1000 : 370,
                                   child: LineChart(
                                     LineChartData(
                                       lineBarsData: [
                                         LineChartBarData(
                                           color: Colors.blue.shade100,
                                           spots: processJsonForChart(
-                                                  snapshot.data![0])
+                                                  snapshot.data![1])
                                               .map((point) => FlSpot(
                                                   point.distance.toDouble(),
                                                   point.elevation.toDouble()))
@@ -104,6 +190,7 @@ class _ElevationChartState extends State<ElevationChart> {
                                               (spot, percent, barData, index) {
                                             return calculateColor(spot);
                                           }),
+                                          show: true,
                                         ),
                                       ],
                                       titlesData: FlTitlesData(
@@ -151,83 +238,8 @@ class _ElevationChartState extends State<ElevationChart> {
                                       ),
                                     ),
                                   ),
-                                )),
-                                const SizedBox(height: 10,),
-                            const Divider(),
-                            const SizedBox(height: 10,),
-                            const Text(
-                              'PROFILO ELEVAZIONE',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: kIsWeb ? 400 : 240,
-                              width: kIsWeb ? 1000 : 370,
-                              child: LineChart(
-                                LineChartData(
-                                  lineBarsData: [
-                                    LineChartBarData(
-                                      color: Colors.blue.shade100,
-                                      spots:
-                                          processJsonForChart(snapshot.data![1])
-                                              .map((point) => FlSpot(
-                                                  point.distance.toDouble(),
-                                                  point.elevation.toDouble()))
-                                              .toList(),
-                                      isCurved: true,
-                                      dotData: FlDotData(getDotPainter:
-                                          (spot, percent, barData, index) {
-                                        return calculateColor(spot);
-                                      }),
-                                      show: true,
-                                    ),
-                                  ],
-                                  titlesData: FlTitlesData(
-                                    show: true,
-                                    bottomTitles: AxisTitles(
-                                      axisNameWidget: Text(
-                                        'Distanza (kM)',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: firstAppTheme.primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      sideTitles: const SideTitles(
-                                        showTitles: true,
-                                        getTitlesWidget: bottomTitleWidgets,
-                                      ),
-                                    ),
-                                    leftTitles: AxisTitles(
-                                      axisNameSize: 20,
-                                      axisNameWidget: Text(
-                                        'Altitudine(m)',
-                                        style: TextStyle(
-                                          color: firstAppTheme.primaryColor,
-                                        ),
-                                      ),
-                                      sideTitles: const SideTitles(
-                                        showTitles: true,
-                                        reservedSize: 35,
-                                        getTitlesWidget: leftTitleWidgets,
-                                      ),
-                                    ),
-                                    topTitles: const AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false)),
-                                    rightTitles: const AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false)),
-                                  ),
-                                  gridData: const FlGridData(show: false),
-                                  borderData: FlBorderData(
-                                    show: true,
-                                    border: Border.all(
-                                        color: const Color(0xff37434d)),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ])));
+                                )
+                              ]))));
             } else if (snapshot.hasError) {
               if (snapshot.error.toString().contains('401')) {
                 return Center(

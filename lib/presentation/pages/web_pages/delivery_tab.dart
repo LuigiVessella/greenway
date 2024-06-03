@@ -29,48 +29,48 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
           List<DeliveryDTO> del =
               snapshot.data!.deliveries!; // Lista dei veicoli
 
-          return  ListView.builder(
+          return ListView.builder(
             padding: const EdgeInsets.all(15),
-                itemCount: del.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                      semanticContainer: false,
-                      elevation: 5.0,
-                      child: ExpansionTile(
-                          tilePadding: const EdgeInsets.all(7),
-                          childrenPadding: const EdgeInsets.all(1.0),
-                          title: Text(
-                            'Consegna ${del[index].id}',
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
+            itemCount: del.length,
+            itemBuilder: (context, index) {
+              return Card(
+                  semanticContainer: false,
+                  elevation: 5.0,
+                  child: ExpansionTile(
+                      tilePadding: const EdgeInsets.all(7),
+                      childrenPadding: const EdgeInsets.all(1.0),
+                      title: Text(
+                        'Consegna ${del[index].id}',
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.local_post_office),
+                          title: Text(del[index].receiver!),
+                          subtitle:
+                              Text('presso: ${del[index].receiverAddress}'),
+                        ),
+                        const Divider(),
+                        Row(children: [ShippingStatus(delivery: del[index])]),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            ListTile(
-                              leading: const Icon(Icons.local_post_office),
-                              title: Text(del[index].receiver!),
-                              subtitle:
-                                  Text('presso: ${del[index].receiverAddress}'),
-                            ),
-                            const Divider(),
                             Text(
-                              'Consegna prevista: ${del[index].estimatedDeliveryTime}',
+                              'Consegna prevista: ${(del[index].estimatedDeliveryTime!).split('T')[0]}',
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                FilledButton(
-                                    onPressed: () {
-                                      dr.completeDelivery(
-                                          del[index].id.toString());
-                                    },
-                                    child: const Text('Consegnata'))
-                              ],
-                            ),
-                            Row(children: [
-                            ShippingStatus(delivery: del[index])])
-
-                          ]));
-                },
-              );
+                              Text(
+                                 'Consegnata il: ${(del[index].deliveryTime) ?? 'Ancora non consegnata'}',
+                                ),
+                            FilledButton(
+                                onPressed: () {
+                                  dr.completeDelivery(del[index].id.toString());
+                                },
+                                child: const Text('Consegnata'))
+                          ],
+                        ),
+                      ]));
+            },
+          );
         } else if (snapshot.hasError) {
           return Center(
               child: Column(

@@ -11,7 +11,7 @@ class ShippingStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 500,
-      height: 500,
+      height: 400,
       child: ListView(
         padding: const EdgeInsets.only(
           left: 16,
@@ -26,7 +26,7 @@ class ShippingStatus extends StatelessWidget {
             subtitle: 'In attesa del ritiro del corriere',
             icon: Icons.hourglass_top_outlined,
             showLine: true,
-            isActive: delivery.inTransit! ? false : true,
+            isActive: (delivery.inTransit! || delivery.deliveryTime!=null) ? false : true,
           ),
           OrderStatusItemView(
             color: Colors.blue,
@@ -34,7 +34,7 @@ class ShippingStatus extends StatelessWidget {
             subtitle: 'Il tuo pacco è in viaggio',
             icon: Icons.local_shipping_outlined,
             showLine: true,
-            isActive: delivery.inTransit! ? true : false,
+            isActive: (delivery.inTransit! || delivery.deliveryTime!=null) ? true : false,
           ),
            OrderStatusItemView(
             color: Colors.green,

@@ -109,6 +109,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       );
                     }).toList(),
                   ),
+                  
                   Visibility(
                       visible: _viewBackTrip,
                       child: PolylineLayer(polylines: [

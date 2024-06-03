@@ -3,13 +3,13 @@ import 'package:openidconnect/openidconnect.dart';
 
 class IdentityView extends StatelessWidget {
   final AuthorizationResponse identity;
-  IdentityView(this.identity);
+  const IdentityView(this.identity, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final captionTheme = Theme.of(context).textTheme.bodySmall;
     return Padding(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Column(

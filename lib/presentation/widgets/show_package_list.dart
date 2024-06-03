@@ -38,7 +38,8 @@ class _PackageListState extends State<PackageList> {
               child: ListView.builder(
                 itemCount: vehicleDTO.deliveries!.length,
                 itemBuilder: (context, index) {
-                  return Card(
+                  return Card.filled(
+                      elevation: 3,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -47,26 +48,55 @@ class _PackageListState extends State<PackageList> {
                       child: ExpansionTile(
                           tilePadding: const EdgeInsets.all(7),
                           childrenPadding: const EdgeInsets.all(1.0),
-                          title: Text(vehicleDTO.deliveries![index].receiver!,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
+                          title: Row(children: [
+                            Expanded(
+                              child: Text(
+                                  vehicleDTO.deliveries![index].receiver!,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                            //controlliamo se la consegna è in ritardo
+                            DateTime.parse(vehicleDTO.deliveries![index]
+                                        .estimatedDeliveryTime!)
+                                    .isAfter(DateTime.now())
+                                ? Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.green),
+                                    child: const Text('In transito',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                        )),
+                                  )
+                                : Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.orange),
+                                    child: const Text('In ritardo',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                        )))
+                          ]),
                           children: [
                             ListTile(
-                              leading:  CircleAvatar(child: SvgPicture.asset('lib/assets/avatar_ship.svg'),),
+                              leading: CircleAvatar(
+                                child: SvgPicture.asset(
+                                    'lib/assets/avatar_ship.svg'),
+                              ),
                               title:
                                   Text(vehicleDTO.deliveries![index].receiver!),
                               subtitle: Text(
                                   'presso: ${vehicleDTO.deliveries![index].receiverAddress}'),
                             ),
                             const Divider(),
-                            
                             Row(
-
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                              'Consegna prevista: ${vehicleDTO.deliveries![index].estimatedDeliveryTime!.split('T')[0]}',
-                            ),
+                                  'Consegna prevista: ${vehicleDTO.deliveries![index].estimatedDeliveryTime!.split('T')[0]}',
+                                ),
                                 TextButton(
                                     onPressed: () {
                                       dr.completeDelivery(vehicleDTO

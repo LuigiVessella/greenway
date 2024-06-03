@@ -28,13 +28,13 @@ class VehicleListWeb extends StatelessWidget {
                           tilePadding: const EdgeInsets.all(15),
                           childrenPadding: const EdgeInsets.all(9.0),
                           title: Text(
-                              'Il tuo veicolo: ${vehicleDTO.content![index].id}'),
+                              'VEICOLO ${vehicleDTO.content![index].id}', style: const TextStyle(fontWeight: FontWeight.bold),),
                           children: [
                         ListTile(
                           leading: const Icon(Icons.local_shipping),
                           title: Text(vehicleDTO.content![index].modelName!),
                           subtitle: Text(
-                              'max capacity: ${vehicleDTO.content![index].maxCapacityKg}kg'),
+                              'CARICO MASSIMO: ${vehicleDTO.content![index].maxCapacityKg}kg'),
                         ),
                         TextButton(
                             onPressed: () {

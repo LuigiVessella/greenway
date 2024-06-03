@@ -48,19 +48,19 @@ class _WebDashboardState extends State<WebDashboard> {
                 : const SizedBox(),
             destinations: const <NavigationRailDestination>[
               NavigationRailDestination(
-                icon: Icon(Icons.local_shipping),
-                selectedIcon: Icon(Icons.local_shipping_outlined),
+                icon: Icon(Icons.admin_panel_settings_outlined),
+                selectedIcon: Icon(Icons.admin_panel_settings),
+                label: Text('Dashboard'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.map_outlined),
+                selectedIcon: Icon(Icons.map),
+                label: Text('Veicoli e grafici'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.schema_outlined),
+                selectedIcon: Icon(Icons.schema),
                 label: Text('Consegne'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.map),
-                selectedIcon: Icon(Icons.map_outlined),
-                label: Text('Mappa e dati'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.schema),
-                selectedIcon: Icon(Icons.schema_outlined),
-                label: Text('Riepilogo'),
               ),
             ],
           ),
