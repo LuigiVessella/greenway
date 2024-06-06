@@ -69,135 +69,141 @@ class _AddNewPackageState extends State<AddNewPackage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.info))],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-         
-          children: [
-            Form(
-                key: _formKey,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: TextFormField(
-                      controller: _controllerName,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Campo obbligatiorio';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Nome',
-                      ),
-                      onChanged: (value) {},
-                    )),
-                    Expanded(
-                        child: TextFormField(
-                      controller: _controllerSecondName,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Campo obbligatiorio';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Cognome',
-                      ),
-                      onChanged: (value) {},
-                    )),
-                  ],
-                )),
-            const SizedBox(
-              height: 40,
-            ),
-            Form(
-                key: _formAddressKey,
-                child: TextFormField(
-                  controller: _controllerAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo obbligatiorio';
-                    }
-                    return null;
-                  },
-                  onChanged: (text) {
-                    _onSearchChanged(text);
-                  },
-                  decoration: const InputDecoration(
-                      labelText: 'Street address:',
-                      prefixIcon: Icon(Icons.house),
-                      border: OutlineInputBorder()),
-                )),
-            SizedBox(
-              height: 270,
-              child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: _addressList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                        elevation: 7.6,
-                        child: ListTile(
-                          title:
-                              Text(_addressList[index].displayName.toString()),
-                          onTap: () {
-                            if (mounted) {
-                              setState(() {
-                                _controllerAddress.text =
-                                    _addressList[index].displayName!;
-                                _lat = double.parse(_addressList[index].lat!);
-                                _lon = double.parse(_addressList[index].lon!);
-                                address = _addressList[index].displayName;
-                              });
-                            }
-                          },
-                        ));
-                  }),
-            ),
-            Column(children: [
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(('Coordinate: LAT: ${_lat.toStringAsFixed(3)} / LON: ${_lon.toStringAsFixed(3)}'),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _nameComplete =
-                      '${_controllerName.text} ${_controllerSecondName.text}';
-                  if (_formKey.currentState!.validate() &&
-                      _formAddressKey.currentState!.validate()) {
-                    Navigator.pop(
-                      context,
-                      {
-                        'lat': _lat,
-                        'lon': _lon,
-                        'address': address,
-                        'name': '$_nameComplete'
-                      },
-                    );
-                  }
-                },
-                child: const Text('Salva informazioni '),
-              )
-            ])
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
+          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.info))],
         ),
-      ),
-    ));
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Form(
+                    key: _formKey,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: TextFormField(
+                          controller: _controllerName,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Campo obbligatiorio';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Nome',
+                          ),
+                          onChanged: (value) {},
+                        )),
+                        Expanded(
+                            child: TextFormField(
+                          controller: _controllerSecondName,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Campo obbligatiorio';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Cognome',
+                          ),
+                          onChanged: (value) {},
+                        )),
+                      ],
+                    )),
+                const SizedBox(
+                  height: 40,
+                ),
+                Form(
+                    key: _formAddressKey,
+                    child: TextFormField(
+                      controller: _controllerAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo obbligatiorio';
+                        }
+                        return null;
+                      },
+                      onChanged: (text) {
+                        _onSearchChanged(text);
+                      },
+                      decoration: const InputDecoration(
+                          labelText: 'Street address:',
+                          prefixIcon: Icon(Icons.house),
+                          border: OutlineInputBorder()),
+                    )),
+                SizedBox(
+                  height: 270,
+                  child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: _addressList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                            elevation: 7.6,
+                            child: ListTile(
+                              title: Text(
+                                  _addressList[index].displayName.toString()),
+                              onTap: () {
+                                if (mounted) {
+                                  setState(() {
+                                    _controllerAddress.text =
+                                        _addressList[index].displayName!;
+                                    _lat =
+                                        double.parse(_addressList[index].lat!);
+                                    _lon =
+                                        double.parse(_addressList[index].lon!);
+                                    address = _addressList[index].displayName;
+                                  });
+                                }
+                              },
+                            ));
+                      }),
+                ),
+                Column(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          ('Coordinate: LAT: ${_lat.toStringAsFixed(3)} / LON: ${_lon.toStringAsFixed(3)}'),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      _nameComplete =
+                          '${_controllerName.text} ${_controllerSecondName.text}';
+                      if (_formKey.currentState!.validate() &&
+                          _formAddressKey.currentState!.validate()) {
+                        Navigator.pop(
+                          context,
+                          {
+                            'lat': _lat,
+                            'lon': _lon,
+                            'address': address,
+                            'name': '$_nameComplete'
+                          },
+                        );
+                      }
+                    },
+                    child: const SizedBox(
+                        width: 70,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [Icon(Icons.save), Text('Salva')])),
+                  )
+                ])
+              ],
+            ),
+          ),
+        ));
   }
 
   @override

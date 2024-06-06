@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -36,47 +38,57 @@ class _ElevationChartState extends State<ElevationChart> {
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(10),
-                                                topLeft: Radius.circular(10))),
-                                        child: const Text(
-                                          '<30m',
-                                          textAlign: TextAlign.center,
+                                SizedBox(
+                                    width: 400,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius: BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(10),
+                                                    topLeft:
+                                                        Radius.circular(10))),
+                                            child: Text(
+                                              '<${(25 / 100 * (_findMax(snapshot.data![1].elevations!))).round()}m',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        child: Container(
-                                      color: Colors.yellow,
-                                      child: const Text('<70m',
-                                          textAlign: TextAlign.center),
+                                        Expanded(
+                                            child: Container(
+                                          color: Colors.yellow,
+                                          child: Text(
+                                              '<${(25 / 100 * (_findMax(snapshot.data![1].elevations!)) * 2).round()}m',
+                                              textAlign: TextAlign.center),
+                                        )),
+                                        Expanded(
+                                          child: Container(
+                                            color: Colors.orange,
+                                            child: Text(
+                                                '<${(25 / 100 * (_findMax(snapshot.data![1].elevations!)) * 3).round()}m',
+                                                textAlign: TextAlign.center),
+                                          ),
+                                        ),
+                                        Expanded(
+                                            child: Container(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius: BorderRadius.only(
+                                                  bottomRight:
+                                                      Radius.circular(10),
+                                                  topRight:
+                                                      Radius.circular(10))),
+                                          child: Text(
+                                              '>${(25 / 100 * (_findMax(snapshot.data![1].elevations!)) * 4).round()}m',
+                                              textAlign: TextAlign.center),
+                                        ))
+                                      ],
                                     )),
-                                    Expanded(
-                                      child: Container(
-                                        color: Colors.orange,
-                                        child: const Text('<150m',
-                                            textAlign: TextAlign.center),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        child: Container(
-                                      decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(10),
-                                              topRight: Radius.circular(10))),
-                                      child: const Text('>150m',
-                                          textAlign: TextAlign.center),
-                                    ))
-                                  ],
-                                ),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -105,7 +117,7 @@ class _ElevationChartState extends State<ElevationChart> {
                                               dotData: FlDotData(getDotPainter:
                                                   (spot, percent, barData,
                                                       index) {
-                                                return calculateColor(spot);
+                                                return calculateColor(spot, snapshot.data![0].elevations!);
                                               }),
                                             ),
                                           ],
@@ -188,7 +200,7 @@ class _ElevationChartState extends State<ElevationChart> {
                                           isCurved: true,
                                           dotData: FlDotData(getDotPainter:
                                               (spot, percent, barData, index) {
-                                            return calculateColor(spot);
+                                            return calculateColor(spot, snapshot.data![0].elevations!);
                                           }),
                                           show: true,
                                         ),
@@ -302,6 +314,20 @@ class _ElevationChartState extends State<ElevationChart> {
         ));
   }
 
+  double _findMax(List<dynamic> values) {
+    double max = 0.0;
+    for (dynamic value in values) {
+      if (value != null) {
+        if (value > max) {
+          max = value;
+        } else {
+          max = max;
+        }
+      }
+    }
+    return max;
+  }
+
   List<ChartData> processJsonForChart(NavigationDataDTO navData) {
     List<ChartData> chartData = [];
     List<num> distances = [];
@@ -311,7 +337,7 @@ class _ElevationChartState extends State<ElevationChart> {
     print('points: ${points.length}');
     print('elevation lenght ${navData.elevations!.length}');
 
-    for (int i = 0; i < navData.elevations!.length - 1; i++) {
+    for (int i = 0; i < points.length - 1; i++) {
       List<num> firstPoint = points[i];
       List<num> secondPoint = points[i + 1];
 
@@ -325,7 +351,7 @@ class _ElevationChartState extends State<ElevationChart> {
 
       num? nullChecker = navData.elevations?[i];
 
-      if (nullChecker == null || navData.elevations?[i] < 0) {
+      if (nullChecker == null || navData.elevations![i] < 0) {
         continue;
       } else {
         chartData.add(ChartData(
@@ -338,29 +364,29 @@ class _ElevationChartState extends State<ElevationChart> {
     return chartData;
   }
 
-  FlDotPainter calculateColor(FlSpot spot) {
-    if (spot.y > 0 && spot.y <= 30) {
+  FlDotPainter calculateColor(FlSpot spot, List<dynamic> values) {
+    if (spot.y > 0 && spot.y <= (25 / 100 * (_findMax(values))).round()) {
       return FlDotCirclePainter(
         radius: 1,
         color: Colors.green,
         strokeWidth: 0.2,
         strokeColor: Colors.green,
       );
-    } else if (spot.y > 30 && spot.y <= 70) {
+    } else if (spot.y > (25 / 100 * (_findMax(values))).round() && spot.y <= (25 / 100 * (_findMax(values))).round() * 2) {
       return FlDotCirclePainter(
         radius: 1,
         color: Colors.yellow,
         strokeWidth: 0.2,
         strokeColor: Colors.green,
       );
-    } else if (spot.y > 70 && spot.y <= 150) {
+    } else if (spot.y >  (25 / 100 * (_findMax(values))).round() * 2 && spot.y <=  (25 / 100 * (_findMax(values))).round() * 3) {
       return FlDotCirclePainter(
         radius: 1,
         color: Colors.orange,
         strokeWidth: 0.1,
         strokeColor: Colors.green,
       );
-    } else if (spot.y > 150) {
+    } else if (spot.y > (25 / 100 * (_findMax(values))).round() * 3) {
       return FlDotCirclePainter(
         radius: 1,
         color: Colors.red,

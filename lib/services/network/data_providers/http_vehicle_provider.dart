@@ -34,7 +34,7 @@ class HttpVehicleResponse {
 
     final queryParams = {
       'pageNo': '0',
-      'pageSize': '10',
+      'pageSize': '15',
     };
 
     var response = await client.get(

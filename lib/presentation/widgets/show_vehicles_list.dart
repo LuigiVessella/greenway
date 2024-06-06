@@ -35,7 +35,7 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
         children: [
           const Expanded(child: Text('I tuoi veicoli: ')),
           const Text('Aggiorna'),
-          IconButton(
+          IconButton.filledTonal(
               enableFeedback: true,
               tooltip: 'Aggiorna lista veicoli',
               onPressed: () {
@@ -163,12 +163,12 @@ class VehicleListDmanWidget extends StatelessWidget {
                                             'PROFILO ELEVAZIONE',
                                             textAlign: TextAlign.center,
                                           ))),
-                                  FilledButton(
+                                  FilledButton.tonal(
                                       onPressed: () {
                                         vr.putLeaveVehicle(
                                             vehicleDTO.id.toString());
                                       },
-                                      child: const Text('Rientra')),
+                                      child: const Text('Termina giro')),
                                 ]),
                           ]));
                 },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/add_delivery_dto.dart';
 import 'package:greenway/entity/delivery.dart';
@@ -30,16 +31,17 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Spedizioni'),
+          
           bottom: const PreferredSize(
               preferredSize: Size.zero,
               child: Text('Da qui puoi gestire le tue spedizioni')),
           actions: <Widget>[
-            IconButton(
+            IconButton.filledTonal(
                 tooltip: 'Programma consegne',
                 onPressed: () {
                   _scheduleDeliveries();
                 },
-                icon: const Icon(Icons.schedule))
+                icon: const Icon(Icons.schedule_send))
           ],
         ),
         body: Center(
@@ -98,29 +100,41 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               const SizedBox(
                 height: 30,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    _navigateAndDisplaySelection(context, 'sender');
-                  },
-                  child: const Text('Aggiungi mittente')),
-              Text(senderString),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                Column(children: [
+                  OutlinedButton(
+                      onPressed: () {
+                        _navigateAndDisplaySelection(context, 'sender');
+                      },
+                      child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [Icon(Icons.info), Text('Dati mittente')])),
+                  Text(senderString,
+                      style: const TextStyle(fontStyle: FontStyle.italic)),
+                ]),
+                Column(children: [
+                  OutlinedButton(
+                      onPressed: () {
+                        _navigateAndDisplaySelection(context, 'receiver');
+                      },
+                      child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(Icons.info),
+                            Text('Dati destinatario')
+                          ])),
+                  Text(receiverString,
+                      style: const TextStyle(fontStyle: FontStyle.italic)),
+                ]),
+              ]),
               const SizedBox(
-                height: 10,
+                height: 35,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    _navigateAndDisplaySelection(context, 'receiver');
-                  },
-                  child: const Text('Aggiungi destinatario')),
-              Text(receiverString),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
+              FilledButton(
                   onPressed: () {
                     _addNewDelivery();
                   },
-                  child: const Text('Invia')),
+                  child: const SizedBox(width: 110, child:  Text('Invia', textAlign: TextAlign.center,))),
             ])));
   }
 
@@ -189,12 +203,10 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
       setState(() {
         createdDeliveries.add(newDelivery);
       });
-     
+
       DeliveryRepository dv = DeliveryRepository();
       dv.addNewDelivery(newDelivery);
       return true;
-
-
     } on TypeError {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Colors.orange,
@@ -203,7 +215,10 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
             SizedBox(
               width: 10,
             ),
-            Text('Inserisci mittente e destinatario!', style: TextStyle(fontWeight: FontWeight.bold),)
+            Text(
+              'Inserisci mittente e destinatario!',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
           ])));
       return false;
     } catch (e) {

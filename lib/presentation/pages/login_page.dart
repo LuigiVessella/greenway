@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                                       fontWeight: FontWeight.bold,
                                     )),
                               )),
-                          ElevatedButton(
+                          OutlinedButton(
                             onPressed: () async {
                               AuthService().endSession();
                             },

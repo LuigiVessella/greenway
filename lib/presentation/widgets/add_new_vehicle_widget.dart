@@ -49,7 +49,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                       },
                       controller: modelTextController,
                       decoration: const InputDecoration(
-                          labelText: 'Model name:',
+                          labelText: 'Modello:',
                           prefixIcon: Icon(Icons.info),
                           border: OutlineInputBorder()),
                     ),
@@ -65,7 +65,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                       },
                       controller: maxAutonomyTextController,
                       decoration: const InputDecoration(
-                          labelText: 'Battery Capacity (km):',
+                          labelText: 'Capacità della batteria (km):',
                           prefixIcon: Icon(Icons.battery_full),
                           border: OutlineInputBorder()),
                     ),
@@ -81,7 +81,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                       },
                       controller: maxCapacityTextController,
                       decoration: const InputDecoration(
-                          labelText: 'Vehicle capacity (kg):',
+                          labelText: 'Carico massimo (kg):',
                           prefixIcon: Icon(Icons.balance),
                           border: OutlineInputBorder()),
                     )
@@ -89,7 +89,7 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
               const SizedBox(
                 height: 10,
               ),
-              ElevatedButton(
+              FilledButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       setState(() {
@@ -147,7 +147,11 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                           );
                     }
                   },
-                  child: const Text('Aggiungi'))
+                  child: const SizedBox(
+                      width: 70,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [Icon(Icons.save), Text('Salva')])))
             ]))));
   }
 }

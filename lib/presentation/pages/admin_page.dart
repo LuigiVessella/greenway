@@ -27,7 +27,7 @@ class _AdminPageState extends State<AdminPage> {
           centerTitle: true,
           title: const Text('Home Page'),
           actions: [
-            IconButton(
+            IconButton.filledTonal(
               enableFeedback: true,
               icon: const Icon(Icons.warehouse),
               tooltip: "Aggiungi punto deposito",
@@ -72,21 +72,21 @@ class _AdminPageState extends State<AdminPage> {
                         'lib/assets/undraw_delivery_address_re_cjca.svg',
                         height: 150,
                       ),
-                      const Text(
-                        'Da qui puoi gestire veicoli e spedire',
+                      const Padding(padding: EdgeInsetsDirectional.only(top: 8, bottom: 8), child:   Text(
+                        'Da qui puoi gestire veicoli e spedizioni',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
-                      ),
+                      )),
                       const Divider(),
                        const VehicleListAdminWidget(),
                       const Divider(),
                       Container(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(children: [
-                            ElevatedButton(
+                            FilledButton.tonal(
                               onPressed: () {
                                 Navigator.push(
                                     context,
@@ -94,12 +94,12 @@ class _AdminPageState extends State<AdminPage> {
                                         builder: (context) =>
                                             const VehicleInputDetail()));
                               },
-                              child: const Text('Aggiungi veicolo'),
+                              child: const SizedBox(width: 110,child:  Text('Aggiungi veicolo')),
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            ElevatedButton(
+                            FilledButton.tonal(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -107,7 +107,7 @@ class _AdminPageState extends State<AdminPage> {
                                           builder: (context) =>
                                               const AddNewDelivery()));
                                 },
-                                child: const Text('Spedizioni')),
+                                child:  const SizedBox(width: 110, child:  Text('Spedizioni', textAlign: TextAlign.center,))),
                           ]))
                     ])))));
   }

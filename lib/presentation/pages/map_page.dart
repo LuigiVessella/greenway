@@ -1,9 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/presentation/widgets/show_trip_info.dart';
@@ -29,15 +29,11 @@ class _NavigationWidgetState extends State<NavigationWidget> {
     _navData = _vr
         .getVehicleByDeliveryMan(AuthService().getUserInfo!)
         .then((value) => _vr.getVehicleRoutes(value.id.toString()));
-
-    colors.add(Colors.purple);
-    colors.add(Colors.red);
-    colors.add(Colors.orange);
   }
 
   final VehicleRepository _vr = VehicleRepository();
   final NavigationDataParser dataParser = NavigationDataParser();
-  List<Color> colors = [];
+
   List<String> tripRoute = [];
   List<String> tripStreetNames = [];
   String? backTrip = '';
@@ -50,8 +46,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   bool _elevationRoute = false;
 
   String duration = '';
-
-  final String _routeText = 'Standard';
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +89,8 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                             points: decodePolyline(
                                     snapshot.data![1].routes![0].geometry!)
                                 .unpackPolyline(),
-                            color: Colors.black54,
-                            strokeWidth: 3.0)
+                            color: const Color.fromARGB(208, 39, 36, 36),
+                            strokeWidth: 5.0)
                       ])),
                   PolylineLayer(
                     polylineCulling: true,
@@ -105,18 +99,17 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       return Polyline(
                         points: decodePolyline(polylineString).unpackPolyline(),
                         color: firstAppTheme.primaryColor,
-                        strokeWidth: 3.0,
+                        strokeWidth: 5.0,
                       );
                     }).toList(),
                   ),
-                  
                   Visibility(
                       visible: _viewBackTrip,
                       child: PolylineLayer(polylines: [
                         Polyline(
                             points: decodePolyline(backTrip!).unpackPolyline(),
-                            color: Colors.green,
-                            strokeWidth: 3.0)
+                            color: const Color.fromARGB(199, 76, 175, 79),
+                            strokeWidth: 5.0)
                       ])),
                   CurrentLocationLayer(
                     style: const LocationMarkerStyle(
@@ -138,7 +131,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                     point: decodePolyline(polylineString)
                                         .unpackPolyline()
                                         .last,
-                                    child:  const Icon(Icons.location_pin,
+                                    child: const Icon(Icons.location_pin,
                                         color: Colors.blue),
                                   ))
                               .toList())),
@@ -149,7 +142,10 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                           point:
                               decodePolyline(backTrip!).unpackPolyline().last,
                           child: IconButton(
-                            icon: const Icon(Icons.warehouse),
+                            icon: const Icon(
+                              Icons.warehouse,
+                              color: Colors.black,
+                            ),
                             onPressed: () {},
                             tooltip: 'Il veicolo parte da qui',
                           ),
@@ -158,7 +154,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   RichAttributionWidget(
                     attributions: [
                       TextSourceAttribution(
-                        'GreenWay Team x Unina x OpenStreetMap',
+                        'GreenWay Team & Unina on OpenStreetMap',
                         onTap: () => launchUrl(
                             Uri.parse('https://openstreetmap.org/copyright')),
                       ),
@@ -174,7 +170,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                         const SizedBox(
                           height: 30,
                         ),
-                        IconButton.filled(
+                        IconButton.filledTonal(
+                            onPressed: () {
+                              _showMyDialog();
+                            },
+                            icon:
+                                SvgPicture.asset('lib/assets/legend_icon.svg')),
+                        IconButton.filledTonal(
                           tooltip: 'Visualizza ritorno',
                           icon: const Icon(
                             Icons.layers,
@@ -195,7 +197,12 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                          'Ottimizza percorso:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+                                                          'Ottimizza percorso:',
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold))
                                                     ],
                                                   ),
                                                   Row(children: [
@@ -210,10 +217,10 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                                                 height: 80,
                                                                 child: Card(
                                                                   shape: _elevationRoute
-                                                                      ? const StadiumBorder(
+                                                                      ? StadiumBorder(
                                                                           side: BorderSide(
                                                                           color:
-                                                                              Colors.blue,
+                                                                              firstAppTheme.primaryColor,
                                                                           width:
                                                                               2.0,
                                                                         ))
@@ -234,7 +241,8 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                                                 ),
                                                               ),
                                                               const Text(
-                                                                  'Elevation', )
+                                                                'Elevation',
+                                                              )
                                                             ])),
                                                     Padding(
                                                         padding:
@@ -250,7 +258,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                                                       ? const StadiumBorder(
                                                                           side: BorderSide(
                                                                           color:
-                                                                              Colors.blue,
+                                                                              Colors.green,
                                                                           width:
                                                                               2.0,
                                                                         ))
@@ -281,11 +289,19 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                          'Informazioni da mostrare:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
+                                                        'Informazioni da mostrare:',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
                                                     ],
                                                   ),
                                                   Row(children: [
-                                                    const SizedBox(width: 5,),
+                                                    const SizedBox(
+                                                      width: 5,
+                                                    ),
                                                     FilterChip(
                                                         label: const Text(
                                                             'Percorso Ritorno'),
@@ -344,8 +360,8 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   padding: const EdgeInsets.only(bottom: 10, right: 10),
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: IconButton.filled(
-                      padding: const EdgeInsets.all(15),
+                    child: ElevatedButton.icon(
+                      label: const Text('Indicazioni'),
                       icon: const Icon(Icons.arrow_upward),
                       onPressed: () {
                         showModalBottomSheet(
@@ -379,13 +395,19 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                             ))
                                       ],
                                     ),
-                                    const Padding(
-                                        padding: EdgeInsets.all(9),
-                                        child: Text(
-                                            'Il percorso mostrato è stato calcolato considerando l\' elevazione del territorio',
-                                            style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                            ))),
+                                    Padding(
+                                        padding: const EdgeInsets.all(9),
+                                        child: _elevationRoute
+                                            ? const Text(
+                                                'Il percorso mostrato e le info qui presenti si riferiscono al percorso ottimizzato di GreenWay',
+                                                style: TextStyle(
+                                                  fontStyle: FontStyle.italic,
+                                                ))
+                                            : const Text(
+                                                'Il percorso mostrato e le info qui presenti si riferiscono al percorso standard di OSMR',
+                                                style: TextStyle(
+                                                  fontStyle: FontStyle.italic,
+                                                ))),
                                     const Divider(),
                                     TripInfo(tripInfo: tripStreetNames),
                                   ])));
@@ -434,6 +456,79 @@ class _NavigationWidgetState extends State<NavigationWidget> {
     return 'Durata: ${Duration(seconds: snapshot.data![currentNavDataIndex].routes![0].duration!.floor()).inHours}h e '
         '${Duration(seconds: snapshot.data![currentNavDataIndex].routes![0].duration!.floor() % 3600).inMinutes}min'
         ' (${(snapshot.data![currentNavDataIndex].routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)';
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Legenda mappa'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Container(
+                    width: 35,
+                    height: 10,
+                    decoration:  BoxDecoration(
+                        color: firstAppTheme.primaryColor,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        )),
+                  ),
+                  const Text('Percorso principale'),
+                ]),
+               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Container(
+                    width: 35,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(199, 76, 175, 79),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        )),
+                  ),
+                  const Text('Percorso ritorno'),
+                ]),
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Container(
+                    width: 35,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(208, 39, 36, 36),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        )),
+                  ),
+                  const Text('Percorso alternativo GreenWay'),
+                ]),
+                const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Icon(Icons.location_pin, color: Colors.blue,),
+                Text('Punti consegna'),
+                ]),
+                 const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Icon(Icons.warehouse_outlined, color: Colors.black,),
+                Text('Magazzino/Partenza'),
+                ]),
+                
+                
+
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
