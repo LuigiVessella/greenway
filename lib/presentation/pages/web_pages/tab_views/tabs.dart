@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
-import 'package:greenway/presentation/pages/web_pages/delivery_tab.dart';
+import 'package:greenway/presentation/pages/web_pages/delivery_web_tab.dart';
 import 'package:greenway/presentation/widgets/web_widget/vehicle_list_web.dart';
 
 class TabOne extends StatelessWidget {
@@ -18,7 +18,7 @@ class TabTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const VehicleListWeb();
+    return const VechicleListWeb();
   }
 }
 

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:greenway/dto/delivery_dman_dto.dart';
@@ -7,6 +9,7 @@ import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/presentation/widgets/web_widget/elevation_chart.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/network/logger.dart';
+import 'package:http/http.dart';
 
 final VehicleRepository vr = VehicleRepository();
 
@@ -20,11 +23,14 @@ class VehicleListAdminWidget extends StatefulWidget {
 class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
   late Future<VehicleDto> _vehicles;
 
+  int _pageCounter = 0;
+  int _totalPages = 0;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _vehicles = vr.getAllVehicles();
+
+    _vehicles = vr.getAllVehicles(_pageCounter);
   }
 
   @override
@@ -33,14 +39,37 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Expanded(child: Text('I tuoi veicoli: ')),
-          const Text('Aggiorna'),
+          const Expanded(child: Text('I tuoi veicoli ')),
+          const Text('Pagina:'),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  if (_pageCounter > 0) {
+                    _pageCounter--;
+                  }
+                });
+              },
+              icon: const Icon(Icons.remove)),
+          Text(
+            '$_pageCounter',
+            style: const TextStyle(fontSize: 18.0),
+          ),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  if (_pageCounter < _totalPages - 1) _pageCounter++;
+                });
+              },
+              icon: const Icon(
+                Icons.add,
+              )),
           IconButton.filledTonal(
               enableFeedback: true,
               tooltip: 'Aggiorna lista veicoli',
               onPressed: () {
-                _vehicles = vr.getAllVehicles();
-                setState(() {});
+                setState(() {
+                  _vehicles = vr.getAllVehicles(_pageCounter);
+                });
               },
               icon: const Icon(Icons.update)),
         ],
@@ -49,48 +78,57 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
         future: _vehicles, // Chiama la tua funzione che ritorna il Future
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            VehicleDto vehicleDTO = snapshot.data!; // Lista dei veicoli
-
+            VehicleDto vehicleDTO = snapshot.data!;
+            if (snapshot.connectionState == ConnectionState.done) {
+              // Lista dei veicoli
+              if (vehicleDTO.totalPages! > 0) {
+                _totalPages = vehicleDTO.totalPages!;
+                print('ci sono ${vehicleDTO.totalPages!} pagine');
+              }
+            }
             return SizedBox(
                 height: 250,
-                child: ListView.builder(
-                    itemCount: vehicleDTO.content!.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          // Define how the card's content should be clipped
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                // Add padding around the row widget
-                                Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Row(children: [
-                                      SvgPicture.asset(
-                                        'lib/assets/electric_icon.svg',
-                                        height: 40,
-                                        width: 40,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      const SizedBox(width: 20,),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: 
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(vehicleDTO
-                                                .content![index].modelName!),
-                                            Text(
-                                                'carico massimo: ${vehicleDTO.content![index].maxCapacityKg}kg'),
-                                          ],
-                                        ),
-                                      )
-                                    ]))
-                              ]));
-                    }));
+                child: Scrollbar(
+                    child: ListView.builder(
+                        itemCount: vehicleDTO.content!.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              // Define how the card's content should be clipped
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    // Add padding around the row widget
+                                    Padding(
+                                        padding: const EdgeInsets.all(15),
+                                        child: Row(children: [
+                                          SvgPicture.asset(
+                                            'lib/assets/electric_icon.svg',
+                                            height: 40,
+                                            width: 40,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(vehicleDTO.content![index]
+                                                    .modelName!),
+                                                Text(
+                                                    'carico massimo: ${vehicleDTO.content![index].maxCapacityKg}kg'),
+                                              ],
+                                            ),
+                                          )
+                                        ]))
+                                  ]));
+                        })));
           } else if (snapshot.hasError) {
             return Center(
               child: Text(

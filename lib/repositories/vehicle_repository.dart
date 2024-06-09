@@ -20,8 +20,8 @@ class VehicleRepository {
     }
   }
 
-  Future<VehicleDto> getAllVehicles() async {
-    final response = await httpVehicle.getAllVehicles();
+  Future<VehicleDto> getAllVehicles(int pagecounter) async {
+    final response = await httpVehicle.getAllVehicles(pagecounter);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return VehicleDto.fromJson(jsonDecode(response.body));

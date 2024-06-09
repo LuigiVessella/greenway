@@ -27,6 +27,7 @@ class _AdminPageState extends State<AdminPage> {
           centerTitle: true,
           title: const Text('Home Page'),
           actions: [
+            Padding(padding: const EdgeInsets.all(8), child: 
             IconButton.filledTonal(
               enableFeedback: true,
               icon: const Icon(Icons.warehouse),
@@ -53,7 +54,7 @@ class _AdminPageState extends State<AdminPage> {
                               Text('Errore: il deposito esiste già, o anomalia')
                             ]))));
               },
-            )
+            ))
           ],
         ),
         body: SingleChildScrollView(

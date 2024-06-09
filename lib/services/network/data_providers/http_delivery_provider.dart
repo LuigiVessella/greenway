@@ -61,10 +61,10 @@ class HttpDeliveryResponse {
     }
   }
 
-  Future<http.Response> getAllDeliveries() async {
+  Future<http.Response> getAllDeliveries(int pageCounter) async {
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
-    final params = {"pageNo": "0", "pageSize": "10"};
+    final params = {"pageNo": "$pageCounter", "pageSize": "10"};
 
     var response = await client.get(
       Uri.http(

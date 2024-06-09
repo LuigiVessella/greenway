@@ -277,18 +277,18 @@ class _ElevationChartState extends State<ElevationChart> {
                       ),
                     ]));
               } else {
-                return Center(
+                return const Center(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                      const Icon(
+                      Icon(
                         Icons.info_outline_rounded,
                         color: Colors.orange,
                         size: 60,
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text('Info: ${snapshot.error}'),
+                        padding: EdgeInsets.all(16),
+                        child: Text('Nessun dato presente. Verifica che sia in transito'),
                       ),
                     ]));
               }

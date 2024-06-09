@@ -28,13 +28,13 @@ class HttpVehicleResponse {
     return response;
   }
 
-  Future<http.Response> getAllVehicles() async {
+  Future<http.Response> getAllVehicles(int pageCounter) async {
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
 
     final queryParams = {
-      'pageNo': '0',
-      'pageSize': '15',
+      'pageNo': '$pageCounter',
+      'pageSize': '10',
     };
 
     var response = await client.get(

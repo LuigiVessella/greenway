@@ -26,7 +26,7 @@ class ShippingStatus extends StatelessWidget {
             subtitle: 'In attesa del ritiro del corriere',
             icon: Icons.hourglass_top_outlined,
             showLine: true,
-            isActive: (delivery.inTransit! || delivery.deliveryTime!=null) ? false : true,
+            isActive:  (delivery.inTransit!) ? false : true,
           ),
           OrderStatusItemView(
             color: Colors.blue,
@@ -34,7 +34,7 @@ class ShippingStatus extends StatelessWidget {
             subtitle: 'Il tuo pacco è in viaggio',
             icon: Icons.local_shipping_outlined,
             showLine: true,
-            isActive: (delivery.inTransit! || delivery.deliveryTime!=null) ? true : false,
+            isActive: (delivery.inTransit!) ? true : false,
           ),
            OrderStatusItemView(
             color: Colors.green,
@@ -42,7 +42,7 @@ class ShippingStatus extends StatelessWidget {
             subtitle: 'Consegnata',
             icon: Icons.task_alt_outlined,
             showLine: false,
-            isActive: (delivery.deliveryTime!=null) ? true : false,
+            isActive:  (delivery.deliveryTime == null) ? false : true
           ),
         ],
       ),

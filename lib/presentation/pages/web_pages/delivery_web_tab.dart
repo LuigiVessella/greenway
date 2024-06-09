@@ -1,0 +1,150 @@
+import 'package:flutter/material.dart';
+import 'package:greenway/dto/all_deliveries_dto.dart';
+import 'package:greenway/dto/delivery_dman_dto.dart';
+import 'package:greenway/presentation/widgets/web_widget/shipping_status.dart';
+import 'package:greenway/repositories/delivery_repository.dart';
+
+class DeliveryWebTab extends StatefulWidget {
+  const DeliveryWebTab({super.key});
+
+  @override
+  State<DeliveryWebTab> createState() => _DeliveryWebTabState();
+}
+
+class _DeliveryWebTabState extends State<DeliveryWebTab> {
+  final DeliveryRepository dr = DeliveryRepository();
+  late Future<AllDeliveriesDTO> deliveries;
+
+  int _pageCounter = 0;
+   int _totalPages = 0;
+
+  @override
+  void initState() {
+    deliveries = dr.getAllDeliveries(0);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Informazioni sulle consegne'),
+        ),
+        body: SafeArea(
+            child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Pagina:'),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_pageCounter > 0) {
+                        _pageCounter--;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.remove)),
+              Text(
+                '$_pageCounter',
+                style: const TextStyle(fontSize: 18.0),
+              ),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_pageCounter <  _totalPages - 1) _pageCounter++;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                  )),
+              IconButton.filledTonal(
+                  enableFeedback: true,
+                  tooltip: 'Carica la nuova pagina',
+                  onPressed: () {
+                    setState(() {
+                      deliveries = dr.getAllDeliveries(_pageCounter);
+                    });
+                  },
+                  icon: const Icon(Icons.update)),
+            ],
+          ),
+          FutureBuilder<AllDeliveriesDTO>(
+            future: deliveries, // Chiama la tua funzione che ritorna il Future
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<DeliveryDTO> del =
+                    snapshot.data!.deliveries!; // Lista dei veicoli
+                
+                _totalPages = snapshot.data!.totalPages!; // Numero di pagine
+
+                return Expanded(child:  ListView.builder(
+                  padding: const EdgeInsets.all(15),
+                  itemCount: del.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                        semanticContainer: false,
+                        elevation: 5.0,
+                        child: ExpansionTile(
+                            tilePadding: const EdgeInsets.all(7),
+                            childrenPadding: const EdgeInsets.all(1.0),
+                            title: Text(
+                              'Consegna ${del[index].id}',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                            children: [
+                              ListTile(
+                                leading: const Icon(Icons.local_post_office),
+                                title: Text(del[index].receiver!),
+                                subtitle: Text(
+                                    'presso: ${del[index].receiverAddress}'),
+                              ),
+                              const Divider(),
+                              Row(children: [
+                                ShippingStatus(delivery: del[index])
+                              ]),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'Consegna prevista: ${(del[index].estimatedDeliveryTime!).split('T')[0]}',
+                                  ),
+                                  Text(
+                                    'Consegnata il: ${(del[index].deliveryTime) ?? 'Ancora non consegnata'}',
+                                  ),
+                                  FilledButton(
+                                      onPressed: () {
+                                        dr.completeDelivery(
+                                            del[index].id.toString());
+                                      },
+                                      child: const Text('Consegnata'))
+                                ],
+                              ),
+                            ]));
+                  },
+                ));
+              } else if (snapshot.hasError) {
+                return Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                      const Icon(
+                        Icons.info_outline_rounded,
+                        color: Colors.orange,
+                        size: 60,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text('Info: ${snapshot.error}'),
+                      ),
+                    ]));
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          )
+        ])));
+  }
+}

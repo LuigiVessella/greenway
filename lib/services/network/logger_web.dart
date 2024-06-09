@@ -45,7 +45,7 @@ class OIDCAuthService {
         request: await InteractiveAuthorizationRequest.create(
           clientId: clientId,
           clientSecret: clientSecret,
-          redirectUrl: "http://localhost:64510/callback.html", // Redirect URL
+          redirectUrl: "http://localhost:8000/web/callback.html", // Redirect URL
           scopes: ["openid", "profile", "email"],
           configuration: discoveryDocument!,
           autoRefresh: true,

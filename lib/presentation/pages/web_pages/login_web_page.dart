@@ -31,7 +31,6 @@ class _InteractivePageState extends State<InteractivePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Benvenuto, effettua il login!'),
-        
       ),
       body: Center(
         child: Form(
@@ -72,10 +71,12 @@ class _InteractivePageState extends State<InteractivePage> {
                   visible: OIDCAuthService().isAuthenticated(),
                   child: FilledButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const WebDashboard()));
+                        if (OIDCAuthService().isAuthenticated()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const WebDashboard()));
+                        }
                       },
                       child: const Text('Procedi'))),
               Visibility(

@@ -25,8 +25,8 @@ class DeliveryRepository{
   }
 
 
-  Future<AllDeliveriesDTO> getAllDeliveries()async {
-    final response = await httpDelivery.getAllDeliveries();
+  Future<AllDeliveriesDTO> getAllDeliveries(int pageCounter)async {
+    final response = await httpDelivery.getAllDeliveries(pageCounter);
     
     if(response.statusCode == 200 || response.statusCode == 201) {
       return AllDeliveriesDTO.fromJson(jsonDecode(response.body));
