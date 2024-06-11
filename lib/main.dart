@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
 import 'package:greenway/presentation/pages/delivery_man_page.dart';
