@@ -99,13 +99,38 @@ class _PackageListState extends State<PackageList> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      dr.completeDelivery(vehicleDTO
-                                          .deliveries![index].id
-                                          .toString());
-                                      setState(() {
-                                        data = vr.getVehicleByDeliveryMan(
-                                            AuthService().getUserInfo!);
-                                      });
+                                      dr
+                                          .completeDelivery(vehicleDTO
+                                              .deliveries![index].id
+                                              .toString())
+                                          .then((value) =>
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      content: Row(children: [
+                                                        Icon(Icons.check),
+                                                        Text(
+                                                            'Marcata come consegnata')
+                                                      ]))))
+                                          .then(
+                                            (value) => setState(() {
+                                              data = vr.getVehicleByDeliveryMan(
+                                                  AuthService().getUserInfo!);
+                                            }),
+                                          )
+                                          .catchError((error, stackTrace) =>
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar( const SnackBar(
+                                                      backgroundColor: Colors.red,
+                                                      content: Row(children: [
+                                                        Icon(Icons.error),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                            'Errore: impossibile completare consegna')
+                                                      ]))));
                                     },
                                     child: const Text('Consegnata'))
                               ],

@@ -7,7 +7,7 @@
 
     <application
 
-        android:label="greenway"
+        android:label="GreenWay"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:enableOnBackInvokedCallback="true">

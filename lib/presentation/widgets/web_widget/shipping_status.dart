@@ -4,8 +4,7 @@ import 'package:greenway/dto/delivery_dman_dto.dart';
 
 class ShippingStatus extends StatelessWidget {
   const ShippingStatus({super.key, required this.delivery});
-  final DeliveryDTO delivery; 
-  
+  final DeliveryDTO delivery;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +18,14 @@ class ShippingStatus extends StatelessWidget {
           top: 48,
           bottom: 16,
         ),
-        children:  [
+        children: [
           OrderStatusItemView(
             color: Colors.amber,
             title: 'Ritiro',
             subtitle: 'In attesa del ritiro del corriere',
             icon: Icons.hourglass_top_outlined,
             showLine: true,
-            isActive:  (delivery.inTransit!) ? false : true,
+            isActive: (delivery.inTransit!),
           ),
           OrderStatusItemView(
             color: Colors.blue,
@@ -34,16 +33,15 @@ class ShippingStatus extends StatelessWidget {
             subtitle: 'Il tuo pacco è in viaggio',
             icon: Icons.local_shipping_outlined,
             showLine: true,
-            isActive: (delivery.inTransit!) ? true : false,
+            isActive: (delivery.inTransit!) ,
           ),
-           OrderStatusItemView(
-            color: Colors.green,
-            title: 'Consegnata',
-            subtitle: 'Consegnata',
-            icon: Icons.task_alt_outlined,
-            showLine: false,
-            isActive:  (delivery.deliveryTime == null) ? false : true
-          ),
+          OrderStatusItemView(
+              color: Colors.green,
+              title: 'Consegnata',
+              subtitle: 'Consegnata',
+              icon: Icons.task_alt_outlined,
+              showLine: false,
+              isActive: (delivery.deliveryTime == null) ? false : true),
         ],
       ),
     );

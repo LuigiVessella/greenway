@@ -35,58 +35,58 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Expanded(child: Text('I tuoi veicoli ')),
-          const Text('Pagina:'),
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  if (_pageCounter > 0) {
-                    _pageCounter--;
-                  }
-                });
-              },
-              icon: const Icon(Icons.remove)),
-          Text(
-            '$_pageCounter',
-            style: const TextStyle(fontSize: 18.0),
-          ),
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  if (_pageCounter < _totalPages - 1) _pageCounter++;
-                });
-              },
-              icon: const Icon(
-                Icons.add,
-              )),
-          IconButton.filledTonal(
-              enableFeedback: true,
-              tooltip: 'Aggiorna lista veicoli',
-              onPressed: () {
-                setState(() {
-                  _vehicles = vr.getAllVehicles(_pageCounter);
-                });
-              },
-              icon: const Icon(Icons.update)),
-        ],
-      ),
-      FutureBuilder<VehicleDto>(
-        future: _vehicles, // Chiama la tua funzione che ritorna il Future
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            VehicleDto vehicleDTO = snapshot.data!;
-            if (snapshot.connectionState == ConnectionState.done) {
-              // Lista dei veicoli
-              if (vehicleDTO.totalPages! > 0) {
-                _totalPages = vehicleDTO.totalPages!;
-                print('ci sono ${vehicleDTO.totalPages!} pagine');
-              }
+    return FutureBuilder<VehicleDto>(
+      future: _vehicles, // Chiama la tua funzione che ritorna il Future
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          VehicleDto vehicleDTO = snapshot.data!;
+          if (snapshot.connectionState == ConnectionState.done) {
+            // Lista dei veicoli
+            if (vehicleDTO.totalPages! > 0) {
+              _totalPages = vehicleDTO.totalPages!;
+              print('ci sono ${vehicleDTO.totalPages!} pagine');
             }
-            return SizedBox(
+          }
+          return Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Expanded(child: Text('I tuoi veicoli ')),
+                const Text('Pagina:'),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (_pageCounter > 0) {
+                          _pageCounter--;
+                        }
+                      });
+                    },
+                    icon: const Icon(Icons.remove)),
+                Text(
+                  '$_pageCounter',
+                  style: const TextStyle(fontSize: 18.0),
+                ),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (_pageCounter < _totalPages - 1) _pageCounter++;
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                    )),
+                IconButton.filledTonal(
+                    enableFeedback: true,
+                    tooltip: 'Aggiorna lista veicoli',
+                    onPressed: () {
+                      setState(() {
+                        _vehicles = vr.getAllVehicles(_pageCounter);
+                      });
+                    },
+                    icon: const Icon(Icons.update)),
+              ],
+            ),
+            SizedBox(
                 height: 250,
                 child: Scrollbar(
                     child: ListView.builder(
@@ -128,18 +128,18 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
                                           )
                                         ]))
                                   ]));
-                        })));
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                  'Errore durante il caricamento dei veicoli ${snapshot.error}'),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      )
-    ]);
+                        })))
+          ]);
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+                'Errore durante il caricamento dei veicoli ${snapshot.error}'),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 }
 
@@ -177,8 +177,8 @@ class VehicleListDmanWidget extends StatelessWidget {
                             ListTile(
                               leading: const Icon(Icons.local_shipping),
                               title: Text(vehicleDTO.modelName!.toUpperCase()),
-                              subtitle: Text(
-                                  'Carico massimo: ${vehicleDTO.maxCapacityKg}kg\nNon è previsto rifornimento'),
+                              subtitle: Row(children: [const Icon(Icons.battery_charging_full, color: Colors.green,), Text(
+                                  'Carico massimo: ${vehicleDTO.maxCapacityKg}kg\nNon è previsto rifornimento')]),
                             ),
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,

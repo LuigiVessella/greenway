@@ -1,5 +1,6 @@
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:greenway/config/ip_config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,16 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static final AuthService _instance = AuthService._privateConstructor();
-  
-  var _userRole;
+
   factory AuthService() => _instance;
 
   //con factory stiamo praticamente dicendo che non possono esistere più istanze di questa classe. se esistono, sono uguali.
   final FlutterAppAuth _appAuth = const FlutterAppAuth();
 
- 
-
   //variabili private
+  dynamic _userRole;
   bool _isBusy = false;
   String? _codeVerifier;
   String? _nonce;
@@ -33,26 +32,29 @@ class AuthService {
   //setting per il server keycloak che fornisce oauth2
   final String _clientId = 'GreenWay';
   final String _redirectUrl = 'com.example.greenway:/';
-  final String _issuer = 'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay';
+  final String _issuer =
+      'http://${IpAddressManager().ipAddress}:8090/realms/GreenWay';
+
   //final String _discoveryUrl =
   //    'http://192.168.1.9:8090/realms/GreenWay/.well-known/openid-configuration';
   final String _postLogoutRedirectUrl = 'com.example.greenway:/';
   final List<String> _scopes = <String>['openid', 'profile', 'email'];
 
   final AuthorizationServiceConfiguration _serviceConfiguration =
-       AuthorizationServiceConfiguration(
+      AuthorizationServiceConfiguration(
     authorizationEndpoint:
-      'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay/protocol/openid-connect/auth',
+        'http://${IpAddressManager().ipAddress}:8090/realms/GreenWay/protocol/openid-connect/auth',
     tokenEndpoint:
-        'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay/protocol/openid-connect/token',
+        'http://${IpAddressManager().ipAddress}:8090/realms/GreenWay/protocol/openid-connect/token',
     endSessionEndpoint:
-        'http://${dotenv.env['keycloakEndpoint']}/realms/GreenWay/protocol/openid-connect/logout',
+        'http://${IpAddressManager().ipAddress}:8090/realms/GreenWay/protocol/openid-connect/logout',
   );
 
   AuthService._privateConstructor();
 
   Future<void> signInWithAutoCodeExchange(
       {bool preferEphemeralSession = false}) async {
+    print('ciao $_issuer');
     try {
       _setBusyState();
 
@@ -76,7 +78,6 @@ class AuthService {
       _clearBusyState();
     }
   }
-  
 
   Future<void> refresh() async {
     try {
@@ -102,9 +103,9 @@ class AuthService {
     _isLoggingComplete = true;
     _isBusy = false;
     _decodedToken = JwtDecoder.decode(_accessToken.toString());
-   _expDate = JwtDecoder.getExpirationDate(_accessToken.toString()).toString();
-   _userInfo = _decodedToken?["preferred_username"].toString();
-   _userRole = _decodedToken?["realm_access"].toString();
+    _expDate = JwtDecoder.getExpirationDate(_accessToken.toString()).toString();
+    _userInfo = _decodedToken?["preferred_username"].toString();
+    _userRole = _decodedToken?["realm_access"].toString();
   }
 
   void _processTokenResponse(TokenResponse? response) {
@@ -154,17 +155,17 @@ class AuthService {
   String? get getUserRole => _userRole;
 
   String? get accessToken {
-      DateTime now = DateTime.now();
-      DateTime expDate = DateTime.parse(_expDate!); 
-      
-      if (now.isBefore(expDate)) {
-        return _accessToken;
-      } else {
-         refresh();
-         return _accessToken;
-      }
-  } 
-  
+    DateTime now = DateTime.now();
+    DateTime expDate = DateTime.parse(_expDate!);
+
+    if (now.isBefore(expDate)) {
+      return _accessToken;
+    } else {
+      refresh();
+      return _accessToken;
+    }
+  }
+
   String? get refreshToken => _refreshToken;
 
   void setAccessToken(String accessToken) {

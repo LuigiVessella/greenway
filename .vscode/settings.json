@@ -6,5 +6,6 @@
     ],
     "cSpell.language": "en",
     "cSpell.enabled": false,
-    "java.server.launchMode": "LightWeight"
+    "java.server.launchMode": "LightWeight",
+    "cmake.sourceDirectory": "C:/Users/vesse/Documents/GreenWay_Frontend/greenway/linux"
 }

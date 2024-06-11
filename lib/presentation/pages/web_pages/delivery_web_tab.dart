@@ -16,7 +16,7 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
   late Future<AllDeliveriesDTO> deliveries;
 
   int _pageCounter = 0;
-   int _totalPages = 0;
+  int _totalPages = 0;
 
   @override
   void initState() {
@@ -31,54 +31,55 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
           title: const Text('Informazioni sulle consegne'),
         ),
         body: SafeArea(
-            child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Pagina:'),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_pageCounter > 0) {
-                        _pageCounter--;
-                      }
-                    });
-                  },
-                  icon: const Icon(Icons.remove)),
-              Text(
-                '$_pageCounter',
-                style: const TextStyle(fontSize: 18.0),
-              ),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_pageCounter <  _totalPages - 1) _pageCounter++;
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                  )),
-              IconButton.filledTonal(
-                  enableFeedback: true,
-                  tooltip: 'Carica la nuova pagina',
-                  onPressed: () {
-                    setState(() {
-                      deliveries = dr.getAllDeliveries(_pageCounter);
-                    });
-                  },
-                  icon: const Icon(Icons.update)),
-            ],
-          ),
-          FutureBuilder<AllDeliveriesDTO>(
-            future: deliveries, // Chiama la tua funzione che ritorna il Future
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<DeliveryDTO> del =
-                    snapshot.data!.deliveries!; // Lista dei veicoli
-                
-                _totalPages = snapshot.data!.totalPages!; // Numero di pagine
+            child: FutureBuilder<AllDeliveriesDTO>(
+          future: deliveries, // Chiama la tua funzione che ritorna il Future
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<DeliveryDTO> del =
+                  snapshot.data!.deliveries!; // Lista dei veicoli
 
-                return Expanded(child:  ListView.builder(
+              _totalPages = snapshot.data!.totalPages!; // Numero di pagine
+
+              return Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Pagina:'),
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (_pageCounter > 0) {
+                              _pageCounter--;
+                            }
+                          });
+                        },
+                        icon: const Icon(Icons.remove)),
+                    Text(
+                      '$_pageCounter',
+                      style: const TextStyle(fontSize: 18.0),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (_pageCounter < _totalPages - 1) _pageCounter++;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                        )),
+                    IconButton.filledTonal(
+                        enableFeedback: true,
+                        tooltip: 'Carica la nuova pagina',
+                        onPressed: () {
+                          setState(() {
+                            deliveries = dr.getAllDeliveries(_pageCounter);
+                          });
+                        },
+                        icon: const Icon(Icons.update)),
+                  ],
+                ),
+                Expanded(
+                    child: ListView.builder(
                   padding: const EdgeInsets.all(15),
                   itemCount: del.length,
                   itemBuilder: (context, index) {
@@ -115,36 +116,61 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
                                     'Consegnata il: ${(del[index].deliveryTime) ?? 'Ancora non consegnata'}',
                                   ),
                                   FilledButton(
-                                      onPressed: () {
-                                        dr.completeDelivery(
-                                            del[index].id.toString());
+                                      onPressed: () async {
+                                        await dr
+                                            .completeDelivery(
+                                                del[index].id.toString())
+                                            .then((value) =>
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                        const SnackBar(
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            content:
+                                                                Row(children: [
+                                                              Icon(Icons.check),
+                                                              Text(
+                                                                  'Marcata come consegnata')
+                                                            ]))))
+                                            .catchError((error, stackTrace) =>
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(const SnackBar(
+                                                        backgroundColor: Colors.red,
+                                                        content: Row(children: [
+                                                          Icon(Icons.error),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Text(
+                                                              'Errore: impossibile completare consegna')
+                                                        ]))));
                                       },
                                       child: const Text('Consegnata'))
                                 ],
                               ),
                             ]));
                   },
-                ));
-              } else if (snapshot.hasError) {
-                return Center(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                      const Icon(
-                        Icons.info_outline_rounded,
-                        color: Colors.orange,
-                        size: 60,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text('Info: ${snapshot.error}'),
-                      ),
-                    ]));
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          )
-        ])));
+                ))
+              ]);
+            } else if (snapshot.hasError) {
+              return Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                    const Icon(
+                      Icons.info_outline_rounded,
+                      color: Colors.orange,
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text('Info: ${snapshot.error}'),
+                    ),
+                  ]));
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        )));
   }
 }

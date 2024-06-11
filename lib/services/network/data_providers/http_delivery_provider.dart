@@ -1,18 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/entity/delivery.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/network/logger_web.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class HttpDeliveryResponse {
   final client = http.Client();
 
   Future<void> addDelivery(Delivery delivery) async {
     var response = await client.post(
-        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deliveries'),
+        Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/deliveries'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
@@ -23,29 +24,22 @@ class HttpDeliveryResponse {
     print(response.body);
   }
 
-  Future<void> completeDelivery(String deliveryID) async {
+  Future<http.Response> completeDelivery(String deliveryID) async {
     var response = await client.get(
-      Uri.http('${dotenv.env['restApiEndpoint']}',
+      Uri.http('${IpAddressManager().ipAddress}:8080',
           '/api/v1/deliveries/$deliveryID/complete'),
       headers: {
         'Authorization': 'Bearer ${AuthService().accessToken}',
         'Content-Type': 'application/json'
       },
     );
-    print('Complete delivery response: ${response.statusCode}');
+    print(response.body);
+    return response;
   }
 
-  Future<void> addDepotPoint() async {
-    final data = {
-      "depositAddress": "Via Roma",
-      "depositCoordinates": {
-        "type": "Point",
-        "coordinates": [14.266262, 40.884837]
-      }
-    };
-
+  Future<http.Response> addDepotPoint(var data) async {
     var response = await client.post(
-      Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/deposit'),
+      Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/deposit'),
       headers: {
         'Authorization': 'Bearer ${AuthService().accessToken}',
         'Content-Type': 'application/json'
@@ -53,12 +47,24 @@ class HttpDeliveryResponse {
       body: json.encode(data),
     );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      print('add depot point response: ${response.statusCode}');
-      print(response.body);
-    } else {
-      return Future.error('error');
-    }
+    print('depot ${response.statusCode}');
+
+    return response;
+  }
+
+  Future<http.Response> updateDepotPoint(var data) async {
+    var response = await client.put(
+      Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/deposit'),
+      headers: {
+        'Authorization': 'Bearer ${AuthService().accessToken}',
+        'Content-Type': 'application/json'
+      },
+      body: json.encode(data),
+    );
+
+    print('depot update${response.statusCode}');
+
+    return response;
   }
 
   Future<http.Response> getAllDeliveries(int pageCounter) async {
@@ -68,7 +74,7 @@ class HttpDeliveryResponse {
 
     var response = await client.get(
       Uri.http(
-          '${dotenv.env['restApiEndpoint']}', '/api/v1/deliveries', params),
+          '${IpAddressManager().ipAddress}:8080', '/api/v1/deliveries', params),
       headers: {
         'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json'

@@ -47,13 +47,12 @@ class VehicleRepository {
   }
 
   Future<NavigationDataDTO> getVehicleRoute(String vehicleID) async {
-    httpVehicle.enterVehicle(vehicleID);
-    
     final response = await httpVehicle.getVehicleRoute(vehicleID);
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       return NavigationDataDTO.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Errore: ${response.statusCode}");
+      throw Exception("Errore route: ${response.statusCode}");
     }
   }
 
@@ -68,6 +67,10 @@ class VehicleRepository {
   }
 
   Future<List<NavigationDataDTO>> getVehicleRoutes(String vehicleID) async {
+    final enterResponse = await httpVehicle.enterVehicle(vehicleID);
+
+    if(enterResponse.statusCode != 200 && enterResponse.statusCode != 201) throw Exception("Errore enter: ${enterResponse.statusCode}");
+
     final responseStandard = await httpVehicle.getRoutesStandard(vehicleID);
     final responseElevation = await httpVehicle.getVehicleRoute(vehicleID);
 

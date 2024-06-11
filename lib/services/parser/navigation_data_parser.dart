@@ -1,6 +1,5 @@
 import 'package:greenway/dto/navigation_dto.dart';
-import 'package:greenway/services/other/unpack_polyline.dart';
-import 'package:latlong2/latlong.dart';
+
 import 'package:google_polyline_algorithm/src/google_polyline_algorithm.dart';
 
 class NavigationDataParser {

@@ -32,104 +32,100 @@ class _VechicleListWebState extends State<VechicleListWeb> {
           leading: null,
         ),
         body: SafeArea(
-            child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              
-              const Text('Pagina:'),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_pageCounter > 0) {
-                        _pageCounter--;
-                      }
-                    });
-                  },
-                  icon: const Icon(Icons.remove)),
-              Text(
-                '$_pageCounter',
-                style: const TextStyle(fontSize: 18.0),
-              ),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_pageCounter <  _totalPages - 1) _pageCounter++;
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                  )),
-              IconButton.filledTonal(
-                  enableFeedback: true,
-                  tooltip: 'Carica la nuova pagina',
-                  onPressed: () {
-                    setState(() {
-                      vehiclesList = vr.getAllVehicles(_pageCounter);
-                    });
-                  },
-                  icon: const Icon(Icons.update)),
-            ],
-          ),
-          FutureBuilder<VehicleDto>(
-            future:
-                vehiclesList, // Chiama la tua funzione che ritorna il Future
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                VehicleDto vehicleDTO = snapshot.data!; // Lista dei veicoli
-                _totalPages = vehicleDTO.totalPages!;
+            child: FutureBuilder<VehicleDto>(
+          future: vehiclesList, // Chiama la tua funzione che ritorna il Future
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              VehicleDto vehicleDTO = snapshot.data!; // Lista dei veicoli
+              _totalPages = vehicleDTO.totalPages!;
 
-                return  Expanded( child: ListView.builder(
+              return Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Pagina:'),
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (_pageCounter > 0) {
+                              _pageCounter--;
+                            }
+                          });
+                        },
+                        icon: const Icon(Icons.remove)),
+                    Text(
+                      '$_pageCounter',
+                      style: const TextStyle(fontSize: 18.0),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (_pageCounter < _totalPages - 1) _pageCounter++;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                        )),
+                    IconButton.filledTonal(
+                        enableFeedback: true,
+                        tooltip: 'Carica la nuova pagina',
+                        onPressed: () {
+                          setState(() {
+                            vehiclesList = vr.getAllVehicles(_pageCounter);
+                          });
+                        },
+                        icon: const Icon(Icons.update)),
+                  ],
+                ),
+                Expanded(
+                    child: ListView.builder(
                   shrinkWrap: true,
-                      itemCount: vehicleDTO.content!.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                            child: ExpansionTile(
-                                tilePadding: const EdgeInsets.all(15),
-                                childrenPadding: const EdgeInsets.all(9.0),
-                                title: Text(
-                                  'VEICOLO ${vehicleDTO.content![index].id}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                children: [
-                              ListTile(
-                                leading: const Icon(Icons.local_shipping),
-                                title:
-                                    Text(vehicleDTO.content![index].modelName!),
-                                subtitle: Text(
-                                    'CARICO MASSIMO: ${vehicleDTO.content![index].maxCapacityKg}kg'),
-                              ),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ElevationChart(
-                                            vehicleID: vehicleDTO
-                                                .content![index].id
-                                                .toString(),
-                                          ),
-                                        ));
-                                  },
-                                  child:
-                                      const Text('Visualizza dati elevazione')),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: const Text('Stato spedizione'))
-                            ]));
-                      },
-                    ));
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                      'Errore durante il caricamento dei veicoli ${snapshot.error}'),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          )
-        ])));
+                  itemCount: vehicleDTO.content!.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                        child: ExpansionTile(
+                            tilePadding: const EdgeInsets.all(15),
+                            childrenPadding: const EdgeInsets.all(9.0),
+                            title: Text(
+                              'VEICOLO ${vehicleDTO.content![index].id}',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            children: [
+                          ListTile(
+                            leading: const Icon(Icons.local_shipping),
+                            title: Text(vehicleDTO.content![index].modelName!),
+                            subtitle: Text(
+                                'CARICO MASSIMO: ${vehicleDTO.content![index].maxCapacityKg}kg'),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ElevationChart(
+                                        vehicleID: vehicleDTO.content![index].id
+                                            .toString(),
+                                      ),
+                                    ));
+                              },
+                              child: const Text('Visualizza dati elevazione')),
+                          TextButton(
+                              onPressed: () {},
+                              child: const Text('Stato spedizione'))
+                        ]));
+                  },
+                ))
+              ]);
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                    'Errore durante il caricamento dei veicoli ${snapshot.error}'),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        )));
   }
 }

@@ -81,6 +81,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
                 Form(
                     key: _formKey,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
                             child: TextFormField(
@@ -96,6 +97,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
                           ),
                           onChanged: (value) {},
                         )),
+                        const SizedBox(width: 15,),
                         Expanded(
                             child: TextFormField(
                           controller: _controllerSecondName,

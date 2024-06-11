@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
-
 import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/network/logger_web.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +16,7 @@ class HttpVehicleResponse {
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
 
     var response = await client.post(
-        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/vehicles'),
+        Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/vehicles'),
         headers: {
           'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
@@ -38,11 +36,14 @@ class HttpVehicleResponse {
     };
 
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}', '/api/v1/vehicles',
+        Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/vehicles',
             queryParams),
         headers: {
           'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods':
+              'POST, GET, OPTIONS, PUT, DELETE, HEAD',
         });
 
     return response;
@@ -50,7 +51,7 @@ class HttpVehicleResponse {
 
   Future<http.Response> getVehicleByDeliveryMan(String deliveryMan) async {
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}',
+        Uri.http('${IpAddressManager().ipAddress}:8080',
             '/api/v1/vehicles/deliveryman/$deliveryMan'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
@@ -66,7 +67,7 @@ class HttpVehicleResponse {
 
     var response = await client.get(
         Uri.http(
-            '${dotenv.env['restApiEndpoint']}',
+            '${IpAddressManager().ipAddress}:8080',
             'api/v1/vehicles/$vehicleID/route',
             {'navigationType': 'ELEVATION_OPTIMIZED'}),
         headers: {
@@ -79,7 +80,7 @@ class HttpVehicleResponse {
 
   Future<http.Response> putLeaveVehicle(String vehicleID) async {
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}',
+        Uri.http('${IpAddressManager().ipAddress}:8080',
             'api/v1/vehicles/$vehicleID/leave'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
@@ -89,22 +90,17 @@ class HttpVehicleResponse {
     return response;
   }
 
-  Future<void> enterVehicle(String vehicleID) async {
+  Future<http.Response> enterVehicle(String vehicleID) async {
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}',
+        Uri.http('${IpAddressManager().ipAddress}:8080',
             'api/v1/vehicles/$vehicleID/enter'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
         });
+    print('enter vehicle ${response.statusCode}');
 
-    print('enter response: ${response.statusCode}');
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return;
-    } else {
-      return Future.error('Attenzione consegne in transito');
-    }
+    return response;
   }
 
   Future<http.Response> getRoutesStandard(String vehicleID) async {
@@ -112,7 +108,7 @@ class HttpVehicleResponse {
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
 
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}',
+        Uri.http('${IpAddressManager().ipAddress}:8080',
             'api/v1/vehicles/$vehicleID/route', {'navigationType': 'STANDARD'}),
         headers: {
           'Authorization': 'Bearer $accessToken',

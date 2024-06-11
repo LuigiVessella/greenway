@@ -360,7 +360,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   padding: const EdgeInsets.only(bottom: 10, right: 10),
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: ElevatedButton.icon(
+                    child: FloatingActionButton.extended(
                       label: const Text('Indicazioni'),
                       icon: const Icon(Icons.arrow_upward),
                       onPressed: () {
@@ -472,7 +472,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   Container(
                     width: 35,
                     height: 10,
-                    decoration:  BoxDecoration(
+                    decoration: BoxDecoration(
                         color: firstAppTheme.primaryColor,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
@@ -480,7 +480,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   ),
                   const Text('Percorso principale'),
                 ]),
-               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Container(
                     width: 35,
                     height: 10,
@@ -504,17 +504,24 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   ),
                   const Text('Percorso alternativo GreenWay'),
                 ]),
-                const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Icon(Icons.location_pin, color: Colors.blue,),
-                Text('Punti consegna'),
-                ]),
-                 const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Icon(Icons.warehouse_outlined, color: Colors.black,),
-                Text('Magazzino/Partenza'),
-                ]),
-                
-                
-
+                const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.location_pin,
+                        color: Colors.blue,
+                      ),
+                      Text('Punti consegna'),
+                    ]),
+                const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.warehouse_outlined,
+                        color: Colors.black,
+                      ),
+                      Text('Magazzino/Partenza'),
+                    ]),
               ],
             ),
           ),

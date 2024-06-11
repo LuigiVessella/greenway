@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/add_delivery_dto.dart';
 import 'package:greenway/entity/delivery.dart';

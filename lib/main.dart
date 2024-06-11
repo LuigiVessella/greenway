@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
 import 'package:greenway/presentation/pages/delivery_man_page.dart';
@@ -11,6 +12,7 @@ import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "lib/config/auth/auth_client.env");
+
   kIsWeb ? runApp(const MyWebApp()) : runApp(const MyApp());
 }
 
@@ -27,7 +29,6 @@ class MyWebApp extends StatelessWidget {
     );
   }
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

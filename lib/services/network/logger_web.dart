@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenway/config/ip_config.dart';
 import 'package:openidconnect/openidconnect.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -9,9 +10,10 @@ class OIDCAuthService {
   OIDCAuthService._internal();
 
   // Variabili
- final String clientId = dotenv.env['clientID']!;
- final String discoveryUrl = dotenv.env['discoveryUrl']!;
- final String clientSecret = dotenv.env['CLIENT_SECRET']!;
+  final String clientId = dotenv.env['clientID']!;
+  final String discoveryUrl =
+      'http://${IpAddressManager().ipAddress}:8090/realms/GreenWay/.well-known/openid-configuration';
+  final String clientSecret = dotenv.env['CLIENT_SECRET']!;
 
   bool _isLogged = false;
 
@@ -45,7 +47,8 @@ class OIDCAuthService {
         request: await InteractiveAuthorizationRequest.create(
           clientId: clientId,
           clientSecret: clientSecret,
-          redirectUrl: "http://localhost:8000/web/callback.html", // Redirect URL
+          redirectUrl:
+              "http://${IpAddressManager().ipAddress}:8081/callback.html", // Redirect URL
           scopes: ["openid", "profile", "email"],
           configuration: discoveryDocument!,
           autoRefresh: true,
@@ -85,7 +88,6 @@ class OIDCAuthService {
     } on Exception catch (e) {
       throw Exception('Errore durante l\'autenticazione OpenID Connect: $e');
     }
-
   }
 
   // Metodo per il logout
@@ -112,7 +114,7 @@ class OIDCAuthService {
   bool isAuthenticated() => _isLogged;
 
   // Metodo per ottenere i token d'accesso e d'identità
-  String? get accessToken  {
+  String? get accessToken {
     DateTime now = DateTime.now();
 
     if (now.isBefore(identity!.expiresAt)) {

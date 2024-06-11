@@ -1,10 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
+import 'package:greenway/presentation/pages/map_page.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 import 'package:greenway/services/other/unpack_polyline.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -117,7 +116,10 @@ class _ElevationChartState extends State<ElevationChart> {
                                               dotData: FlDotData(getDotPainter:
                                                   (spot, percent, barData,
                                                       index) {
-                                                return calculateColor(spot, snapshot.data![0].elevations!);
+                                                return calculateColor(
+                                                    spot,
+                                                    snapshot
+                                                        .data![0].elevations!);
                                               }),
                                             ),
                                           ],
@@ -200,7 +202,8 @@ class _ElevationChartState extends State<ElevationChart> {
                                           isCurved: true,
                                           dotData: FlDotData(getDotPainter:
                                               (spot, percent, barData, index) {
-                                            return calculateColor(spot, snapshot.data![0].elevations!);
+                                            return calculateColor(spot,
+                                                snapshot.data![0].elevations!);
                                           }),
                                           show: true,
                                         ),
@@ -250,8 +253,41 @@ class _ElevationChartState extends State<ElevationChart> {
                                       ),
                                     ),
                                   ),
-                                )
-                              ]))));
+                                ),
+                                const Divider(),
+                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                      const Column(
+                                        children: [
+                                          Text('Altezza massima standard:'),
+                                          Text('Altezza massima elevazione:')
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('${(_findMax( snapshot.data![0].elevations!))} m'),
+                                          Text('${(_findMax( snapshot.data![1].elevations!))} m')
+                                        ],
+                                      )]),
+                                       Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                      const Column(
+
+                                        children: [
+                                          Text('Distanza viaggio standard '),
+                                          Text('Distanza viaggio elevazione')
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text(calculateDurance(snapshot.data![0])),
+                                           Text(calculateDurance(snapshot.data![1]))
+                                        ],
+                                      )]),
+                                    ]))
+                              ));
             } else if (snapshot.hasError) {
               if (snapshot.error.toString().contains('401')) {
                 return Center(
@@ -288,7 +324,8 @@ class _ElevationChartState extends State<ElevationChart> {
                       ),
                       Padding(
                         padding: EdgeInsets.all(16),
-                        child: Text('Nessun dato presente. Verifica che sia in transito'),
+                        child: Text(
+                            'Nessun dato presente. Verifica che sia in transito'),
                       ),
                     ]));
               }
@@ -372,14 +409,16 @@ class _ElevationChartState extends State<ElevationChart> {
         strokeWidth: 0.2,
         strokeColor: Colors.green,
       );
-    } else if (spot.y > (25 / 100 * (_findMax(values))).round() && spot.y <= (25 / 100 * (_findMax(values))).round() * 2) {
+    } else if (spot.y > (25 / 100 * (_findMax(values))).round() &&
+        spot.y <= (25 / 100 * (_findMax(values))).round() * 2) {
       return FlDotCirclePainter(
         radius: 1,
         color: Colors.yellow,
         strokeWidth: 0.2,
         strokeColor: Colors.green,
       );
-    } else if (spot.y >  (25 / 100 * (_findMax(values))).round() * 2 && spot.y <=  (25 / 100 * (_findMax(values))).round() * 3) {
+    } else if (spot.y > (25 / 100 * (_findMax(values))).round() * 2 &&
+        spot.y <= (25 / 100 * (_findMax(values))).round() * 3) {
       return FlDotCirclePainter(
         radius: 1,
         color: Colors.orange,
@@ -401,6 +440,12 @@ class _ElevationChartState extends State<ElevationChart> {
         strokeColor: Colors.white,
       );
     }
+  }
+
+    String calculateDurance(NavigationDataDTO data) {
+    return '${Duration(seconds: data.routes![0].duration!.floor()).inHours}h e '
+        '${Duration(seconds: data.routes![0].duration!.floor() % 3600).inMinutes}min'
+        ' (${(data.routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)';
   }
 }
 

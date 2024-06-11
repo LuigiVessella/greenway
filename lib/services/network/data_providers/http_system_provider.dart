@@ -1,4 +1,5 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,7 +8,7 @@ class HttpSystemResponse{
 
   Future<void> triggerDeliveryScheduling() async{
     var response = await client.get(
-        Uri.http('${dotenv.env['restApiEndpoint']}','/api/v1/schedule'),
+        Uri.http('${IpAddressManager().ipAddress}:8080','/api/v1/schedule'),
         headers: {
           'Authorization': 'Bearer ${AuthService().accessToken}',
           'Content-Type': 'application/json'
