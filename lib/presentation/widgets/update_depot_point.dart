@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/entity/addresses.dart';
 import 'package:greenway/repositories/delivery_repository.dart';
@@ -31,9 +32,9 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Inserisci o aggiorna deposito'),
+          const Text('Inserisci o aggiorna deposito', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),
           Visibility(
               visible: _isLoading, child: const CircularProgressIndicator())
         ],

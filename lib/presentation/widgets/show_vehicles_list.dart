@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -72,7 +73,7 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
               children: [
                 const Expanded(
                     child: Text('Veicoli presenti al deposito: ',
-                        style: TextStyle(fontSize: 18))),
+                        style: TextStyle(fontSize: kIsWeb ? 18 : 14))),
                 const Text('Pagina:'),
                 IconButton(
                     onPressed: () {
