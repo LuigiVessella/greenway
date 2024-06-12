@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/presentation/pages/web_pages/admin_web_dashboard.dart';
-import 'package:greenway/presentation/widgets/identity_view.dart';
 import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/network/logger_web.dart';
 import 'package:openidconnect/openidconnect.dart';
@@ -27,8 +26,6 @@ class _InteractivePageState extends State<InteractivePage> {
     // TODO: implement initState
     super.initState();
   }
-
-  final _formKey = GlobalKey<FormState>();
 
   bool usePopup = true;
 
@@ -84,10 +81,23 @@ class _InteractivePageState extends State<InteractivePage> {
               icon: const Icon(Icons.login),
               label: const Text("Login"),
             ),
-            const SizedBox(height: 15,),
+            const SizedBox(
+              height: 15,
+            ),
             Visibility(
               visible: identity != null,
-              child: identity == null ? Container() : const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Loggato correttamente'), Icon(Icons.check, color: Colors.green,)],),
+              child: identity == null
+                  ? Container()
+                  : const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Loggato correttamente'),
+                        Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      ],
+                    ),
             ),
             const SizedBox(
               height: 30,
@@ -123,10 +133,8 @@ class _InteractivePageState extends State<InteractivePage> {
                     identity = null;
                     OIDCAuthService().identity = null;
                     errorMessage = null;
-                  
                   });
                 }
-                  
               },
               icon: const Icon(Icons.logout),
               label: const Text("Logout"),
@@ -166,10 +174,18 @@ class _InteractivePageState extends State<InteractivePage> {
             child: ListBody(
               children: <Widget>[
                 TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                  ],
                   keyboardType: TextInputType.number,
                   controller: ipTextController,
-                  decoration: const InputDecoration(hintText: 'indirizzo IP'),
+                  decoration: const InputDecoration(hintText: 'es. 192.168.1.7'),
                 ),
+                const SizedBox(height: 5,),
+                const Divider(),
+                const SizedBox(height: 5,),
+                const Text(
+                    'Ricarica la pagina per rendere effettive le modifiche.')
               ],
             ),
           ),
