@@ -1,9 +1,11 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/add_delivery_dto.dart';
 import 'package:greenway/entity/delivery.dart';
 
 import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
+import 'package:greenway/presentation/widgets/show_shipping_list.dart';
 import 'package:greenway/repositories/delivery_repository.dart';
 import 'package:greenway/repositories/system_repository.dart';
 
@@ -29,13 +31,9 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Spedizioni'),
+          title: const Text('Crea Spedizione'),
           
-          bottom: const PreferredSize(
-              preferredSize: Size.zero,
-              child: Text('Da qui puoi gestire le tue spedizioni')),
           actions: <Widget>[
-            
             IconButton.filledTonal(
                 tooltip: 'Programma consegne',
                 onPressed: () {
@@ -48,8 +46,9 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+              const Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox( width: 220, child:  AutoSizeText('Gestisci e crea spedizioni. Poi, pianifica con il tasto in alto a destra.', maxLines: 2, textAlign: TextAlign.center,))],),
               const SizedBox(
-                height: 40,
+                height: 30,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 const SizedBox(
@@ -57,32 +56,15 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                 ),
                 Text(
                   textAlign: TextAlign.right,
-                  'Le tue spedizioni:',
+                  'Spedizioni recenti',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: firstAppTheme.primaryColor,
                       fontSize: 16),
                 )
               ]),
-              SizedBox(
-                height: 300,
-                child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: createdDeliveries.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: ListTile(
-                          leading: const Icon(Icons.house),
-                          title: Text(
-                              'A: ${createdDeliveries[index].receiverAddress}'),
-                          subtitle: Text(
-                            'Da: ${createdDeliveries[index].sender}',
-                            style: const TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      );
-                    }),
-              ),
+               const ShippingListMobile(),
+              
               const Divider(),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 const SizedBox(
@@ -90,7 +72,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                 ),
                 Text(
                   textAlign: TextAlign.right,
-                  'Vuoi spedire?',
+                  'Crea una consegna',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: firstAppTheme.primaryColor,
@@ -100,33 +82,49 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
               const SizedBox(
                 height: 30,
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                Column(children: [
-                  OutlinedButton(
-                      onPressed: () {
-                        _navigateAndDisplaySelection(context, 'sender');
-                      },
-                      child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [Icon(Icons.info), Text('Dati mittente')])),
-                  Text(senderString,
-                      style: const TextStyle(fontStyle: FontStyle.italic)),
-                ]),
-                Column(children: [
-                  OutlinedButton(
-                      onPressed: () {
-                        _navigateAndDisplaySelection(context, 'receiver');
-                      },
-                      child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(Icons.info),
-                            Text('Dati destinatario')
-                          ])),
-                  Text(receiverString,
-                      style: const TextStyle(fontStyle: FontStyle.italic)),
-                ]),
-              ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(children: [
+                      OutlinedButton(
+                          onPressed: () {
+                            _navigateAndDisplaySelection(context, 'sender');
+                          },
+                          child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(Icons.info),
+                                Text('Dati mittente')
+                              ])),
+                      SizedBox(
+                          width: 170,
+                          child: AutoSizeText(
+                            maxLines: 3,
+                            senderString,
+                            textAlign: TextAlign.center,
+                          )),
+                    ]),
+                    Column(children: [
+                      OutlinedButton(
+                          onPressed: () {
+                            _navigateAndDisplaySelection(context, 'receiver');
+                          },
+                          child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(Icons.info),
+                                Text('Dati destinatario')
+                              ])),
+                      SizedBox(
+                          width: 170,
+                          child: AutoSizeText(
+                            maxLines: 3,
+                            receiverString,
+                            textAlign: TextAlign.center
+                          )),
+                    ]),
+                  ]),
               const SizedBox(
                 height: 35,
               ),
@@ -134,7 +132,12 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                   onPressed: () {
                     _addNewDelivery();
                   },
-                  child: const SizedBox(width: 110, child:  Text('Invia', textAlign: TextAlign.center,))),
+                  child: const SizedBox(
+                      width: 110,
+                      child: Text(
+                        'Invia',
+                        textAlign: TextAlign.center,
+                      ))),
             ])));
   }
 
@@ -166,7 +169,8 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
 
     if (resultSender != null) {
       setState(() {
-        senderString = 'Dati inseriti';
+        senderString =
+            'Dati inseriti: ${resultSender['name']},${resultSender['address']} ';
         newDeliveryDTO.sender = resultSender['name'];
         newDeliveryDTO.senderAddress = resultSender['address'];
       });
@@ -174,7 +178,8 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
 
     if (resultReceiver != null) {
       setState(() {
-        receiverString = 'Dati inseriti';
+        receiverString =
+            'Dati inseriti: ${resultReceiver['name']},${resultReceiver['address']} ';
         newDeliveryDTO.receiver = resultReceiver['name'];
         newDeliveryDTO.receiverAddress = resultReceiver['address'];
         newDeliveryDTO.receiverCoordinates = NewCoordinatesDTO(
@@ -188,51 +193,53 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
     }
   }
 
-  bool _addNewDelivery() {
-    try {
-      Delivery newDelivery = Delivery(
-          sender: newDeliveryDTO.sender!,
-          senderAddress: newDeliveryDTO.senderAddress!,
-          receiver: newDeliveryDTO.receiver!,
-          receiverAddress: newDeliveryDTO.receiverAddress!,
-          receiverCoordinates: Coordinates(
-              type: newDeliveryDTO.receiverCoordinates!.type!,
-              coordinates: newDeliveryDTO.receiverCoordinates!.coordinates!),
-          weightKg: '1.0');
+  void _addNewDelivery() {
+    Delivery newDelivery = Delivery(
+        sender: newDeliveryDTO.sender!,
+        senderAddress: newDeliveryDTO.senderAddress!,
+        receiver: newDeliveryDTO.receiver!,
+        receiverAddress: newDeliveryDTO.receiverAddress!,
+        receiverCoordinates: Coordinates(
+            type: newDeliveryDTO.receiverCoordinates!.type!,
+            coordinates: newDeliveryDTO.receiverCoordinates!.coordinates!),
+        weightKg: '1.0');
 
-      setState(() {
-        createdDeliveries.add(newDelivery);
-      });
+    setState(() {
+      createdDeliveries.add(newDelivery);
+    });
 
-      DeliveryRepository dv = DeliveryRepository();
-      dv.addNewDelivery(newDelivery);
-      return true;
-    } on TypeError {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          backgroundColor: Colors.orange,
-          content: Row(children: [
-            Icon(Icons.info),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              'Inserisci mittente e destinatario!',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )
-          ])));
-      return false;
-    } catch (e) {
+    DeliveryRepository dv = DeliveryRepository();
+    dv.addNewDelivery(newDelivery).then(
+      (value) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.green,
+            content: Row(children: [
+              Icon(Icons.info),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                'Consegna inserita',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ])));
+      },
+    ).catchError((error, stackTrace) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Colors.red,
           content: Row(children: [
-            Icon(Icons.info),
+            Icon(Icons.error),
             SizedBox(
               width: 10,
             ),
-            Text('Anomalia ')
+            Text('Errore: il deposito esiste già, o anomalia')
           ])));
-      return false;
-    }
+    })
+    .whenComplete(() {
+      setState(() {
+        
+      });
+    },);
   }
 
   void _scheduleDeliveries() {

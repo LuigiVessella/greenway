@@ -1,6 +1,6 @@
 
 import 'package:greenway/config/ip_config.dart';
-import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logging/logger.dart';
 import 'package:http/http.dart' as http;
 
 class HttpDeliveryManResponse {

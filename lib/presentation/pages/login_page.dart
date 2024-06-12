@@ -1,10 +1,11 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/components/components.dart';
 import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/repositories/deliveryman_repository.dart';
-import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logging/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _loadIp();
-   
+
     super.initState();
   }
 
@@ -26,22 +27,22 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Accedi'),
-          centerTitle: true,
-          actions: [
-            IconButton.outlined(
-                onPressed: () async {
-                  await IpAddressManager().loadAddress();
-                  await _settingsDialog();
-                },
-                icon: const Icon(Icons.settings))
-          ],
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(25),
-            child:  Column(
+      appBar: AppBar(
+        title: const Text('Accedi'),
+        centerTitle: true,
+        actions: [
+          IconButton.outlined(
+              onPressed: () async {
+                await IpAddressManager().loadAddress();
+                await _settingsDialog();
+              },
+              icon: const Icon(Icons.settings))
+        ],
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Visibility(
@@ -151,10 +152,10 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                   child: const Text('Procedi')),
                             ])))
-          ]),
-            ),
-          ),
-        );
+              ]),
+        ),
+      ),
+    );
   }
 
   void _checkDeliveyman() {
@@ -178,9 +179,23 @@ class _LoginPageState extends State<LoginPage> {
             child: ListBody(
               children: <Widget>[
                 TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                  ],
+                  keyboardType: TextInputType.number,
                   controller: ipTextController,
-                  decoration: const InputDecoration(hintText: 'indirizzo IP'),
+                  decoration:
+                      const InputDecoration(hintText: 'es. 192.168.1.7'),
                 ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 5,
+                ),
+                const Text(
+                    'Ricarica la pagina per rendere effettive le modifiche.')
               ],
             ),
           ),
@@ -191,9 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                 setState(() {
                   IpAddressManager().setIpAddress(ipTextController.text);
                 });
-                
 
-                
                 //Navigator.of(context).pop();
               },
             ),

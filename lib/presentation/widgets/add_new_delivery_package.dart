@@ -28,7 +28,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
 
   _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 3000), () {
+    _debounce = Timer(const Duration(milliseconds: 2000), () {
       _getAddress(query);
     });
   }
@@ -85,9 +85,10 @@ class _AddNewPackageState extends State<AddNewPackage> {
                       children: [
                         Expanded(
                             child: TextFormField(
+                               keyboardType: TextInputType.name,
                           controller: _controllerName,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.isEmpty || value.length <= 3) {
                               return 'Campo obbligatiorio';
                             }
                             return null;
@@ -100,9 +101,10 @@ class _AddNewPackageState extends State<AddNewPackage> {
                         const SizedBox(width: 15,),
                         Expanded(
                             child: TextFormField(
+                          keyboardType: TextInputType.name,
                           controller: _controllerSecondName,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.isEmpty || value.length <= 3) {
                               return 'Campo obbligatiorio';
                             }
                             return null;
@@ -183,7 +185,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
                       _nameComplete =
                           '${_controllerName.text} ${_controllerSecondName.text}';
                       if (_formKey.currentState!.validate() &&
-                          _formAddressKey.currentState!.validate()) {
+                          _formAddressKey.currentState!.validate() && _addressList.any((address) => address.displayName == _controllerAddress.text)) {
                         Navigator.pop(
                           context,
                           {
@@ -210,6 +212,9 @@ class _AddNewPackageState extends State<AddNewPackage> {
 
   @override
   void dispose() {
+    _controllerAddress.dispose();
+    _controllerName.dispose();
+    _controllerSecondName.dispose();
     _debounce?.cancel();
     _addressList.clear();
     super.dispose();

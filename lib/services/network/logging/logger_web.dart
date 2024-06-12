@@ -42,14 +42,14 @@ class OIDCAuthService {
 
     try {
       final response = await OpenIdConnect.authorizeInteractive(
-        context:
+       context:
             context, // L'esempio richiedeva il 'context', ma qui non sarà necessario
         title: "Login",
         request: await InteractiveAuthorizationRequest.create(
           clientId: clientId,
           clientSecret: clientSecret,
           redirectUrl:
-              "http://localhost:8000/callback.html", // Redirect URL
+              "http://${IpAddressManager().ipAddress}:8081/callback.html", // Redirect URL
           scopes: ["openid", "profile", "email"],
           configuration: discoveryDocument!,
           autoRefresh: true,

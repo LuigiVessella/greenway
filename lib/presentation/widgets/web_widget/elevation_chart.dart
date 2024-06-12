@@ -23,7 +23,11 @@ class _ElevationChartState extends State<ElevationChart> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Grafici'),
+          title: const Text('Grafico percorso'),
+          centerTitle: true,
+           bottom: const PreferredSize(
+              preferredSize: Size.zero,
+              child: Text('Visualizza il grafico del percorso del veicolo')),
         ),
         body: FutureBuilder<List<NavigationDataDTO>>(
           future: vr.getVehicleRoutes(widget.vehicleID),

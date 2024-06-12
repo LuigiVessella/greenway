@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/presentation/pages/web_pages/tab_views/tabs.dart';
 
@@ -48,18 +49,18 @@ class _WebDashboardState extends State<WebDashboard> {
                 : const SizedBox(),
             destinations: const <NavigationRailDestination>[
               NavigationRailDestination(
-                icon: Icon(Icons.admin_panel_settings_outlined),
-                selectedIcon: Icon(Icons.admin_panel_settings),
-                label: Text('Dashboard'),
+                icon: Icon(CupertinoIcons.home),
+                selectedIcon: Icon(CupertinoIcons.home),
+                label: Text('Veicoli e Spedizioni'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.map_outlined),
-                selectedIcon: Icon(Icons.map),
-                label: Text('Veicoli e grafici'),
+                icon: Icon(CupertinoIcons.graph_square),
+                selectedIcon: Icon(CupertinoIcons.graph_square_fill),
+                label: Text('Grafici e Viaggi'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.schema_outlined),
-                selectedIcon: Icon(Icons.schema),
+                icon: Icon(CupertinoIcons.cube_box),
+                selectedIcon: Icon(CupertinoIcons.cube_box_fill),
                 label: Text('Consegne'),
               ),
             ],

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
-import 'package:greenway/services/network/logger.dart';
-import 'package:greenway/services/network/logger_web.dart';
+import 'package:greenway/services/network/logging/logger.dart';
+import 'package:greenway/services/network/logging/logger_web.dart';
 import 'package:http/http.dart' as http;
 
 class HttpVehicleResponse {

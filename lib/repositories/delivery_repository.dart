@@ -9,8 +9,14 @@ class DeliveryRepository {
   ///http vehicle provider ci fornisce tutta la comunicazione con il server
   final HttpDeliveryResponse httpDelivery = HttpDeliveryResponse();
 
-  void addNewDelivery(Delivery delivery) {
-    httpDelivery.addDelivery(delivery);
+  Future<http.Response> addNewDelivery(Delivery delivery) async {
+    final response = await httpDelivery.addDelivery(delivery);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response;
+    } else {
+      throw Exception('$response');
+    }
   }
 
   Future<http.Response> completeDelivery(String deliveryID) async {

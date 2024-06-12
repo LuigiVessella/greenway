@@ -27,7 +27,7 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Home Page'),
+          title: const Text('Admin Dashboard'),
           actions: [
             Padding(
                 padding: const EdgeInsets.all(8),
@@ -66,7 +66,7 @@ class _AdminPageState extends State<AdminPage> {
                           padding:
                               EdgeInsetsDirectional.only(top: 8, bottom: 8),
                           child: Text(
-                            'Da qui puoi gestire veicoli e spedizioni',
+                            'Qui puoi inserire Veicoli e Spedizioni',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -104,7 +104,7 @@ class _AdminPageState extends State<AdminPage> {
                                 child: const SizedBox(
                                     width: 110,
                                     child: Text(
-                                      'Spedizioni',
+                                      'Aggiungi spedizione',
                                       textAlign: TextAlign.center,
                                     ))),
                           ]))

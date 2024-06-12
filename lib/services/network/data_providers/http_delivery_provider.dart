@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/entity/delivery.dart';
-import 'package:greenway/services/network/logger.dart';
-import 'package:greenway/services/network/logger_web.dart';
+import 'package:greenway/services/network/logging/logger.dart';
+import 'package:greenway/services/network/logging/logger_web.dart';
 import 'package:http/http.dart' as http;
 
 class HttpDeliveryResponse {
   final client = http.Client();
 
-  Future<void> addDelivery(Delivery delivery) async {
+  Future<http.Response> addDelivery(Delivery delivery) async {
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
 
@@ -22,15 +22,16 @@ class HttpDeliveryResponse {
         },
         body: deliveryToJson(delivery));
 
-    print('add delivery response: ${response.statusCode}');
-    print(response.body);
+    return response;
+
+
   }
 
   Future<http.Response> completeDelivery(String deliveryID) async {
     print('sono qui');
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
-    
+
     print(accessToken);
 
     var response = await client.get(

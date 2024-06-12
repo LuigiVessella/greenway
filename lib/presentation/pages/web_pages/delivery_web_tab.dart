@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/dto/all_deliveries_dto.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
@@ -29,6 +30,10 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Informazioni sulle consegne'),
+          centerTitle: true,
+          bottom: const PreferredSize(
+              preferredSize: Size.zero,
+              child: Text('Accedi a tutte le informazioni sulle consegne')),
         ),
         body: SafeArea(
             child: FutureBuilder<AllDeliveriesDTO>(
@@ -38,13 +43,28 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
               List<DeliveryDTO> del =
                   snapshot.data!.deliveries!; // Lista dei veicoli
 
+              if (del.isEmpty) {
+                return const Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                      Icon(
+                        CupertinoIcons.smiley,
+                        size: 50,
+                      ),
+                      SizedBox(height: 10,),
+                      Text(
+                          'Wow! Sembra che i corrieri abbiano consegnato tutti i pacchi')
+                    ]));
+              }
+
               _totalPages = snapshot.data!.totalPages!; // Numero di pagine
 
               return Column(children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text('Pagina:'),
+                    const Text('Numero di pagina:'),
                     IconButton(
                         onPressed: () {
                           setState(() {
@@ -76,6 +96,9 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
                           });
                         },
                         icon: const Icon(Icons.update)),
+                    const SizedBox(
+                      width: 20,
+                    ),
                   ],
                 ),
                 Expanded(
@@ -109,14 +132,39 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    'Consegna prevista: ${(del[index].estimatedDeliveryTime!).split('T')[0]}',
-                                  ),
-                                  Text(
-                                    'Consegnata il: ${(del[index].deliveryTime) ?? 'Ancora non consegnata'}',
-                                  ),
+                                  Container(
+                                      decoration: const BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10),
+                                          )),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Text(
+                                              'Consegna prevista: ${(del[index].estimatedDeliveryTime!).split('T')[0]}',
+                                              style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                      FontWeight.w500)))),
+                                  Container(
+                                      decoration: const BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10),
+                                          )),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Text(
+                                            'Consegnata il: ${(del[index].deliveryTime) ?? 'Ancora non consegnata'}',
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500),
+                                          ))),
                                 ],
                               ),
+                              const SizedBox(
+                                height: 5,
+                              )
                             ]));
                   },
                 ))

@@ -28,8 +28,12 @@ class _VechicleListWebState extends State<VechicleListWeb> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Informazioni sui veicoli'),
+          title: const Text('Grafici e Viaggio'),
+          centerTitle: true,
           leading: null,
+          bottom: const PreferredSize(
+              preferredSize: Size.zero,
+              child: Text('Accedi al veicolo in transito e visualizza il grafico')),
         ),
         body: SafeArea(
             child: FutureBuilder<VehicleDto>(
@@ -41,9 +45,9 @@ class _VechicleListWebState extends State<VechicleListWeb> {
 
               return Column(children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text('Pagina:'),
+                    const Text('Numero di pagina:'),
                     IconButton(
                         onPressed: () {
                           setState(() {
@@ -75,6 +79,8 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                           });
                         },
                         icon: const Icon(Icons.update)),
+
+                        const SizedBox(width: 20,),
                   ],
                 ),
                 Expanded(
@@ -100,7 +106,7 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                             subtitle: Text(
                                 'CARICO MASSIMO: ${vehicleDTO.content![index].maxCapacityKg}kg'),
                           ),
-                          TextButton(
+                          FilledButton.icon(
                               onPressed: () {
                                 Navigator.push(
                                     context,
@@ -111,7 +117,8 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                                       ),
                                     ));
                               },
-                              child: const Text('Visualizza dati elevazione')),
+                              icon: const Icon(Icons.auto_graph),
+                              label: const Text('Visualizza dati elevazione')),
                           TextButton(
                               onPressed: () {},
                               child: const Text('Stato spedizione'))

@@ -8,7 +8,7 @@ import 'package:greenway/dto/vehicle_dto.dart';
 
 import 'package:greenway/presentation/widgets/web_widget/elevation_chart.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
-import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logging/logger.dart';
 import 'package:http/http.dart';
 
 final VehicleRepository vr = VehicleRepository();
@@ -40,6 +40,25 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           VehicleDto vehicleDTO = snapshot.data!;
+          if (vehicleDTO.totalElements! < 1) {
+            return const Center(
+                child: SizedBox(
+                    height: 250,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            CupertinoIcons.info,
+                            size: 50,
+                          ),
+                          SizedBox(height: 10,),
+                          Text(
+                            'Non ci sono veicoli al momento. Puoi aggiungerne uno cliccando in basso.',
+                            textAlign: TextAlign.center,
+                          )
+                        ])));
+          }
+
           if (snapshot.connectionState == ConnectionState.done) {
             // Lista dei veicoli
             if (vehicleDTO.totalPages! > 0) {
@@ -51,7 +70,9 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Expanded(child: Text('I tuoi veicoli ')),
+                const Expanded(
+                    child: Text('Veicoli presenti al deposito: ',
+                        style: TextStyle(fontSize: 18))),
                 const Text('Pagina:'),
                 IconButton(
                     onPressed: () {
@@ -177,8 +198,14 @@ class VehicleListDmanWidget extends StatelessWidget {
                             ListTile(
                               leading: const Icon(Icons.local_shipping),
                               title: Text(vehicleDTO.modelName!.toUpperCase()),
-                              subtitle: Row(children: [const Icon(Icons.battery_charging_full, color: Colors.green,), Text(
-                                  'Carico massimo: ${vehicleDTO.maxCapacityKg}kg\nNon è previsto rifornimento')]),
+                              subtitle: Row(children: [
+                                const Icon(
+                                  Icons.battery_charging_full,
+                                  color: Colors.green,
+                                ),
+                                Text(
+                                    'Carico massimo: ${vehicleDTO.maxCapacityKg}kg\nNon è previsto rifornimento')
+                              ]),
                             ),
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,

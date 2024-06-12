@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/repositories/delivery_repository.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
-import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logging/logger.dart';
 
 class PackageList extends StatefulWidget {
   const PackageList({super.key});
@@ -32,7 +33,15 @@ class _PackageListState extends State<PackageList> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           VehicleByDmanDto vehicleDTO = snapshot.data!; // Lista dei veicoli
-
+          if (vehicleDTO.deliveries!.isEmpty) {
+            return const Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                  Icon(CupertinoIcons.smiley, size: 50,),
+                  Text('Wow! Sembra che tu abbia consegnato tutti i pacchi')
+                ]));
+          }
           return SizedBox(
               height: 250,
               child: ListView.builder(
@@ -121,7 +130,7 @@ class _PackageListState extends State<PackageList> {
                                           )
                                           .catchError((error, stackTrace) =>
                                               ScaffoldMessenger.of(context)
-                                                  .showSnackBar( const SnackBar(
+                                                  .showSnackBar(const SnackBar(
                                                       backgroundColor: Colors.red,
                                                       content: Row(children: [
                                                         Icon(Icons.error),

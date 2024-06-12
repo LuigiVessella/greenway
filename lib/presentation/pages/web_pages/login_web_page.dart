@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/presentation/pages/web_pages/admin_web_dashboard.dart';
-import 'package:greenway/services/network/logger.dart';
-import 'package:greenway/services/network/logger_web.dart';
+import 'package:greenway/services/network/logging/logger.dart';
+import 'package:greenway/services/network/logging/logger_web.dart';
 import 'package:openidconnect/openidconnect.dart';
 
 //import 'credentials.dart';
@@ -35,16 +36,19 @@ class _InteractivePageState extends State<InteractivePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:   AppBar(
         centerTitle: true,
-        title: const Text('Benvenuto, effettua il login!'),
+        title: const Padding (padding:EdgeInsets.all(8), child: Text('Benvenuto in GreenWay, il navigatore Green.')),
+       
         actions: [
+          Padding(padding: const EdgeInsets.all(5),child: 
           IconButton.outlined(
+            tooltip: 'Modifica indirizzo IP',
               onPressed: () async {
                 await IpAddressManager().loadAddress();
                 await _settingsDialog();
               },
-              icon: const Icon(Icons.settings))
+              icon: const Icon(Icons.settings)))
         ],
       ),
       body: Center(
@@ -62,7 +66,7 @@ class _InteractivePageState extends State<InteractivePage> {
             FilledButton.icon(
               onPressed: () async {
                 try {
-                  print(IpAddressManager().ipAddress);
+                 
                   if (mounted) {
                     await OIDCAuthService().authenticate(context: context);
                   }

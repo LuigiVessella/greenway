@@ -8,7 +8,7 @@ import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/presentation/widgets/show_trip_info.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
-import 'package:greenway/services/network/logger.dart';
+import 'package:greenway/services/network/logging/logger.dart';
 import 'package:greenway/services/parser/navigation_data_parser.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
