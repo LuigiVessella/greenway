@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:greenway/dto/all_deliveries_dto.dart';
+import 'package:greenway/dto/depot_point_dto.dart';
 import 'package:greenway/entity/delivery.dart';
 import 'package:greenway/services/network/data_providers/http_delivery_provider.dart';
 import 'package:http/http.dart' as http;
@@ -30,6 +31,7 @@ class DeliveryRepository {
     }
   }
 
+//////////////////////////////////// DEPOT METHODS //////////////////////////////////
   Future<http.Response> addDepotPoint(var data) async {
     final response = await httpDelivery.addDepotPoint(data);
 
@@ -43,9 +45,25 @@ class DeliveryRepository {
       } else {
         throw Exception('$responseUpdate');
       }
-    } else
+    } else {
       throw Exception('$response');
+    }
   }
+
+  Future<DepotPointDTO> getDepotPoint() async {
+    final response = await httpDelivery.getDepotPoint();
+    print(response.statusCode);
+
+    if(response.statusCode == 200 || response.statusCode == 201) {
+      print('sono qui');
+      return DepotPointDTO.fromJson(jsonDecode(response.body));
+    }
+    else {
+      throw Exception('$response');
+    }
+  }
+
+  //////////////////////////////////////////END DEPOT METHODS//////////////////////////////////////////
 
   Future<AllDeliveriesDTO> getAllDeliveries(int pageCounter) async {
     final response = await httpDelivery.getAllDeliveries(pageCounter);

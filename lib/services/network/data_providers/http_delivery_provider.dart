@@ -46,6 +46,8 @@ class HttpDeliveryResponse {
     return response;
   }
 
+  /////////////////////////////////////////////////////////////////// DEPOT METHODS ///////////////////////////////////////////
+
   Future<http.Response> addDepotPoint(var data) async {
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
@@ -63,6 +65,22 @@ class HttpDeliveryResponse {
     return response;
   }
 
+  Future<http.Response> getDepotPoint() async {
+
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+    var response = await client.get(
+      Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/deposit'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json'
+      },
+    );
+    return response;
+  }
+
+
+
   Future<http.Response> updateDepotPoint(var data) async {
     String? accessToken =
         kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
@@ -79,6 +97,8 @@ class HttpDeliveryResponse {
 
     return response;
   }
+
+  ////////////////////////////// END DEPHOT METHODS //////////////////////////////
 
   Future<http.Response> getAllDeliveries(int pageCounter) async {
     String? accessToken =

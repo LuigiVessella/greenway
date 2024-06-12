@@ -16,6 +16,7 @@ class UpdateDepotWidget extends StatefulWidget {
 
 class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
   final DeliveryRepository dr = DeliveryRepository();
+
   final List<Address> _addressList = [];
   final TextEditingController _controllerAddress = TextEditingController();
   final _formAddressKey = GlobalKey<FormState>();
@@ -32,7 +33,7 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Text('Punto di deposito'),
+          const Text('Inserisci o aggiorna deposito'),
           Visibility(
               visible: _isLoading, child: const CircularProgressIndicator())
         ],
@@ -42,6 +43,7 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
           height: 350,
           child: SingleChildScrollView(
               child: Column(children: [
+            _depotInfo(),
             Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Form(
@@ -180,5 +182,27 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
         _addressList.addAll([]);
       });
     }
+  }
+
+  Widget _depotInfo() {
+    return FutureBuilder(
+        future: dr.getDepotPoint(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Indirizzo attuale: ${
+                snapshot.data!.depositAddress!}',
+                style: const TextStyle(fontSize: 13),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          } else {
+            return const CircularProgressIndicator(
+              color: Colors.black,
+            );
+          }
+        });
   }
 }
