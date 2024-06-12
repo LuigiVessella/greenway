@@ -10,6 +10,7 @@ class HttpVehicleResponse {
   final client = http.Client();
 
   Future<http.Response> addVehicle(Vehicle vehicle) async {
+    
     Future.delayed(Durations.short1);
 
     String? accessToken =
@@ -50,11 +51,13 @@ class HttpVehicleResponse {
   }
 
   Future<http.Response> getVehicleByDeliveryMan(String deliveryMan) async {
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
     var response = await client.get(
         Uri.http('${IpAddressManager().ipAddress}:8080',
             '/api/v1/vehicles/deliveryman/$deliveryMan'),
         headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
         });
 
@@ -79,11 +82,13 @@ class HttpVehicleResponse {
   }
 
   Future<http.Response> putLeaveVehicle(String vehicleID) async {
+  String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
     var response = await client.get(
         Uri.http('${IpAddressManager().ipAddress}:8080',
             'api/v1/vehicles/$vehicleID/leave'),
         headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
         });
 
@@ -91,11 +96,13 @@ class HttpVehicleResponse {
   }
 
   Future<http.Response> enterVehicle(String vehicleID) async {
+  String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
     var response = await client.get(
         Uri.http('${IpAddressManager().ipAddress}:8080',
             'api/v1/vehicles/$vehicleID/enter'),
         headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
         });
     print('enter vehicle ${response.statusCode}');

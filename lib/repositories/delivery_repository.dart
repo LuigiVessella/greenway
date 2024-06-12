@@ -15,6 +15,7 @@ class DeliveryRepository {
 
   Future<http.Response> completeDelivery(String deliveryID) async {
     final response = await httpDelivery.completeDelivery(deliveryID);
+    print('response: ${response.statusCode}');
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response;

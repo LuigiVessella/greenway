@@ -115,37 +115,6 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
                                   Text(
                                     'Consegnata il: ${(del[index].deliveryTime) ?? 'Ancora non consegnata'}',
                                   ),
-                                  FilledButton(
-                                      onPressed: () async {
-                                        await dr
-                                            .completeDelivery(
-                                                del[index].id.toString())
-                                            .then((value) =>
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                        const SnackBar(
-                                                            backgroundColor:
-                                                                Colors.green,
-                                                            content:
-                                                                Row(children: [
-                                                              Icon(Icons.check),
-                                                              Text(
-                                                                  'Marcata come consegnata')
-                                                            ]))))
-                                            .catchError((error, stackTrace) =>
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(const SnackBar(
-                                                        backgroundColor: Colors.red,
-                                                        content: Row(children: [
-                                                          Icon(Icons.error),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                              'Errore: impossibile completare consegna')
-                                                        ]))));
-                                      },
-                                      child: const Text('Consegnata'))
                                 ],
                               ),
                             ]));

@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 icon: const Icon(Icons.settings))
           ],
         ),
-        body:  Center(
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(25),
             child:  Column(

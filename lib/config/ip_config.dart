@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IpAddressManager {
@@ -20,13 +22,21 @@ class IpAddressManager {
   // Metodo getter per ottenere l'indirizzo IP
   Future<void> loadAddress() async {
     prefs = await SharedPreferences.getInstance();
-    _ipAddress = prefs?.getString('ip') ?? "192.168.1.7";
+    if (kIsWeb) {
+      print('sono quii kiswe');
+      if (prefs?.getString('ip') != null || prefs!.getString('ip') != '') {
+        _ipAddress = prefs!.getString('ip') ?? dotenv.get('web_address');
+        print('ho preso $_ipAddress');
+      }
+    } else {
+      _ipAddress = prefs?.getString('ip') ?? "192.168.1.7";
+    }
   }
 
   String get ipAddress => _ipAddress;
 
   // Metodo setter per impostare l'indirizzo IP
-  void setIpAddress(String newIpAddress) async {
+  Future<void> setIpAddress(String newIpAddress) async {
     prefs = await SharedPreferences.getInstance();
     _ipAddress = newIpAddress;
     print('new address $_ipAddress');

@@ -83,6 +83,8 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                   itemCount: vehicleDTO.content!.length,
                   itemBuilder: (context, index) {
                     return Card(
+                      semanticContainer: false,
+                        elevation: 5.0,
                         child: ExpansionTile(
                             tilePadding: const EdgeInsets.all(15),
                             childrenPadding: const EdgeInsets.all(9.0),

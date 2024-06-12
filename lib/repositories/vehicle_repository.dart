@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:greenway/dto/delivery_dman_dto.dart';
 import 'package:greenway/dto/navigation_dto.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
@@ -67,10 +68,13 @@ class VehicleRepository {
   }
 
   Future<List<NavigationDataDTO>> getVehicleRoutes(String vehicleID) async {
-    final enterResponse = await httpVehicle.enterVehicle(vehicleID);
+    if (!kIsWeb) {
+      var enterResponse = await httpVehicle.enterVehicle(vehicleID);
 
-    if(enterResponse.statusCode != 200 && enterResponse.statusCode != 201) throw Exception("Errore enter: ${enterResponse.statusCode}");
-
+      if (enterResponse.statusCode != 200 && enterResponse.statusCode != 201) {
+        throw Exception("Errore enter: ${enterResponse.statusCode}");
+      }
+    }
     final responseStandard = await httpVehicle.getRoutesStandard(vehicleID);
     final responseElevation = await httpVehicle.getVehicleRoute(vehicleID);
 

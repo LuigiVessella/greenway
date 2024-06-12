@@ -24,33 +24,44 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
   String? address;
   Timer? _debounce;
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Selezione punto di deposito'),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const Text('Punto di deposito'),
+          Visibility(
+              visible: _isLoading, child: const CircularProgressIndicator())
+        ],
+      ),
       content: SizedBox(
           width: 300,
           height: 350,
           child: SingleChildScrollView(
               child: Column(children: [
-            Form(
-                key: _formAddressKey,
-                child: TextFormField(
-                  controller: _controllerAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo obbligatiorio';
-                    }
-                    return null;
-                  },
-                  onChanged: (text) {
-                    _onSearchChanged(text);
-                  },
-                  decoration: const InputDecoration(
-                      labelText: 'Street address:',
-                      prefixIcon: Icon(Icons.house),
-                      border: OutlineInputBorder()),
-                )),
+            Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Form(
+                    key: _formAddressKey,
+                    child: TextFormField(
+                      controller: _controllerAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo obbligatiorio';
+                        }
+                        return null;
+                      },
+                      onChanged: (text) {
+                        _onSearchChanged(text);
+                      },
+                      decoration: const InputDecoration(
+                          labelText: 'Street address:',
+                          prefixIcon: Icon(Icons.house),
+                          border: OutlineInputBorder()),
+                    ))),
             SizedBox(
               height: 270,
               child: ListView.builder(
@@ -79,9 +90,14 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
           ]))),
       actions: <Widget>[
         TextButton(
+            child: const Text('Annulla'),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        TextButton(
           child: const Text('Salva'),
-          onPressed: () {
-            dr
+          onPressed: () async {
+            await dr
                 .addDepotPoint({
                   "depositAddress": "'$address'",
                   "depositCoordinates": {
@@ -119,15 +135,20 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
     );
   }
 
-  _onSearchChanged(String query) {
+  Future<void> _onSearchChanged(String query) async {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 3000), () {
-      _getAddress(query);
+    _debounce = Timer(const Duration(milliseconds: 2000), () async {
+      await _getAddress(query).then(
+        (value) {},
+      );
     });
   }
 
   Future<void> _getAddress(String userInput) async {
     //late Delivery newDelivery;
+    setState(() {
+      _isLoading = true;
+    });
 
     var client = http.Client();
 
@@ -149,11 +170,13 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
           .map((data) => Address.fromJson(data))
           .toList(); // Mappa gli oggetti Address
       setState(() {
+        _isLoading = false;
         _addressList.clear();
         _addressList.addAll(addresses);
       });
     } else {
       setState(() {
+        _isLoading = false;
         _addressList.addAll([]);
       });
     }

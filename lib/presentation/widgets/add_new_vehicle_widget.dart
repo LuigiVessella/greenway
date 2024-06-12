@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:greenway/entity/vehicle/vehicle.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 
@@ -57,6 +58,10 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                       height: 10,
                     ),
                     TextFormField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Campo obbligatiorio';
@@ -73,6 +78,10 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                       height: 10,
                     ),
                     TextFormField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Campo obbligatiorio';

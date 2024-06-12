@@ -35,6 +35,7 @@ class OIDCAuthService {
   // Metodo per l'autenticazione
   Future<AuthorizationResponse?> authenticate(
       {bool usePopup = true, required BuildContext context}) async {
+    print(discoveryUrl);
     if (discoveryDocument == null) {
       await _fetchConfiguration(); // Recupera la configurazione se necessario
     }
@@ -48,7 +49,7 @@ class OIDCAuthService {
           clientId: clientId,
           clientSecret: clientSecret,
           redirectUrl:
-              "http://${IpAddressManager().ipAddress}:8081/callback.html", // Redirect URL
+              "http://localhost:8000/callback.html", // Redirect URL
           scopes: ["openid", "profile", "email"],
           configuration: discoveryDocument!,
           autoRefresh: true,
@@ -57,7 +58,7 @@ class OIDCAuthService {
       );
 
       identity = response;
-
+      print(identity!.additionalProperties);
       _isLogged = true;
 
       return response;
@@ -97,21 +98,24 @@ class OIDCAuthService {
     }
 
     try {
+      print('sono qui logout');
       await OpenIdConnect.logout(
         request: LogoutRequest(
+
           idToken: identity!.idToken,
           configuration: discoveryDocument!,
+        
         ),
       );
       _isLogged = false;
       identity = null;
-    } on Exception catch (e) {
-      throw Exception('Errore durante il logout OpenID Connect: $e');
+    } catch (e, s) {
+      throw Exception('Errore durante il logout OpenID Connect: $e, $s');
     }
   }
 
   // Metodo per verificare se l'utente è loggato
-  bool isAuthenticated() => _isLogged;
+  bool isAuthenticated() => identity!= null ? true : false;
 
   // Metodo per ottenere i token d'accesso e d'identità
   String? get accessToken {

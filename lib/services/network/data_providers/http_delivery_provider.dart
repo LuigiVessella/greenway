@@ -7,15 +7,17 @@ import 'package:greenway/services/network/logger.dart';
 import 'package:greenway/services/network/logger_web.dart';
 import 'package:http/http.dart' as http;
 
-
 class HttpDeliveryResponse {
   final client = http.Client();
 
   Future<void> addDelivery(Delivery delivery) async {
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+
     var response = await client.post(
         Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/deliveries'),
         headers: {
-          'Authorization': 'Bearer ${AuthService().accessToken}',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json'
         },
         body: deliveryToJson(delivery));
@@ -25,11 +27,17 @@ class HttpDeliveryResponse {
   }
 
   Future<http.Response> completeDelivery(String deliveryID) async {
+    print('sono qui');
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
+    
+    print(accessToken);
+
     var response = await client.get(
       Uri.http('${IpAddressManager().ipAddress}:8080',
           '/api/v1/deliveries/$deliveryID/complete'),
       headers: {
-        'Authorization': 'Bearer ${AuthService().accessToken}',
+        'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json'
       },
     );
@@ -38,10 +46,12 @@ class HttpDeliveryResponse {
   }
 
   Future<http.Response> addDepotPoint(var data) async {
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
     var response = await client.post(
       Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/deposit'),
       headers: {
-        'Authorization': 'Bearer ${AuthService().accessToken}',
+        'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json'
       },
       body: json.encode(data),
@@ -53,10 +63,12 @@ class HttpDeliveryResponse {
   }
 
   Future<http.Response> updateDepotPoint(var data) async {
+    String? accessToken =
+        kIsWeb ? OIDCAuthService().accessToken : AuthService().accessToken;
     var response = await client.put(
       Uri.http('${IpAddressManager().ipAddress}:8080', '/api/v1/deposit'),
       headers: {
-        'Authorization': 'Bearer ${AuthService().accessToken}',
+        'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json'
       },
       body: json.encode(data),

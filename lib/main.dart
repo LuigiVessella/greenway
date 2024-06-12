@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:greenway/config/ip_config.dart';
 import 'package:greenway/config/themes/first_theme.dart';
 import 'package:greenway/presentation/pages/admin_page.dart';
 import 'package:greenway/presentation/pages/delivery_man_page.dart';
@@ -11,6 +12,7 @@ import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "lib/config/auth/auth_client.env");
+  await IpAddressManager().loadAddress();
 
   kIsWeb ? runApp(const MyWebApp()) : runApp(const MyApp());
 }
@@ -20,6 +22,7 @@ class MyWebApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'GreenWay',
       debugShowCheckedModeBanner: false,
