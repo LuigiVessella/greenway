@@ -107,53 +107,45 @@ class _VehicleInputDetailState extends State<VehicleInputDetail> {
                       FocusManager.instance.primaryFocus?.unfocus();
                       vr
                           .addVehicle(Vehicle(
-                            modelName: modelTextController.text,
-                            maxAutonomyKm:
-                                int.parse(maxAutonomyTextController.text),
-                            maxCapacityKg:
-                                int.parse(maxCapacityTextController.text),
-                          ))
+                        modelName: modelTextController.text,
+                        maxAutonomyKm:
+                            int.parse(maxAutonomyTextController.text),
+                        maxCapacityKg:
+                            int.parse(maxCapacityTextController.text),
+                      ))
                           .then(
-                            (value) {
-                              setState(() {
-                                _isLoading = false;
-                              });
+                        (value) {
+                          setState(() {
+                            _isLoading = false;
+                          });
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      backgroundColor: Colors.green,
-                                      content: Row(children: [
-                                        Icon(Icons.info),
-                                        Text('Veicolo aggiunto correttamente')
-                                      ])));
-                            },
-                          )
-                          .catchError(
-                            (error, stackTrace) {
-                              setState(() {
-                                _isLoading = false;
-                              });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Row(children: [
+                                    Icon(Icons.info),
+                                    Text('Veicolo aggiunto correttamente')
+                                  ])));
+                        },
+                      ).catchError(
+                        (error, stackTrace) {
+                          setState(() {
+                            _isLoading = false;
+                          });
 
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                      backgroundColor: Colors.red,
-                                      content: Row(children: [
-                                        Icon(Icons.error),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                            'Errore: impossibile aggiungere il veicolo')
-                                      ])));
-                            },
-                          )
-                          .then(
-                            (value) =>
-                                Future.delayed(const Duration(seconds: 3)),
-                          )
-                          .then(
-                            (value) => Navigator.pop(context),
-                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Row(children: [
+                                    Icon(Icons.error),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                        'Errore: impossibile aggiungere il veicolo')
+                                  ])));
+                        },
+                      );
                     }
                   },
                   child: const SizedBox(

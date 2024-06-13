@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
+import 'package:greenway/presentation/pages/map_page.dart';
 import 'package:greenway/presentation/widgets/web_widget/elevation_chart.dart';
 import 'package:greenway/repositories/vehicle_repository.dart';
 
@@ -33,7 +35,8 @@ class _VechicleListWebState extends State<VechicleListWeb> {
           leading: null,
           bottom: const PreferredSize(
               preferredSize: Size.zero,
-              child: Text('Accedi al veicolo in transito e visualizza il grafico')),
+              child: Text(
+                  'Accedi al veicolo in transito e visualizza il grafico')),
         ),
         body: SafeArea(
             child: FutureBuilder<VehicleDto>(
@@ -78,9 +81,10 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                             vehiclesList = vr.getAllVehicles(_pageCounter);
                           });
                         },
-                        icon: const Icon(Icons.update)),
-
-                        const SizedBox(width: 20,),
+                        icon: const Icon(CupertinoIcons.refresh)),
+                    const SizedBox(
+                      width: 20,
+                    ),
                   ],
                 ),
                 Expanded(
@@ -89,7 +93,7 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                   itemCount: vehicleDTO.content!.length,
                   itemBuilder: (context, index) {
                     return Card(
-                      semanticContainer: false,
+                        semanticContainer: false,
                         elevation: 5.0,
                         child: ExpansionTile(
                             tilePadding: const EdgeInsets.all(15),
@@ -100,29 +104,49 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             children: [
-                          ListTile(
-                            leading: const Icon(Icons.local_shipping),
-                            title: Text(vehicleDTO.content![index].modelName!),
-                            subtitle: Text(
-                                'CARICO MASSIMO: ${vehicleDTO.content![index].maxCapacityKg}kg'),
-                          ),
-                          FilledButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ElevationChart(
-                                        vehicleID: vehicleDTO.content![index].id
-                                            .toString(),
-                                      ),
-                                    ));
-                              },
-                              icon: const Icon(Icons.auto_graph),
-                              label: const Text('Visualizza dati elevazione')),
-                          TextButton(
-                              onPressed: () {},
-                              child: const Text('Stato spedizione'))
-                        ]));
+                              ListTile(
+                                leading: const Icon(Icons.local_shipping),
+                                title:
+                                    Text(vehicleDTO.content![index].modelName!),
+                                subtitle: Text(
+                                    'CARICO MASSIMO: ${vehicleDTO.content![index].maxCapacityKg}kg'),
+                              ),
+                              FilledButton.icon(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ElevationChart(
+                                            vehicleID: vehicleDTO
+                                                .content![index].id
+                                                .toString(),
+                                          ),
+                                        ));
+                                  },
+                                  icon: const Icon(Icons.auto_graph),
+                                  label:
+                                      const Text('Visualizza dati elevazione')),
+                              const SizedBox(
+                                height: 20,
+                                child: Center(child: Text('o')),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => NavigationWidget(
+                                          vehicleID: vehicleDTO
+                                              .content![index].id!
+                                              .toInt(),
+                                        ),
+                                      ));
+                                },
+                                label:
+                                    const Text('Visulizza percorso su mappa'),
+                                icon: const Icon(CupertinoIcons.map),
+                              )
+                            ]));
                   },
                 ))
               ]);

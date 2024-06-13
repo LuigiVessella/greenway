@@ -83,7 +83,7 @@ class _ShippingListMobileState extends State<ShippingListMobile> {
                                         padding: const EdgeInsets.all(15),
                                         child: Row(children: [
                                           SvgPicture.asset(
-                                            'lib/assets/electric_icon.svg',
+                                            'lib/assets/pack_icon.svg',
                                             height: 40,
                                             width: 40,
                                             fit: BoxFit.cover,

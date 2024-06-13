@@ -96,7 +96,7 @@ class _DeliveryWebTabState extends State<DeliveryWebTab> {
                               deliveries = dr.getAllDeliveries(_pageCounter);
                             });
                           },
-                          icon: const Icon(Icons.update)),
+                          icon: const Icon(CupertinoIcons.refresh)),
                       const SizedBox(
                         width: 20,
                       ),

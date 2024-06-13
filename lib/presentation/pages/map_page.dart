@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -15,7 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../services/other/unpack_polyline.dart';
 
 class NavigationWidget extends StatefulWidget {
-  const NavigationWidget({super.key});
+  const NavigationWidget({super.key, required this.vehicleID});
+  final int vehicleID;
 
   @override
   State<NavigationWidget> createState() => _NavigationWidgetState();
@@ -26,9 +28,11 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   void initState() {
     super.initState();
 
-    _navData = _vr
-        .getVehicleByDeliveryMan(AuthService().getUserInfo!)
-        .then((value) => _vr.getVehicleRoutes(value.id.toString()));
+    _navData = kIsWeb
+        ? _vr.getVehicleRoutes(widget.vehicleID.toString())
+        : _vr
+            .getVehicleByDeliveryMan(AuthService().getUserInfo!)
+            .then((value) => _vr.getVehicleRoutes(value.id.toString()));
   }
 
   final VehicleRepository _vr = VehicleRepository();
@@ -418,32 +422,35 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             ]))
           ];
         } else if (snapshot.hasError) {
-          children = <Widget>[
+          children = [
             const Icon(
-              Icons.info_outline_rounded,
+              CupertinoIcons.info_circle,
               color: Colors.orange,
               size: 60,
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text('Info: ${snapshot.error}'),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Il veicolo non è in transito',
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
             ),
           ];
         } else {
           children = const <Widget>[
             SizedBox(
-              width: 60,
-              height: 60,
+              width: 50,
+              height: 50,
               child: CircularProgressIndicator(),
             ),
             Padding(
               padding: EdgeInsets.only(top: 16),
-              child: Text('Sto caricando la mappa...'),
+              child: Text('Sto caricando la mappa...', style: TextStyle(color: Colors.black, fontSize: 18)),
             ),
           ];
         }
         return Center(
-          child: Column(
+          child : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: children,
           ),

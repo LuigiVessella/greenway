@@ -30,7 +30,7 @@ class DeliveryManPage extends StatelessWidget {
             children: [
               PackageList(),
               VehicleListDmanWidget(),
-              NavigationWidget(),
+              NavigationWidget(vehicleID: 0,),
             ],
           ),
         ));

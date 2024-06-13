@@ -25,7 +25,7 @@ class _ElevationChartState extends State<ElevationChart> {
         appBar: AppBar(
           title: const Text('Grafico percorso'),
           centerTitle: true,
-           bottom: const PreferredSize(
+          bottom: const PreferredSize(
               preferredSize: Size.zero,
               child: Text('Visualizza il grafico del percorso del veicolo')),
         ),
@@ -106,9 +106,20 @@ class _ElevationChartState extends State<ElevationChart> {
                                       aspectRatio: 2,
                                       child: LineChart(
                                         LineChartData(
+                                          maxY: _findMax(snapshot
+                                                  .data![0].elevations!) +
+                                              5,
+                                          minY: _findMin(snapshot
+                                                  .data![0].elevations!) -
+                                              2,
+                                          clipData: const FlClipData.all(),
                                           lineBarsData: [
                                             LineChartBarData(
-                                              color: Colors.blue.shade100,
+                                              //preventCurveOverShooting: true,
+
+                                              curveSmoothness: 0,
+                                              color: const Color.fromARGB(
+                                                  255, 162, 178, 239),
                                               spots: processJsonForChart(
                                                       snapshot.data![0])
                                                   .map((point) => FlSpot(
@@ -194,9 +205,20 @@ class _ElevationChartState extends State<ElevationChart> {
                                   width: kIsWeb ? 1000 : 370,
                                   child: LineChart(
                                     LineChartData(
+                                      maxY: _findMax(
+                                              snapshot.data![1].elevations!) +
+                                          5,
+                                      minY: _findMin(
+                                              snapshot.data![1].elevations!) -
+                                          2,
+                                      clipData: const FlClipData.all(),
                                       lineBarsData: [
                                         LineChartBarData(
-                                          color: Colors.blue.shade100,
+                                          //preventCurveOverShooting: true,
+
+                                          curveSmoothness: 0,
+                                          color: const Color.fromARGB(
+                                              255, 162, 178, 239),
                                           spots: processJsonForChart(
                                                   snapshot.data![1])
                                               .map((point) => FlSpot(
@@ -259,9 +281,10 @@ class _ElevationChartState extends State<ElevationChart> {
                                   ),
                                 ),
                                 const Divider(),
-                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
                                       const Column(
                                         children: [
                                           Text('Altezza massima standard:'),
@@ -270,15 +293,18 @@ class _ElevationChartState extends State<ElevationChart> {
                                       ),
                                       Column(
                                         children: [
-                                          Text('${(_findMax( snapshot.data![0].elevations!))} m'),
-                                          Text('${(_findMax( snapshot.data![1].elevations!))} m')
+                                          Text(
+                                              '${(_findMax(snapshot.data![0].elevations!))} m'),
+                                          Text(
+                                              '${(_findMax(snapshot.data![1].elevations!))} m')
                                         ],
-                                      )]),
-                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
+                                      )
+                                    ]),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
                                       const Column(
-
                                         children: [
                                           Text('Distanza viaggio standard '),
                                           Text('Distanza viaggio elevazione')
@@ -286,12 +312,14 @@ class _ElevationChartState extends State<ElevationChart> {
                                       ),
                                       Column(
                                         children: [
-                                          Text(calculateDurance(snapshot.data![0])),
-                                           Text(calculateDurance(snapshot.data![1]))
+                                          Text(calculateDurance(
+                                              snapshot.data![0])),
+                                          Text(calculateDurance(
+                                              snapshot.data![1]))
                                         ],
-                                      )]),
-                                    ]))
-                              ));
+                                      )
+                                    ]),
+                              ]))));
             } else if (snapshot.hasError) {
               if (snapshot.error.toString().contains('401')) {
                 return Center(
@@ -367,6 +395,20 @@ class _ElevationChartState extends State<ElevationChart> {
       }
     }
     return max;
+  }
+
+  double _findMin(List<dynamic> values) {
+    double min = values[0];
+    for (dynamic value in values) {
+      if (value != null) {
+        if (value < min) {
+          min = value;
+        } else {
+          min = min;
+        }
+      }
+    }
+    return min;
   }
 
   List<ChartData> processJsonForChart(NavigationDataDTO navData) {
@@ -446,7 +488,7 @@ class _ElevationChartState extends State<ElevationChart> {
     }
   }
 
-    String calculateDurance(NavigationDataDTO data) {
+  String calculateDurance(NavigationDataDTO data) {
     return '${Duration(seconds: data.routes![0].duration!.floor()).inHours}h e '
         '${Duration(seconds: data.routes![0].duration!.floor() % 3600).inMinutes}min'
         ' (${(data.routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)';
@@ -459,7 +501,7 @@ Widget leftTitleWidgets(double value, TitleMeta meta) {
     fontSize: 13,
   );
   return SideTitleWidget(
-    space: 10,
+    space: 12,
     axisSide: meta.axisSide,
     child: Text('${value.round()}', style: style),
   );
@@ -473,7 +515,7 @@ Widget bottomTitleWidgets(double value, TitleMeta meta) {
 
   return SideTitleWidget(
     axisSide: meta.axisSide,
-    angle: 1.0,
+    angle: 0.6,
     child: Text('${value.round()}', style: style),
   );
 }

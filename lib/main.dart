@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         '/deliveryR': (context) => const AddNewPackage(
               title: 'Aggiungi destinatario',
             ),
-        'mapPage': (context) => const NavigationWidget()
+        'mapPage': (context) => const NavigationWidget(vehicleID: 0,)
       },
     );
   }

@@ -36,19 +36,21 @@ class _InteractivePageState extends State<InteractivePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:   AppBar(
+      appBar: AppBar(
         centerTitle: true,
-        title: const Padding (padding:EdgeInsets.all(8), child: Text('Benvenuto in GreenWay, il navigatore Green.')),
-       
+        title: const Padding(
+            padding: EdgeInsets.all(8),
+            child: Text('Benvenuto in GreenWay, il navigatore Green.')),
         actions: [
-          Padding(padding: const EdgeInsets.all(5),child: 
-          IconButton.outlined(
-            tooltip: 'Modifica indirizzo IP',
-              onPressed: () async {
-                await IpAddressManager().loadAddress();
-                await _settingsDialog();
-              },
-              icon: const Icon(Icons.settings)))
+          Padding(
+              padding: const EdgeInsets.all(5),
+              child: IconButton.outlined(
+                  tooltip: 'Modifica indirizzo IP',
+                  onPressed: () async {
+                    await IpAddressManager().loadAddress();
+                    await _settingsDialog();
+                  },
+                  icon: const Icon(Icons.settings)))
         ],
       ),
       body: Center(
@@ -66,7 +68,6 @@ class _InteractivePageState extends State<InteractivePage> {
             FilledButton.icon(
               onPressed: () async {
                 try {
-                 
                   if (mounted) {
                     await OIDCAuthService().authenticate(context: context);
                   }
@@ -154,7 +155,7 @@ class _InteractivePageState extends State<InteractivePage> {
                   SelectableText(
                       textScaler: TextScaler.linear(1.5),
                       minLines: 3,
-                      "Verifica il tuo ip o la connessione" ?? "")
+                      "Verifica il tuo ip o la connessione")
                 ],
               ),
             ),
@@ -183,11 +184,16 @@ class _InteractivePageState extends State<InteractivePage> {
                   ],
                   keyboardType: TextInputType.number,
                   controller: ipTextController,
-                  decoration: const InputDecoration(hintText: 'es. 192.168.1.7'),
+                  decoration:
+                      const InputDecoration(hintText: 'es. 192.168.1.7'),
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 const Divider(),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 const Text(
                     'Ricarica la pagina per rendere effettive le modifiche.')
               ],

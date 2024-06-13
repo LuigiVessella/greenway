@@ -42,7 +42,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                 icon: const Icon(Icons.schedule_send))
           ],
         ),
-        body: Center(
+        body: SingleChildScrollView(child:  Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -138,7 +138,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                         'Invia',
                         textAlign: TextAlign.center,
                       ))),
-            ])));
+            ]))));
   }
 
   //utilizzo i il Navigator.push in una funzione che ritorna Future in attesa dei risultati della scelta del luogo
