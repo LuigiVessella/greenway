@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:greenway/entity/addresses.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -28,7 +27,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
 
   _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 2000), () {
+    _debounce = Timer(const Duration(milliseconds: 1100), () {
       _getAddress(query);
     });
   }

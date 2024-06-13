@@ -32,23 +32,33 @@ class _ShippingListMobileState extends State<ShippingListMobile> {
         if (snapshot.hasData) {
           AllDeliveriesDTO deliveriesDTO = snapshot.data!;
           if (deliveriesDTO.totalElements! < 1) {
-            return const Center(
+            return Center(
                 child: SizedBox(
                     height: 350,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             CupertinoIcons.info,
                             size: 50,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            'Non ci sono consegne al momento. Puoi crearne una nella sezione in basso',
+                          const Text(
+                            'Non ci sono consegne al momento. Puoi crearne una nella sezione in basso. Poi aggiorna.',
                             textAlign: TextAlign.center,
-                          )
+                          ),
+                          IconButton.outlined(
+                              enableFeedback: true,
+                              tooltip: 'Aggiorna lista veicoli',
+                              onPressed: () {
+                                setState(() {
+                                  _deliveries =
+                                      dr.getAllDeliveries(_pageCounter);
+                                });
+                              },
+                              icon: const Icon(CupertinoIcons.refresh))
                         ])));
           }
 

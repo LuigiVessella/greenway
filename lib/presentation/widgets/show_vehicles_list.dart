@@ -42,21 +42,32 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
         if (snapshot.hasData) {
           VehicleDto vehicleDTO = snapshot.data!;
           if (vehicleDTO.totalElements! < 1) {
-            return const Center(
+            return Center(
                 child: SizedBox(
                     height: 250,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             CupertinoIcons.info,
                             size: 50,
                           ),
-                          SizedBox(height: 10,),
-                          Text(
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text(
                             'Non ci sono veicoli al momento. Puoi aggiungerne uno cliccando in basso.',
                             textAlign: TextAlign.center,
-                          )
+                          ),
+                          IconButton.outlined(
+                              enableFeedback: true,
+                              tooltip: 'Aggiorna lista veicoli',
+                              onPressed: () {
+                                setState(() {
+                                  _vehicles = vr.getAllVehicles(_pageCounter);
+                                });
+                              },
+                              icon: const Icon(CupertinoIcons.refresh))
                         ])));
           }
 
@@ -105,7 +116,7 @@ class _VehicleListAdminWidgetState extends State<VehicleListAdminWidget> {
                         _vehicles = vr.getAllVehicles(_pageCounter);
                       });
                     },
-                    icon: const Icon(Icons.update)),
+                    icon: const Icon(CupertinoIcons.refresh)),
               ],
             ),
             SizedBox(

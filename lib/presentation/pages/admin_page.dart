@@ -80,12 +80,15 @@ class _AdminPageState extends State<AdminPage> {
                           padding: const EdgeInsets.all(10.0),
                           child: Column(children: [
                             FilledButton.tonal(
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             const VehicleInputDetail()));
+                                setState(() {
+                                  print('sono qui');
+                                });
                               },
                               child: const SizedBox(
                                   width: 110, child: Text('Aggiungi veicolo')),

@@ -59,7 +59,7 @@ class DeliveryRepository {
       return DepotPointDTO.fromJson(jsonDecode(response.body));
     }
     else {
-      throw Exception('$response');
+      throw Exception('${response.statusCode}');
     }
   }
 

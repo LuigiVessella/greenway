@@ -198,7 +198,7 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
+            return const Text('Inserisci il punto di deposito:');
           } else {
             return const CircularProgressIndicator(
               color: Colors.black,
