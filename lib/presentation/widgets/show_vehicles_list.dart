@@ -203,7 +203,7 @@ class VehicleListDmanWidget extends StatelessWidget {
                           tilePadding: const EdgeInsets.all(7),
                           childrenPadding: const EdgeInsets.all(1),
                           title: const Text(
-                            'Veicolo in viaggio: ',
+                            'Veicolo su cui viaggi: ',
                             style: TextStyle(fontWeight: FontWeight.w700),
                           ),
                           children: [
@@ -216,7 +216,7 @@ class VehicleListDmanWidget extends StatelessWidget {
                                   color: Colors.green,
                                 ),
                                 Text(
-                                    'Carico massimo: ${vehicleDTO.maxCapacityKg}kg\nNon è previsto rifornimento')
+                                    'Carico massimo: ${vehicleDTO.maxCapacityKg}kg\nAutonomia:${vehicleDTO.maxAutonomyKm}km\nNon è previsto rifornimento')
                               ]),
                             ),
                             Row(
@@ -237,7 +237,7 @@ class VehicleListDmanWidget extends StatelessWidget {
                                                 ));
                                           },
                                           child: const Text(
-                                            'PROFILO ELEVAZIONE',
+                                            'GRAFICO PERCORSO',
                                             textAlign: TextAlign.center,
                                           ))),
                                   FilledButton.tonal(

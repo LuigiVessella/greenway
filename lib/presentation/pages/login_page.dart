@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 60,
                 ),
-                SvgPicture.asset('lib/assets/undraw_package_arrived_63rf.svg',
+                SvgPicture.asset('lib/assets/mountain_road_icon.svg',
                     height: 100),
                 Expanded(
                     child: Padding(
@@ -63,9 +63,9 @@ class _LoginPageState extends State<LoginPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              const ScreenTitle(title: 'Ciao'),
+                              const ScreenTitle(title: 'Ciao!'),
                               const Text(
-                                  'Benvenuto in GreenWay, il navigatore Green',
+                                  'Benvenuto in GreenWay, il navigatore Green.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.grey,

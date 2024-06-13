@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:greenway/dto/vehicle_dto.dart';
 import 'package:greenway/presentation/pages/map_page.dart';
 import 'package:greenway/presentation/widgets/web_widget/elevation_chart.dart';
@@ -30,13 +31,13 @@ class _VechicleListWebState extends State<VechicleListWeb> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Grafici e Viaggio'),
+          title: const Text('Grafici e Mappe'),
           centerTitle: true,
           leading: null,
           bottom: const PreferredSize(
               preferredSize: Size.zero,
               child: Text(
-                  'Accedi al veicolo in transito e visualizza il grafico')),
+                  'Mostra il veicolo, il grafico e la mappa del percorso')),
         ),
         body: SafeArea(
             child: FutureBuilder<VehicleDto>(
@@ -105,7 +106,10 @@ class _VechicleListWebState extends State<VechicleListWeb> {
                             ),
                             children: [
                               ListTile(
-                                leading: const Icon(Icons.local_shipping),
+                                leading: CircleAvatar(
+                                  child: SvgPicture.asset(
+                                      'lib/assets/electric_icon.svg'),
+                                ),
                                 title:
                                     Text(vehicleDTO.content![index].modelName!),
                                 subtitle: Text(

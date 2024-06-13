@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenway/presentation/pages/map_page.dart';
@@ -17,14 +18,14 @@ class DeliveryManPage extends StatelessWidget {
             bottom: const TabBar(
               tabs: [
                 Tab(
-                  icon: Icon(Icons.warehouse_outlined),
-                  text: "Consegne",
+                  icon: Icon(CupertinoIcons.cube_box),
+                  text: "Spedizioni",
                 ),
                 Tab(icon: Icon(Icons.electric_car), text: "Veicolo"),
                 Tab(icon: Icon(Icons.map_outlined), text: "Mappa"),
               ],
             ),
-            title: const Text('La tua giornata'),
+            title: const Text('Consegne e Percorso'),
           ),
           body: const TabBarView(
             children: [

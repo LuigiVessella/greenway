@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -38,7 +39,10 @@ class _PackageListState extends State<PackageList> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                  Icon(CupertinoIcons.smiley, size: 50,),
+                  Icon(
+                    CupertinoIcons.smiley,
+                    size: 50,
+                  ),
                   Text('Wow! Sembra che tu abbia consegnato tutti i pacchi')
                 ]));
           }
@@ -59,8 +63,8 @@ class _PackageListState extends State<PackageList> {
                           childrenPadding: const EdgeInsets.all(1.0),
                           title: Row(children: [
                             Expanded(
-                              child: Text(
-                                  vehicleDTO.deliveries![index].receiver!,
+                              child: AutoSizeText(maxLines: 1, 'Destinatario: ${
+                                  vehicleDTO.deliveries![index].receiver!}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700)),
                             ),
@@ -94,10 +98,10 @@ class _PackageListState extends State<PackageList> {
                                 child: SvgPicture.asset(
                                     'lib/assets/avatar_ship.svg'),
                               ),
-                              title:
-                                  Text(vehicleDTO.deliveries![index].receiver!),
-                              subtitle: Text(
+                              title: Text(
                                   'presso: ${vehicleDTO.deliveries![index].receiverAddress}'),
+                              subtitle: Text(
+                                  'da: ${vehicleDTO.deliveries![index].sender!}'),
                             ),
                             const Divider(),
                             Row(
@@ -105,6 +109,7 @@ class _PackageListState extends State<PackageList> {
                               children: [
                                 Text(
                                   'Consegna prevista: ${vehicleDTO.deliveries![index].estimatedDeliveryTime!.split('T')[0]}',
+                                  style: const TextStyle(color: Colors.blue),
                                 ),
                                 TextButton(
                                     onPressed: () {

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TripInfo extends StatelessWidget {
@@ -16,7 +17,7 @@ class TripInfo extends StatelessWidget {
             child: ExpansionTile(
                 tilePadding: const EdgeInsets.all(4),
                 childrenPadding: const EdgeInsets.all(2.0),
-                title:  Text('Viaggio ${index + 1}', style: const TextStyle(fontWeight: FontWeight.w600),),
+                title: Row(children:[ const Icon(CupertinoIcons.map_pin, color: Colors.red,), Text((index != tripInfo.length  -1) ? 'Spedizione ${index + 1}' : 'Ritorno', style: const TextStyle(fontWeight: FontWeight.w600),)]),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.directions),
