@@ -39,7 +39,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   final NavigationDataParser dataParser = NavigationDataParser();
 
   List<String> tripRoute = [];
-  List<String> tripStreetNames = [];
+  List<Widget> tripStreetNames = [];
   String? backTrip = '';
 
   int currentNavDataIndex = 0;
@@ -460,7 +460,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   }
 
   String calculateDurance(var snapshot) {
-    return 'Durata: ${Duration(seconds: snapshot.data![currentNavDataIndex].routes![0].duration!.floor()).inHours}h e '
+    return 'Durata viaggio: ${Duration(seconds: snapshot.data![currentNavDataIndex].routes![0].duration!.floor()).inHours}h e '
         '${Duration(seconds: snapshot.data![currentNavDataIndex].routes![0].duration!.floor() % 3600).inMinutes}min'
         ' (${(snapshot.data![currentNavDataIndex].routes![0].distance!.round() / 1000).toStringAsFixed(2)}km)';
   }

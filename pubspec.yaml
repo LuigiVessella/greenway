@@ -101,6 +101,7 @@ flutter:
   assets:
     - lib/config/auth/auth_client.env
     - lib/assets/
+    - lib/assets/directions_icon/
 
 
   # The following line ensures that the Material Icons font is
