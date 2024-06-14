@@ -23,6 +23,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerSecondName = TextEditingController();
   final TextEditingController _controllerAddress = TextEditingController();
+  final TextEditingController _controllerWeight = TextEditingController();
   Timer? _debounce;
 
   _onSearchChanged(String query) {
@@ -79,42 +80,65 @@ class _AddNewPackageState extends State<AddNewPackage> {
               children: [
                 Form(
                     key: _formKey,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                            child: TextFormField(
-                               keyboardType: TextInputType.name,
-                          controller: _controllerName,
-                          validator: (value) {
-                            if (value == null || value.isEmpty || value.length <= 3) {
-                              return 'Campo obbligatiorio';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            labelText: 'Nome',
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                              child: TextFormField(
+                            keyboardType: TextInputType.name,
+                            controller: _controllerName,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length <= 3) {
+                                return 'Campo obbligatiorio';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Nome',
+                            ),
+                            onChanged: (value) {},
+                          )),
+                          const SizedBox(
+                            width: 15,
                           ),
-                          onChanged: (value) {},
-                        )),
-                        const SizedBox(width: 15,),
-                        Expanded(
-                            child: TextFormField(
-                          keyboardType: TextInputType.name,
-                          controller: _controllerSecondName,
-                          validator: (value) {
-                            if (value == null || value.isEmpty || value.length <= 3) {
-                              return 'Campo obbligatiorio';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            labelText: 'Cognome',
-                          ),
-                          onChanged: (value) {},
-                        )),
-                      ],
-                    )),
+                          Expanded(
+                              child: TextFormField(
+                            keyboardType: TextInputType.name,
+                            controller: _controllerSecondName,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length <= 3) {
+                                return 'Campo obbligatiorio';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Cognome',
+                            ),
+                            onChanged: (value) {},
+                          )),
+                        ],
+                      ),
+                      SizedBox(width: 100, child: 
+                      TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: _controllerWeight,
+                        validator: (value) {
+                          if (value == null || value.isEmpty || value.isEmpty) {
+                            return 'Campo obbligatiorio';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Peso pacco:',
+                        ),
+                        onChanged: (value) {},
+                      ),
+            )])),
                 const SizedBox(
                   height: 40,
                 ),
@@ -183,17 +207,24 @@ class _AddNewPackageState extends State<AddNewPackage> {
                     onPressed: () {
                       _nameComplete =
                           '${_controllerName.text} ${_controllerSecondName.text}';
+
                       if (_formKey.currentState!.validate() &&
-                          _formAddressKey.currentState!.validate() && _addressList.any((address) => address.displayName == _controllerAddress.text)) {
+                          _formAddressKey.currentState!.validate() &&
+                          _addressList.any((address) =>
+                              address.displayName == _controllerAddress.text)) {
                         Navigator.pop(
                           context,
                           {
                             'lat': _lat,
                             'lon': _lon,
                             'address': address,
-                            'name': '$_nameComplete'
+                            'name': '$_nameComplete',
+                            'weight': _controllerWeight.text
                           },
                         );
+                      }
+                      else {
+                        _controllerAddress.value = const TextEditingValue(text: 'Scegliere indirizzo dalla lista!');
                       }
                     },
                     child: const SizedBox(

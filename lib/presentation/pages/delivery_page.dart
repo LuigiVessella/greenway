@@ -32,7 +32,6 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Crea Spedizione'),
-          
           actions: <Widget>[
             IconButton.filledTonal(
                 tooltip: 'Programma consegne',
@@ -42,11 +41,23 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                 icon: const Icon(Icons.schedule_send))
           ],
         ),
-        body: SingleChildScrollView(child:  Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-              const Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox( width: 220, child:  AutoSizeText('Gestisci e crea spedizioni. Poi, pianifica con il tasto in alto a destra.', maxLines: 2, textAlign: TextAlign.center,))],),
+        body: SingleChildScrollView(
+            child: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      width: 220,
+                      child: AutoSizeText(
+                        'Gestisci e crea spedizioni. Poi, pianifica con il tasto in alto a destra.',
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                      ))
+                ],
+              ),
               const SizedBox(
                 height: 30,
               ),
@@ -63,8 +74,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                       fontSize: 16),
                 )
               ]),
-               const ShippingListMobile(),
-              
+              const ShippingListMobile(),
               const Divider(),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 const SizedBox(
@@ -119,10 +129,9 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
                       SizedBox(
                           width: 170,
                           child: AutoSizeText(
-                            maxLines: 3,
-                            receiverString,
-                            textAlign: TextAlign.center
-                          )),
+                              maxLines: 3,
+                              receiverString,
+                              textAlign: TextAlign.center)),
                     ]),
                   ]),
               const SizedBox(
@@ -173,6 +182,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
             'Dati inseriti: ${resultSender['name']},${resultSender['address']} ';
         newDeliveryDTO.sender = resultSender['name'];
         newDeliveryDTO.senderAddress = resultSender['address'];
+        newDeliveryDTO.weightKg = resultSender['weight'];
       });
     }
 
@@ -202,7 +212,7 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
         receiverCoordinates: Coordinates(
             type: newDeliveryDTO.receiverCoordinates!.type!,
             coordinates: newDeliveryDTO.receiverCoordinates!.coordinates!),
-        weightKg: '1.0');
+        weightKg: newDeliveryDTO.weightKg!);
 
     setState(() {
       createdDeliveries.add(newDelivery);
@@ -234,12 +244,11 @@ class _AddNewDeliveryState extends State<AddNewDelivery> {
             ),
             Text('Errore: il deposito esiste già, o anomalia')
           ])));
-    })
-    .whenComplete(() {
-      setState(() {
-        
-      });
-    },);
+    }).whenComplete(
+      () {
+        setState(() {});
+      },
+    );
   }
 
   void _scheduleDeliveries() {

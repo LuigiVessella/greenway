@@ -43,55 +43,8 @@ class _ElevationChartState extends State<ElevationChart> {
                               children: [
                                 SizedBox(
                                     width: 400,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                                color: Colors.green,
-                                                borderRadius: BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(10),
-                                                    topLeft:
-                                                        Radius.circular(10))),
-                                            child: Text(
-                                              '<${(25 / 100 * (_findMax(snapshot.data![1].elevations!))).round()}m',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                            child: Container(
-                                          color: Colors.yellow,
-                                          child: Text(
-                                              '<${(25 / 100 * (_findMax(snapshot.data![1].elevations!)) * 2).round()}m',
-                                              textAlign: TextAlign.center),
-                                        )),
-                                        Expanded(
-                                          child: Container(
-                                            color: Colors.orange,
-                                            child: Text(
-                                                '<${(25 / 100 * (_findMax(snapshot.data![1].elevations!)) * 3).round()}m',
-                                                textAlign: TextAlign.center),
-                                          ),
-                                        ),
-                                        Expanded(
-                                            child: Container(
-                                          decoration: const BoxDecoration(
-                                              color: Colors.red,
-                                              borderRadius: BorderRadius.only(
-                                                  bottomRight:
-                                                      Radius.circular(10),
-                                                  topRight:
-                                                      Radius.circular(10))),
-                                          child: Text(
-                                              '>${(25 / 100 * (_findMax(snapshot.data![1].elevations!)) * 4).round()}m',
-                                              textAlign: TextAlign.center),
-                                        ))
-                                      ],
-                                    )),
+                                    child:buildLegend(snapshot
+                                                  .data![0].elevations!)),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -383,34 +336,71 @@ class _ElevationChartState extends State<ElevationChart> {
         ));
   }
 
-  double _findMax(List<dynamic> values) {
-    double max = 0.0;
-    for (dynamic value in values) {
-      if (value != null) {
-        if (value > max) {
-          max = value;
-        } else {
-          max = max;
-        }
-      }
-    }
-    return max;
-  }
+FlDotPainter calculateColor(FlSpot spot, List<dynamic> values) {
+  // Find minimum and maximum values
+  final minValue = _findMin(values);
+  final maxValue = _findMax(values);
 
-  double _findMin(List<dynamic> values) {
-    double min = values[0];
-    for (dynamic value in values) {
-      if (value != null) {
-        if (value < min) {
-          min = value;
-        } else {
-          min = min;
-        }
-      }
-    }
-    return min;
-  }
+  // Calculate range (avoid division by zero)
+  final range = maxValue > minValue ? maxValue - minValue : 1.0;
 
+  // Calculate proportional thresholds based on desired ranges (adjust as needed)
+  const lowThreshold = 0.25; // 25% of the range
+  const midThreshold1 = 0.50; // 50% of the range
+  const midThreshold2 = 0.75; // 75% of the range
+
+  // Calculate proportional y values
+  final lowY = minValue + lowThreshold * range;
+  final midY1 = minValue + midThreshold1 * range;
+  final midY2 = minValue + midThreshold2 * range;
+
+  // Check spot value and assign color based on range
+  if (spot.y > minValue && spot.y <= lowY) {
+    return FlDotCirclePainter(
+      radius: 1,
+      color: Colors.green, // Adjust color for low range
+      strokeWidth: 0.2,
+      strokeColor: Colors.green,
+    );
+  } else if (spot.y > lowY && spot.y <= midY1) {
+    return FlDotCirclePainter(
+      radius: 1,
+      color: Colors.yellow, // Adjust color for mid range 1
+      strokeWidth: 0.2,
+      strokeColor: Colors.green,
+    );
+  } else if (spot.y > midY1 && spot.y <= midY2) {
+    return FlDotCirclePainter(
+      radius: 1,
+      color: Colors.orange, // Adjust color for mid range 2
+      strokeWidth: 0.1,
+      strokeColor: Colors.green,
+    );
+  } else if (spot.y > midY2) {
+    return FlDotCirclePainter(
+      radius: 1,
+      color: Colors.red, // Adjust color for high range
+      strokeWidth: 0.2,
+      strokeColor: Colors.green,
+    );
+  } else {
+    return FlDotCirclePainter(
+      radius: 0,
+      color: Colors.white,
+      strokeWidth: 0.5,
+      strokeColor: Colors.white,
+    );
+  }
+}
+
+// Helper functions to find min and max values (assuming numeric values)
+double _findMin(List<dynamic> values) {
+  return values.reduce((min, value) => min < value ? min : value);
+}
+
+double _findMax(List<dynamic> values) {
+  return values.reduce((max, value) => max > value ? max : value);
+}
   List<ChartData> processJsonForChart(NavigationDataDTO navData) {
     List<ChartData> chartData = [];
     List<num> distances = [];
@@ -447,7 +437,82 @@ class _ElevationChartState extends State<ElevationChart> {
     return chartData;
   }
 
-  FlDotPainter calculateColor(FlSpot spot, List<dynamic> values) {
+  Widget buildLegend(List<dynamic> values) {
+  // Find minimum and maximum values
+  final double minValue = _findMin(values);
+  final double maxValue = _findMax(values);
+
+  // Calculate range (avoid division by zero)
+  final double range = maxValue > minValue ? maxValue - minValue : 1.0;
+
+  // Calculate proportional thresholds
+  const double lowThreshold = 0.25; // 25% of the range
+  const double midThreshold1 = 0.50; // 50% of the range
+  const double midThreshold2 = 0.75; // 75% of the range
+
+  // Calculate proportional y values
+  final double lowY = minValue + lowThreshold * range;
+  final double midY1 = minValue + midThreshold1 * range;
+  final double midY2 = minValue + midThreshold2 * range;
+
+  // Build legend row
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Expanded(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              topLeft: Radius.circular(10),
+            ),
+          ),
+          child: Text(
+            '< ${(lowY).round()}m',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          color: Colors.yellow,
+          child: Text(
+            '< ${(midY1).round()}m',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          color: Colors.orange,
+          child: Text(
+            '< ${(midY2).round()}m',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+          ),
+          child: Text(
+            '> ${maxValue.round()}m',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+
+  /* FlDotPainter calculateColor(FlSpot spot, List<dynamic> values) {
     if (spot.y > 0 && spot.y <= (25 / 100 * (_findMax(values))).round()) {
       return FlDotCirclePainter(
         radius: 1,
@@ -486,7 +551,7 @@ class _ElevationChartState extends State<ElevationChart> {
         strokeColor: Colors.white,
       );
     }
-  }
+  }*/
 
   String calculateDurance(NavigationDataDTO data) {
     return '${Duration(seconds: data.routes![0].duration!.floor()).inHours}h e '

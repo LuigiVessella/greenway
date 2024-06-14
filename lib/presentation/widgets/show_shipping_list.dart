@@ -63,6 +63,21 @@ class _ShippingListMobileState extends State<ShippingListMobile> {
           }
 
           return Column(children: [
+             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+              
+                IconButton.filledTonal(
+                    enableFeedback: true,
+                    tooltip: 'Aggiorna lista veicoli',
+                    onPressed: () {
+                      setState(() {
+                        _deliveries = dr.getAllDeliveries(_pageCounter);
+                      });
+                    },
+                    icon: const Icon(CupertinoIcons.refresh)),
+              ],
+            ),
             SizedBox(
                 height: 320,
                 child: Scrollbar(

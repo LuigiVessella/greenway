@@ -63,8 +63,9 @@ class _PackageListState extends State<PackageList> {
                           childrenPadding: const EdgeInsets.all(1.0),
                           title: Row(children: [
                             Expanded(
-                              child: AutoSizeText(maxLines: 1, 'Destinatario: ${
-                                  vehicleDTO.deliveries![index].receiver!}',
+                              child: AutoSizeText(
+                                  maxLines: 1,
+                                  'Destinatario: ${vehicleDTO.deliveries![index].receiver!}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700)),
                             ),
@@ -101,7 +102,7 @@ class _PackageListState extends State<PackageList> {
                               title: Text(
                                   'presso: ${vehicleDTO.deliveries![index].receiverAddress}'),
                               subtitle: Text(
-                                  'da: ${vehicleDTO.deliveries![index].sender!}'),
+                                  'mittente: ${vehicleDTO.deliveries![index].sender!}\npeso: ${vehicleDTO.deliveries![index].weightKg}kg'),
                             ),
                             const Divider(),
                             Row(

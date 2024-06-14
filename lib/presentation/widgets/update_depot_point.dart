@@ -34,7 +34,10 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Inserisci o aggiorna deposito', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),
+          const Text(
+            'Inserisci o aggiorna deposito',
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
           Visibility(
               visible: _isLoading, child: const CircularProgressIndicator())
         ],
@@ -100,38 +103,46 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
         TextButton(
           child: const Text('Salva'),
           onPressed: () async {
-            await dr
-                .addDepotPoint({
-                  "depositAddress": "'$address'",
-                  "depositCoordinates": {
-                    "type": "Point",
-                    "coordinates": [_lon, _lat]
-                  }
-                })
-                .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        backgroundColor: Colors.green,
-                        content: Row(children: [
-                          Icon(Icons.check),
-                          Text('Punto deposito creato')
-                        ]))))
-                .catchError((error, stackTrace) =>
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Row(children: [
-                          Icon(Icons.error),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('Errore: il deposito esiste già, o anomalia')
-                        ]))))
-                .whenComplete(
-                  () {
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
+            if (_formAddressKey.currentState!.validate() &&
+                _addressList.any((address) =>
+                    address.displayName == _controllerAddress.text)) {
+              await dr
+                  .addDepotPoint({
+                    "depositAddress": "'$address'",
+                    "depositCoordinates": {
+                      "type": "Point",
+                      "coordinates": [_lon, _lat]
                     }
-                  },
-                );
+                  })
+                  .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Row(children: [
+                            Icon(Icons.check),
+                            Text('Punto deposito creato')
+                          ]))))
+                  .catchError((error, stackTrace) =>
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Row(children: [
+                            Icon(Icons.error),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text('Errore: il deposito esiste già, o anomalia')
+                          ]))))
+                  .whenComplete(
+                    () {
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  );
+            }
+            else {
+              _controllerAddress.value = const TextEditingValue(text: 'Scegliere indirizzo dalla lista');
+              
+            }
           },
         ),
       ],
@@ -192,8 +203,8 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
           if (snapshot.hasData) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Indirizzo attuale: ${
-                snapshot.data!.depositAddress!}',
+              child: Text(
+                'Indirizzo attuale: ${snapshot.data!.depositAddress!}',
                 style: const TextStyle(fontSize: 13),
               ),
             );
