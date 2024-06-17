@@ -119,7 +119,7 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
                           backgroundColor: Colors.green,
                           content: Row(children: [
                             Icon(Icons.check),
-                            Text('Punto deposito creato')
+                            Text('Punto deposito aggiornato')
                           ]))))
                   .catchError((error, stackTrace) =>
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -129,7 +129,7 @@ class _UpdateDepotWidgetState extends State<UpdateDepotWidget> {
                             SizedBox(
                               width: 10,
                             ),
-                            Text('Errore: il deposito esiste già, o anomalia')
+                            Text('Impossibile aggiornare deposito')
                           ]))))
                   .whenComplete(
                     () {

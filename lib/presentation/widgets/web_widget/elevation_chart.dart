@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,7 +28,7 @@ class _ElevationChartState extends State<ElevationChart> {
           centerTitle: true,
           bottom: const PreferredSize(
               preferredSize: Size.zero,
-              child: Text('Visualizza il grafico del percorso del veicolo')),
+              child: Text('Visualizza il grafico e informazioni sul percorso')),
         ),
         body: FutureBuilder<List<NavigationDataDTO>>(
           future: vr.getVehicleRoutes(widget.vehicleID),
@@ -35,16 +36,16 @@ class _ElevationChartState extends State<ElevationChart> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SafeArea(
-                  child: SingleChildScrollView(
+                  child: Scrollbar(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    child: 
+                  SingleChildScrollView(
                       child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                    width: 400,
-                                    child:buildLegend(snapshot
-                                                  .data![0].elevations!)),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -52,6 +53,12 @@ class _ElevationChartState extends State<ElevationChart> {
                                   'PROFILO STANDARD',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                    width: 400,
+                                    child: buildLegend(
+                                        snapshot.data![0].elevations!)),
+                                const SizedBox(height: 15),
                                 SizedBox(
                                     height: kIsWeb ? 400 : 240,
                                     width: kIsWeb ? 1000 : 370,
@@ -153,6 +160,12 @@ class _ElevationChartState extends State<ElevationChart> {
                                   'PROFILO ELEVAZIONE',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                    width: 400,
+                                    child: buildLegend(
+                                        snapshot.data![1].elevations!)),
+                                const SizedBox(height: 15),
                                 SizedBox(
                                   height: kIsWeb ? 400 : 240,
                                   width: kIsWeb ? 1000 : 370,
@@ -235,44 +248,59 @@ class _ElevationChartState extends State<ElevationChart> {
                                 ),
                                 const Divider(),
                                 Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      const Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Expanded(
+                                        child: Card(
+                                            child: Column(
+                                      children: [
+                                        const AutoSizeText(
+                                            maxLines: 1,
+                                            'Informazioni sul sentiero'),
+                                        const Icon(Icons
+                                            .hiking), // Icona di un escursionista
+                                        const AutoSizeText(
+                                            maxLines: 1,
+                                            'Altezza massima standard:'),
+                                        AutoSizeText(
+                                            maxLines: 1,
+                                            '${_findMax(snapshot.data![0].elevations!)} m'),
+                                        const AutoSizeText(
+                                            maxLines: 1,
+                                            'Distanza viaggio standard:'),
+                                        AutoSizeText(
+                                            maxLines: 1,
+                                            calculateDurance(
+                                                snapshot.data![0])),
+                                      ],
+                                    ))),
+                                    Expanded(
+                                      child: Card(
+                                          child: Column(
                                         children: [
-                                          Text('Altezza massima standard:'),
-                                          Text('Altezza massima elevazione:')
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
+                                          const AutoSizeText(
+                                            maxLines: 1,
+                                            'Dati di elevazione:',
+                                          ),
+                                          const Icon(Icons
+                                              .bar_chart), // Icona di un grafico a barre
+                                          const AutoSizeText(
+                                              maxLines: 1,
+                                              'Altezza massima elevazione:'),
                                           Text(
-                                              '${(_findMax(snapshot.data![0].elevations!))} m'),
-                                          Text(
-                                              '${(_findMax(snapshot.data![1].elevations!))} m')
-                                        ],
-                                      )
-                                    ]),
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      const Column(
-                                        children: [
-                                          Text('Distanza viaggio standard '),
-                                          Text('Distanza viaggio elevazione')
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
+                                              '${_findMax(snapshot.data![1].elevations!)} m'),
+                                          const AutoSizeText(
+                                              maxLines: 1,
+                                              'Distanza viaggio elevazione:'),
                                           Text(calculateDurance(
-                                              snapshot.data![0])),
-                                          Text(calculateDurance(
-                                              snapshot.data![1]))
+                                              snapshot.data![1])),
                                         ],
-                                      )
-                                    ]),
-                              ]))));
+                                      )),
+                                    )
+                                  ],
+                                )
+                              ])))));
             } else if (snapshot.hasError) {
               if (snapshot.error.toString().contains('401')) {
                 return Center(
@@ -336,71 +364,72 @@ class _ElevationChartState extends State<ElevationChart> {
         ));
   }
 
-FlDotPainter calculateColor(FlSpot spot, List<dynamic> values) {
-  // Find minimum and maximum values
-  final minValue = _findMin(values);
-  final maxValue = _findMax(values);
+  FlDotPainter calculateColor(FlSpot spot, List<dynamic> values) {
+    // Find minimum and maximum values
+    final minValue = _findMin(values);
+    final maxValue = _findMax(values);
 
-  // Calculate range (avoid division by zero)
-  final range = maxValue > minValue ? maxValue - minValue : 1.0;
+    // Calculate range (avoid division by zero)
+    final range = maxValue > minValue ? maxValue - minValue : 1.0;
 
-  // Calculate proportional thresholds based on desired ranges (adjust as needed)
-  const lowThreshold = 0.25; // 25% of the range
-  const midThreshold1 = 0.50; // 50% of the range
-  const midThreshold2 = 0.75; // 75% of the range
+    // Calculate proportional thresholds based on desired ranges (adjust as needed)
+    const lowThreshold = 0.25; // 25% of the range
+    const midThreshold1 = 0.50; // 50% of the range
+    const midThreshold2 = 0.75; // 75% of the range
 
-  // Calculate proportional y values
-  final lowY = minValue + lowThreshold * range;
-  final midY1 = minValue + midThreshold1 * range;
-  final midY2 = minValue + midThreshold2 * range;
+    // Calculate proportional y values
+    final lowY = minValue + lowThreshold * range;
+    final midY1 = minValue + midThreshold1 * range;
+    final midY2 = minValue + midThreshold2 * range;
 
-  // Check spot value and assign color based on range
-  if (spot.y > minValue && spot.y <= lowY) {
-    return FlDotCirclePainter(
-      radius: 1,
-      color: Colors.green, // Adjust color for low range
-      strokeWidth: 0.2,
-      strokeColor: Colors.green,
-    );
-  } else if (spot.y > lowY && spot.y <= midY1) {
-    return FlDotCirclePainter(
-      radius: 1,
-      color: Colors.yellow, // Adjust color for mid range 1
-      strokeWidth: 0.2,
-      strokeColor: Colors.green,
-    );
-  } else if (spot.y > midY1 && spot.y <= midY2) {
-    return FlDotCirclePainter(
-      radius: 1,
-      color: Colors.orange, // Adjust color for mid range 2
-      strokeWidth: 0.1,
-      strokeColor: Colors.green,
-    );
-  } else if (spot.y > midY2) {
-    return FlDotCirclePainter(
-      radius: 1,
-      color: Colors.red, // Adjust color for high range
-      strokeWidth: 0.2,
-      strokeColor: Colors.green,
-    );
-  } else {
-    return FlDotCirclePainter(
-      radius: 0,
-      color: Colors.white,
-      strokeWidth: 0.5,
-      strokeColor: Colors.white,
-    );
+    // Check spot value and assign color based on range
+    if (spot.y > minValue && spot.y <= lowY) {
+      return FlDotCirclePainter(
+        radius: 1,
+        color: Colors.green, // Adjust color for low range
+        strokeWidth: 0.2,
+        strokeColor: Colors.green,
+      );
+    } else if (spot.y > lowY && spot.y <= midY1) {
+      return FlDotCirclePainter(
+        radius: 1,
+        color: Colors.yellow, // Adjust color for mid range 1
+        strokeWidth: 0.2,
+        strokeColor: Colors.green,
+      );
+    } else if (spot.y > midY1 && spot.y <= midY2) {
+      return FlDotCirclePainter(
+        radius: 1,
+        color: Colors.orange, // Adjust color for mid range 2
+        strokeWidth: 0.1,
+        strokeColor: Colors.green,
+      );
+    } else if (spot.y > midY2) {
+      return FlDotCirclePainter(
+        radius: 1,
+        color: Colors.red, // Adjust color for high range
+        strokeWidth: 0.2,
+        strokeColor: Colors.green,
+      );
+    } else {
+      return FlDotCirclePainter(
+        radius: 0,
+        color: Colors.white,
+        strokeWidth: 0.5,
+        strokeColor: Colors.white,
+      );
+    }
   }
-}
 
 // Helper functions to find min and max values (assuming numeric values)
-double _findMin(List<dynamic> values) {
-  return values.reduce((min, value) => min < value ? min : value);
-}
+  double _findMin(List<dynamic> values) {
+    return values.reduce((min, value) => min < value ? min : value);
+  }
 
-double _findMax(List<dynamic> values) {
-  return values.reduce((max, value) => max > value ? max : value);
-}
+  double _findMax(List<dynamic> values) {
+    return values.reduce((max, value) => max > value ? max : value);
+  }
+
   List<ChartData> processJsonForChart(NavigationDataDTO navData) {
     List<ChartData> chartData = [];
     List<num> distances = [];
@@ -438,79 +467,78 @@ double _findMax(List<dynamic> values) {
   }
 
   Widget buildLegend(List<dynamic> values) {
-  // Find minimum and maximum values
-  final double minValue = _findMin(values);
-  final double maxValue = _findMax(values);
+    // Find minimum and maximum values
+    final double minValue = _findMin(values);
+    final double maxValue = _findMax(values);
 
-  // Calculate range (avoid division by zero)
-  final double range = maxValue > minValue ? maxValue - minValue : 1.0;
+    // Calculate range (avoid division by zero)
+    final double range = maxValue > minValue ? maxValue - minValue : 1.0;
 
-  // Calculate proportional thresholds
-  const double lowThreshold = 0.25; // 25% of the range
-  const double midThreshold1 = 0.50; // 50% of the range
-  const double midThreshold2 = 0.75; // 75% of the range
+    // Calculate proportional thresholds
+    const double lowThreshold = 0.25; // 25% of the range
+    const double midThreshold1 = 0.50; // 50% of the range
+    const double midThreshold2 = 0.75; // 75% of the range
 
-  // Calculate proportional y values
-  final double lowY = minValue + lowThreshold * range;
-  final double midY1 = minValue + midThreshold1 * range;
-  final double midY2 = minValue + midThreshold2 * range;
+    // Calculate proportional y values
+    final double lowY = minValue + lowThreshold * range;
+    final double midY1 = minValue + midThreshold1 * range;
+    final double midY2 = minValue + midThreshold2 * range;
 
-  // Build legend row
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Expanded(
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.green,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              topLeft: Radius.circular(10),
+    // Build legend row
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                topLeft: Radius.circular(10),
+              ),
+            ),
+            child: Text(
+              '< ${(lowY).round()}m',
+              textAlign: TextAlign.center,
             ),
           ),
-          child: Text(
-            '< ${(lowY).round()}m',
-            textAlign: TextAlign.center,
-          ),
         ),
-      ),
-      Expanded(
-        child: Container(
-          color: Colors.yellow,
-          child: Text(
-            '< ${(midY1).round()}m',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-      Expanded(
-        child: Container(
-          color: Colors.orange,
-          child: Text(
-            '< ${(midY2).round()}m',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-      Expanded(
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(10),
-              topRight: Radius.circular(10),
+        Expanded(
+          child: Container(
+            color: Colors.yellow,
+            child: Text(
+              '< ${(midY1).round()}m',
+              textAlign: TextAlign.center,
             ),
           ),
-          child: Text(
-            '> ${maxValue.round()}m',
-            textAlign: TextAlign.center,
+        ),
+        Expanded(
+          child: Container(
+            color: Colors.orange,
+            child: Text(
+              '< ${(midY2).round()}m',
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+            ),
+            child: Text(
+              '> ${maxValue.round()}m',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   /* FlDotPainter calculateColor(FlSpot spot, List<dynamic> values) {
     if (spot.y > 0 && spot.y <= (25 / 100 * (_findMax(values))).round()) {
