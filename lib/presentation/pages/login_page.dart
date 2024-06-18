@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
               child: const Text('Modifica'),
               onPressed: () {
                 setState(() {
-                  IpAddressManager().setIpAddress(ipTextController.text);
+                  IpAddressManager().setIpAddress(ipTextController.text.trim());
                 });
 
                 //Navigator.of(context).pop();

@@ -208,7 +208,7 @@ class _InteractivePageState extends State<InteractivePage> {
             TextButton(
               child: const Text('Modifica'),
               onPressed: () async {
-                await IpAddressManager().setIpAddress(ipTextController.text);
+                await IpAddressManager().setIpAddress(ipTextController.text.trim());
 
                 Navigator.of(context).pop();
               },
