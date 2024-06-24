@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +7,7 @@ import 'package:greenway/presentation/pages/web_pages/admin_web_dashboard.dart';
 import 'package:greenway/services/network/logging/logger.dart';
 import 'package:greenway/services/network/logging/logger_web.dart';
 import 'package:openidconnect/openidconnect.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 //import 'credentials.dart';
 //
@@ -60,11 +61,13 @@ class _InteractivePageState extends State<InteractivePage> {
             const SizedBox(
               height: 100,
             ),
-            SvgPicture.asset('lib/assets/undraw_package_arrived_63rf.svg',
+            SvgPicture.asset('lib/assets/mountain_road_icon.svg',
                 height: 100),
             const SizedBox(
               height: 80,
             ),
+            const SizedBox(width: 200,  child: AutoSizeText('Effettua il login, assicurandoti che l\'indirizzo ip del tuo pc sia configurato correttamente.', textAlign: TextAlign.center, )),
+            const SizedBox(height: 90,),
             FilledButton.icon(
               onPressed: () async {
                 try {

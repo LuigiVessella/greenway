@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.number,
                   controller: ipTextController,
                   decoration:
-                      const InputDecoration(hintText: 'es. 192.168.1.7'),
+                       InputDecoration(hintText: 'attuale: ${IpAddressManager().ipAddress}'),
                 ),
                 const SizedBox(
                   height: 5,
@@ -202,15 +202,21 @@ class _LoginPageState extends State<LoginPage> {
           ),
           actions: <Widget>[
             TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Indietro')),
+            TextButton(
               child: const Text('Modifica'),
               onPressed: () {
                 setState(() {
                   IpAddressManager().setIpAddress(ipTextController.text.trim());
                 });
-
-                //Navigator.of(context).pop();
+                Future.delayed(Durations.extralong4).then((value) =>  Navigator.pop(context),);
+               
               },
             ),
+            
           ],
         );
       },
