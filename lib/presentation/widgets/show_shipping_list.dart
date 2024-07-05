@@ -69,7 +69,7 @@ class _ShippingListMobileState extends State<ShippingListMobile> {
               
                 IconButton.filledTonal(
                     enableFeedback: true,
-                    tooltip: 'Aggiorna lista veicoli',
+                    tooltip: 'Aggiorna lista consegne',
                     onPressed: () {
                       setState(() {
                         _deliveries = dr.getAllDeliveries(_pageCounter);

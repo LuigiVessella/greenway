@@ -76,8 +76,9 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             Expanded(
                 child: Stack(children: [
               FlutterMap(
-                options: const MapOptions(
-                  initialCenter: LatLng(41.353153, 14.355927),
+                options: MapOptions(
+                  initialCenter:
+                      decodePolyline(tripRoute[0]).unpackPolyline()[0],
                   initialZoom: 15,
                 ),
                 children: [
@@ -86,16 +87,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.example.greenway',
                   ),
-                  Visibility(
-                      visible: !_elevationRoute,
-                      child: PolylineLayer(polylines: [
-                        Polyline(
-                            points: decodePolyline(
-                                    snapshot.data![1].routes![0].geometry!)
-                                .unpackPolyline(),
-                            color: const Color.fromARGB(208, 39, 36, 36),
-                            strokeWidth: 5.0)
-                      ])),
                   PolylineLayer(
                     polylineCulling: true,
                     polylines: tripRoute.asMap().entries.map((entry) {
@@ -115,18 +106,6 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                             color: const Color.fromARGB(199, 76, 175, 79),
                             strokeWidth: 5.0)
                       ])),
-                  CurrentLocationLayer(
-                    style: const LocationMarkerStyle(
-                      marker: DefaultLocationMarker(
-                        child: Icon(
-                          Icons.navigation,
-                          color: Colors.white,
-                        ),
-                      ),
-                      markerSize: Size(30, 30),
-                      markerDirection: MarkerDirection.heading,
-                    ),
-                  ),
                   Visibility(
                       visible: _viewMarkers,
                       child: MarkerLayer(
@@ -155,6 +134,18 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                           ),
                         ),
                       ])),
+                  CurrentLocationLayer(
+                    style: const LocationMarkerStyle(
+                      marker: DefaultLocationMarker(
+                        child: Icon(
+                          Icons.navigation,
+                          color: Colors.white,
+                        ),
+                      ),
+                      markerSize: Size(30, 30),
+                      markerDirection: MarkerDirection.heading,
+                    ),
+                  ),
                   RichAttributionWidget(
                     attributions: [
                       TextSourceAttribution(
@@ -445,12 +436,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 16),
-              child: Text('Sto caricando la mappa...', style: TextStyle(color: Colors.black, fontSize: 18)),
+              child: Text('Sto caricando la mappa...',
+                  style: TextStyle(color: Colors.black, fontSize: 18)),
             ),
           ];
         }
         return Center(
-          child : Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: children,
           ),
