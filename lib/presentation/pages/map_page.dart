@@ -92,7 +92,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       final polylineString = entry.value;
                       return Polyline(
                         points: decodePolyline(polylineString).unpackPolyline(),
-                        color: firstAppTheme.primaryColor,
+                            color: const Color.fromARGB(197, 6, 86, 236),
                         strokeWidth: 5.0,
                       );
                     }).toList(),
@@ -102,7 +102,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       child: PolylineLayer(polylines: [
                         Polyline(
                             points: decodePolyline(backTrip!).unpackPolyline(),
-                            color: Color.fromARGB(198, 2, 137, 255),
+                            color: const Color.fromARGB(197, 221, 25, 192),
                             strokeWidth: 5.0)
                       ])),
                   Visibility(
