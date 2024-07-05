@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -112,7 +111,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                       child: PolylineLayer(polylines: [
                         Polyline(
                             points: decodePolyline(backTrip!).unpackPolyline(),
-                            color: const Color.fromARGB(199, 76, 175, 79),
+                            color: Color.fromARGB(198, 2, 137, 255),
                             strokeWidth: 5.0)
                       ])),
                   CurrentLocationLayer(
@@ -136,7 +135,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                                         .unpackPolyline()
                                         .last,
                                     child: const Icon(Icons.location_pin,
-                                        color: Colors.blue),
+                                        color: Color.fromARGB(255, 207, 29, 32)),
                                   ))
                               .toList())),
                   Visibility(
