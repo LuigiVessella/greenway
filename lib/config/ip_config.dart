@@ -23,10 +23,9 @@ class IpAddressManager {
   Future<void> loadAddress() async {
     prefs = await SharedPreferences.getInstance();
     if (kIsWeb) {
-      print('sono quii kiswe');
+      
       if (prefs?.getString('ip') != null || prefs!.getString('ip') != '') {
         _ipAddress = prefs!.getString('ip') ?? dotenv.get('web_address');
-        print('ho preso $_ipAddress');
       }
     } else {
       _ipAddress = prefs?.getString('ip') ?? "192.168.1.7";

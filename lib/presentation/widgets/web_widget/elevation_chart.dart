@@ -436,9 +436,6 @@ class _ElevationChartState extends State<ElevationChart> {
     List<List<num>> points = decodePolyline(navData.routes![0].geometry!);
     double distanceSum = 0.0;
 
-    print('points: ${points.length}');
-    print('elevation lenght ${navData.elevations!.length}');
-
     for (int i = 0; i < points.length - 1; i++) {
       List<num> firstPoint = points[i];
       List<num> secondPoint = points[i + 1];
