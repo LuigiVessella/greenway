@@ -4,6 +4,8 @@ GreenWay is a multi-platform app (iOS and Android) that includes a routing and n
 
 App distribution is now limited as a Docker image.
 
+Back-end is located at [GreenWay Back-end] (https://github.com/Redy1908/GreenWay-Backend)
+
 ## Installation
 > :warning: This set up is only for development/prototyping <u>DO NOT</u> use it in production :warning:
 Clone the repository and open project with Visual Studio Code.
