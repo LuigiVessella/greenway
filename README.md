@@ -12,6 +12,8 @@ First please be sure of installing:
 
 2)[Flutter](https://docs.flutter.dev/get-started/install) framework
 
+3)Android Studio Tools and XCode(if you develop on MacOS)
+
 
 ## Usage
 After cloning repository, you are one step away from start and test the project. By default, the project is ready-to-start, but if some errors occurs, try:
@@ -25,12 +27,7 @@ After that, you're 90% ready to start the app. The last step you need to do is c
 ```.env ``` file and put inside it your endpoint (keycloak and rest service) configuration. 
 Here is an example: 
 ```
-CLIENT_SECRET={your_client_secret}  
-ISSUER={keycloak_issuer}
-authorizationEndpoint={keycloak_auth_endpoint}
-tokenEndpoint={keycloak_token_endpoint}
-endSessionEndpoint={keycloak_logout_endpoint}
-restApiEndpoint={backend_rest_api_endpoint}
+web_address={backend_address}
 ```
 Rename the file ```auth_client.env``` and put it inside ```lib\config\auth\auth_client.env```
 
