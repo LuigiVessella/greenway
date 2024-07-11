@@ -44,6 +44,11 @@ Good! Now you're ready to debug the application, just connect your mobile device
 
 > :warning: This app is fully tested only on an Android (A13+) device! I can't say for now if it's 100% working on iOS :warning:
 
+## Screenshots
+
+![App Screenshot](https://i.postimg.cc/QxfJnGhy/temp-Image-Sh-WWou.avif)
+
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
