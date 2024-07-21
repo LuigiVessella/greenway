@@ -24,6 +24,9 @@ class _AddNewPackageState extends State<AddNewPackage> {
   final TextEditingController _controllerSecondName = TextEditingController();
   final TextEditingController _controllerAddress = TextEditingController();
   final TextEditingController _controllerWeight = TextEditingController();
+
+  final TextEditingController _controllerLAT = TextEditingController();
+  final TextEditingController _controllerLON = TextEditingController();
   Timer? _debounce;
 
   _onSearchChanged(String query) {
@@ -69,175 +72,183 @@ class _AddNewPackageState extends State<AddNewPackage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.info))],
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Form(
-                    key: _formKey,
-                    child: Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                              child: TextFormField(
-                            keyboardType: TextInputType.name,
-                            controller: _controllerName,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.length <= 3) {
-                                return 'Campo obbligatiorio';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Nome',
-                            ),
-                            onChanged: (value) {},
-                          )),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                              child: TextFormField(
-                            keyboardType: TextInputType.name,
-                            controller: _controllerSecondName,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.length <= 3) {
-                                return 'Campo obbligatiorio';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Cognome',
-                            ),
-                            onChanged: (value) {},
-                          )),
-                        ],
-                      ),
-                      SizedBox(width: 100, child: 
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _controllerWeight,
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.info))],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(children: [
+            Form(
+                key: _formKey,
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          child: TextFormField(
+                        keyboardType: TextInputType.name,
+                        controller: _controllerName,
                         validator: (value) {
-                          if (value == null || value.isEmpty || value.isEmpty) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length <= 3) {
                             return 'Campo obbligatiorio';
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
-                          labelText: 'Peso pacco:',
+                          labelText: 'Nome',
                         ),
                         onChanged: (value) {},
+                      )),
+                      const SizedBox(
+                        width: 15,
                       ),
-            )])),
-                const SizedBox(
-                  height: 40,
-                ),
-                Form(
-                    key: _formAddressKey,
+                      Expanded(
+                          child: TextFormField(
+                        keyboardType: TextInputType.name,
+                        controller: _controllerSecondName,
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length <= 3) {
+                            return 'Campo obbligatiorio';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Cognome',
+                        ),
+                        onChanged: (value) {},
+                      )),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 100,
                     child: TextFormField(
-                      controller: _controllerAddress,
+                      keyboardType: TextInputType.number,
+                      controller: _controllerWeight,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.isEmpty || value.isEmpty) {
                           return 'Campo obbligatiorio';
                         }
                         return null;
                       },
-                      onChanged: (text) {
-                        _onSearchChanged(text);
-                      },
                       decoration: const InputDecoration(
-                          labelText: 'Street address:',
-                          prefixIcon: Icon(Icons.house),
-                          border: OutlineInputBorder()),
-                    )),
-                SizedBox(
-                  height: 270,
-                  child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: _addressList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                            elevation: 7.6,
-                            child: ListTile(
-                              title: Text(
-                                  _addressList[index].displayName.toString()),
-                              onTap: () {
-                                if (mounted) {
-                                  setState(() {
-                                    _controllerAddress.text =
-                                        _addressList[index].displayName!;
-                                    _lat =
-                                        double.parse(_addressList[index].lat!);
-                                    _lon =
-                                        double.parse(_addressList[index].lon!);
-                                    address = _addressList[index].displayName;
-                                  });
-                                }
-                              },
-                            ));
-                      }),
-                ),
-                Column(children: [
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          ('Coordinate: LAT: ${_lat.toStringAsFixed(3)} / LON: ${_lon.toStringAsFixed(3)}'),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  FilledButton(
-                    onPressed: () {
-                      _nameComplete =
-                          '${_controllerName.text} ${_controllerSecondName.text}';
-
-                      if (_formKey.currentState!.validate() &&
-                          _formAddressKey.currentState!.validate() &&
-                          _addressList.any((address) =>
-                              address.displayName == _controllerAddress.text)) {
-                        Navigator.pop(
-                          context,
-                          {
-                            'lat': _lat,
-                            'lon': _lon,
-                            'address': address,
-                            'name': '$_nameComplete',
-                            'weight': _controllerWeight.text
-                          },
-                        );
-                      }
-                      else {
-                        _controllerAddress.value = const TextEditingValue(text: 'Scegliere indirizzo dalla lista!');
-                      }
-                    },
-                    child: const SizedBox(
-                        width: 70,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [Icon(Icons.save), Text('Salva')])),
+                        labelText: 'Peso pacco:',
+                      ),
+                      onChanged: (value) {},
+                    ),
                   )
-                ])
-              ],
+                ])),
+            const SizedBox(
+              height: 40,
             ),
-          ),
-        ));
+            Form(
+                key: _formAddressKey,
+                child: TextFormField(
+                  controller: _controllerAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obbligatiorio';
+                    }
+                    return null;
+                  },
+                  onChanged: (text) {
+                    _onSearchChanged(text);
+                  },
+                  decoration: const InputDecoration(
+                      labelText: 'Street address:',
+                      prefixIcon: Icon(Icons.house),
+                      border: OutlineInputBorder()),
+                )),
+            SizedBox(
+              height: 270,
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: _addressList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                        elevation: 7.6,
+                        child: ListTile(
+                          title:
+                              Text(_addressList[index].displayName.toString()),
+                          onTap: () {
+                            if (mounted) {
+                              setState(() {
+                                _controllerAddress.text =
+                                    _addressList[index].displayName!;
+                                _lat = double.parse(_addressList[index].lat!);
+                                _lon = double.parse(_addressList[index].lon!);
+                                address = _addressList[index].displayName;
+                              });
+                            }
+                          },
+                        ));
+                  }),
+            ),
+            SizedBox(width: 120, child: 
+            TextFormField(
+              keyboardType: TextInputType.number,
+              controller: _controllerLAT,
+              decoration: const InputDecoration(
+                labelText: 'LAT:',
+              ),
+              onChanged: (value) {},
+            )),
+            SizedBox(width: 120, child: 
+            TextFormField(
+              keyboardType: TextInputType.number,
+              controller: _controllerLON,
+              decoration: const InputDecoration(
+                labelText: 'LON:',
+              ),
+              onChanged: (value) {},
+            )),
+            const SizedBox(height: 30,),
+            Text(
+                ('COORDINATE: LAT: ${_lat.toStringAsFixed(3)} / LON: ${_lon.toStringAsFixed(3)}'),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(
+              height: 30,
+            ),
+            FilledButton(
+              onPressed: () {
+                _nameComplete =
+                    '${_controllerName.text} ${_controllerSecondName.text}';
+
+                if (_formKey.currentState!.validate() &&
+                    _formAddressKey.currentState!.validate() &&
+                    _addressList.any((address) =>
+                        address.displayName == _controllerAddress.text)) {
+                  Navigator.pop(
+                    context,
+                    {
+                      'lat': _controllerLAT.text,
+                      'lon': _controllerLON.text,
+                      'address': address,
+                      'name': '$_nameComplete',
+                      'weight': _controllerWeight.text
+                    },
+                  );
+                } else {
+                  _controllerAddress.value = const TextEditingValue(
+                      text: 'Scegliere indirizzo dalla lista!');
+                }
+              },
+              child: const SizedBox(
+                  width: 70,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [Icon(Icons.save), Text('Salva')])),
+            )
+          ]),
+        ),
+      ),
+    );
   }
 
   @override

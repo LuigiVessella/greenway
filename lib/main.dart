@@ -11,6 +11,7 @@ import 'package:greenway/presentation/pages/map_page.dart';
 import 'package:greenway/presentation/widgets/add_new_delivery_package.dart';
 
 Future<void> main() async {
+  //await IpAddressManager().firstAddress();
   await dotenv.load(fileName: "lib/config/auth/auth_client.env");
   await IpAddressManager().loadAddress();
 

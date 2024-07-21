@@ -19,16 +19,23 @@ class IpAddressManager {
     return _instance;
   }
 
+  Future<void> firstAddress() async {
+    prefs = await SharedPreferences.getInstance();
+
+    _ipAddress = '192.168.1.15';
+
+    await prefs!.setString('ip', _ipAddress);
+  }
+
   // Metodo getter per ottenere l'indirizzo IP
   Future<void> loadAddress() async {
     prefs = await SharedPreferences.getInstance();
     if (kIsWeb) {
-      
       if (prefs?.getString('ip') != null || prefs!.getString('ip') != '') {
         _ipAddress = prefs!.getString('ip') ?? dotenv.get('web_address');
       }
     } else {
-      _ipAddress = prefs?.getString('ip') ?? "192.168.1.7";
+      _ipAddress = prefs?.getString('ip') ?? "192.168.1.15";
     }
   }
 
