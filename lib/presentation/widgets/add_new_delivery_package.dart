@@ -189,6 +189,7 @@ class _AddNewPackageState extends State<AddNewPackage> {
                         ));
                   }),
             ),
+            
             SizedBox(width: 120, child: 
             TextFormField(
               keyboardType: TextInputType.number,
